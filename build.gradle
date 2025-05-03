@@ -1,0 +1,19 @@
+subprojects {
+    group = 'com.technokratos.eateasy'
+    version = '1.0-SNAPSHOT'
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    configurations {
+        configureEach {
+            resolutionStrategy {
+                failOnVersionConflict()
+            }
+        }
+    }
+}
+
+
