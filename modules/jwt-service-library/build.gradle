@@ -21,9 +21,10 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+    api "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
     implementation "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
     implementation "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
+    implementation 'org.springframework.security:spring-security-core'
     testImplementation platform("org.junit:junit-bom:${junitVersion}")
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
