@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Smesitejl
+      changes:
+        - sql:
+            dbms: postgres
+            sql: "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";"
+
+  - changeSet:
+      id: 2
+      author: Smesitejl
+      changes:
+        - createTable:
+            tableName: product
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: "uuid_generate_v4()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(1000)
+              - column:
+                  name: photo_url
+                  type: varchar(255)
+              - column:
+                  name: price
+                  type: decimal(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: int
+                  constraints:
+                    nullable: false
+
