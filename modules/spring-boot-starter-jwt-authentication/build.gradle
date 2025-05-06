@@ -21,6 +21,7 @@ dependencyManagement {
 
 dependencies {
     implementation 'org.slf4j:slf4j-api'
+    implementation 'org.springframework.security:spring-security-core'
     testImplementation platform("org.junit:junit-bom:${junitVersion}")
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.mockito:mockito-core'
