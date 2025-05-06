@@ -1,10 +1,10 @@
 package com.technokratos.eateasy.jwtauthenticationstarter.token.access.service;
 
+import com.technokratos.eateasy.jwtauthenticationstarter.token.claimexctractor.ClaimExtractor;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.AuthenticationException;
 
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * Service interface for parsing and validating access tokens.
@@ -40,13 +40,13 @@ public interface AccessTokenParserService {
      * Extracts specific claim using provided claims processor.
      *
      * @param token access token to parse
-     * @param claimExtractor function to process claims map
-     * @return extracted claim value or null if not found
+     * @param claimExtractor processor for extracting target claim
+     * @return extracted claim value or null if not present
      * @param <T> type of claim value
      * @throws IllegalArgumentException for invalid tokens
      */
-    default  <T> @Nullable T extractClaim(String token, Function<Map<String, Object>, T> claimExtractor) throws IllegalArgumentException {
-        return claimExtractor.apply(extractAllClaims(token));
+    default  <T> @Nullable T extractClaim(String token, ClaimExtractor<? extends T> claimExtractor) throws IllegalArgumentException {
+        return claimExtractor.extract(extractAllClaims(token));
     }
 
 }
