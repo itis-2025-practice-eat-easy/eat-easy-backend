@@ -1,1 +1,3 @@
 rootProject.name = 'eat-easy-backend'
+
+include 'modules:jwt-service-library'
