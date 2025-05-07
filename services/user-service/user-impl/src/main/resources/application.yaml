@@ -4,9 +4,6 @@ spring:
     username: postgres
     password: 12345
     driver-class-name: org.postgresql.Driver
-  liquibase:
-    enabled: false
-  #    change-log: classpath:/db/changelog/db.changelog-master.yaml
   jpa:
     hibernate:
       ddl-auto: none
