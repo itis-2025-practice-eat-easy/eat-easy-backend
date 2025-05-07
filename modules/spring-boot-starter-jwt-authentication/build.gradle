@@ -23,6 +23,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-api'
     implementation project(':modules:jwt-service-library')
     implementation 'org.springframework.security:spring-security-core'
+    implementation 'jakarta.annotation:jakarta.annotation-api'
     testImplementation platform("org.junit:junit-bom:${junitVersion}")
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.mockito:mockito-core'
