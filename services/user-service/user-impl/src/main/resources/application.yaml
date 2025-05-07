@@ -5,10 +5,11 @@ spring:
     password: 12345
     driver-class-name: org.postgresql.Driver
   liquibase:
-    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    enabled: false
+  #    change-log: classpath:/db/changelog/db.changelog-master.yaml
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
@@ -24,3 +25,13 @@ springdoc:
     path: /v3/api-docs
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
+
+  # Включить AOP
+aop:
+  auto: true           # Включение AOP
+  proxy-target-class: true  # Использование CGLIB прокси вместо JDK динамических прокси
+
+logging:
+  level:
+    com.technokratos.eateasy.userapi.aop: DEBUG
+

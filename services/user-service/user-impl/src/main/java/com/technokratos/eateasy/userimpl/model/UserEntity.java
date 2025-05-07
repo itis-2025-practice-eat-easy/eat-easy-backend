@@ -1,4 +1,4 @@
-package com.technokratos.eateasy.userdb.model;
+package com.technokratos.eateasy.userimpl.model;
 
 import jakarta.persistence.*;
 import lombok.*;

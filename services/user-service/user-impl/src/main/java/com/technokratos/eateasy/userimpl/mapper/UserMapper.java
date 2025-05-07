@@ -1,9 +1,9 @@
-package com.technokratos.eateasy.userdb.mapper;
+package com.technokratos.eateasy.userimpl.mapper;
 
 
 import com.technokratos.eateasy.userapi.dto.UserRequestDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
-import com.technokratos.eateasy.userdb.model.UserEntity;
+import com.technokratos.eateasy.userimpl.model.UserEntity;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.crypto.password.PasswordEncoder;

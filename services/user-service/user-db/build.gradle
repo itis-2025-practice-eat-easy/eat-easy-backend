@@ -1,9 +1,14 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.liquibase:liquibase-core:4.26.0'
+    }
+}
+
 plugins {
-//    id 'java-library' // для db модулей
-//    id 'io.spring.dependency-management' version '1.1.7'
-    id 'java'
-    id 'org.springframework.boot' version '3.4.5'
-    id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.liquibase.gradle' version '3.0.2'
 }
 
 repositories {
@@ -11,18 +16,21 @@ repositories {
 }
 
 dependencies {
-    implementation project(':user-api')
-
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // Только JPA
-    runtimeOnly 'org.postgresql:postgresql' // БД
-
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-
-    implementation 'org.liquibase:liquibase-core'
-
-
+    liquibaseRuntime 'org.liquibase:liquibase-core:4.26.0'
+    liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:3.0.2'
+    liquibaseRuntime 'info.picocli:picocli:4.6.1'
+    liquibaseRuntime 'org.postgresql:postgresql:42.7.4'
 }
 
+liquibase {
+    activities {
+        main {
+            classpath "$projectDir/db/changelog"
+            changelogFile 'db.changelog-master.yaml'
+            url 'jdbc:postgresql://localhost:5432/user_service_dev'
+            username 'postgres'
+            password '12345'
+            driver 'org.postgresql.Driver'
+        }
+    }
+}

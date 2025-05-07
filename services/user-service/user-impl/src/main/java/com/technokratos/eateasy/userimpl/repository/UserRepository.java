@@ -1,7 +1,7 @@
-package com.technokratos.eateasy.userdb.repository;
+package com.technokratos.eateasy.userimpl.repository;
 
 
-import com.technokratos.eateasy.userdb.model.UserEntity;
+import com.technokratos.eateasy.userimpl.model.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
