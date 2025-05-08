@@ -1,6 +1,6 @@
 package com.technokratos.eateasy.jwtauthenticationstarter.dto.request;
 
-import lombok.Builder;
+import lombok.experimental.SuperBuilder;
 
 /**
  * Data transfer object representing login credentials with fingerprint validation.
@@ -8,10 +8,31 @@ import lombok.Builder;
  * Used for authentication requests where login, password, and client fingerprint
  * are required for security validation.
  * </p>
- * @param login       unique user identifier (username/email)
- * @param password    user's secret credentials
- * @param fingerprint client browser/device fingerprint for session binding
  */
-@Builder
-public record LoginRequest(String login, String password, String fingerprint) {
+@SuperBuilder
+public class LoginRequest extends FingerprintRequest {
+
+    /**
+     * Unique user identifier (username/email).
+     */
+    private final String login;
+
+    /**
+     * User's secret credentials (password).
+     */
+    private final String password;
+
+    public LoginRequest(String fingerprint, String login, String password) {
+        super(fingerprint);
+        this.login = login;
+        this.password = password;
+    }
+
+    public String login() {
+        return login;
+    }
+
+    public String password() {
+        return password;
+    }
 }
