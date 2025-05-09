@@ -25,6 +25,7 @@ dependencies {
     compileOnly 'jakarta.servlet:jakarta.servlet-api'
     implementation 'org.springframework.security:spring-security-core'
     implementation 'org.springframework.security:spring-security-web'
+    implementation 'org.springframework.security:spring-security-config'
     implementation 'org.springframework.boot:spring-boot-autoconfigure'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'jakarta.annotation:jakarta.annotation-api'
@@ -35,6 +36,9 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.mockito:mockito-core'
     testImplementation 'org.mockito:mockito-junit-jupiter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-validation'
+    testImplementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 test {

@@ -3,6 +3,7 @@ package com.technokratos.eateasy.jwtauthenticationstarter.utils.refreshtokencook
 import com.technokratos.eateasy.jwtauthenticationstarter.utils.refreshtokencookiewriter.RefreshTokenCookieWriter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,6 +22,7 @@ import java.time.Duration;
  * </p>
  */
 @Slf4j
+@Builder
 @RequiredArgsConstructor
 public class SimpleRefreshTokenCookieWriter implements RefreshTokenCookieWriter {
 
