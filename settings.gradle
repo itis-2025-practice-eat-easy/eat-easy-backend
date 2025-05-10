@@ -1,7 +1,3 @@
 rootProject.name = 'eat-easy-backend'
 
-include 'services:user-service:user-api'
-include 'services:user-service:user-db'
-include 'services:user-service:user-impl'
-
 include 'modules:log-starter'

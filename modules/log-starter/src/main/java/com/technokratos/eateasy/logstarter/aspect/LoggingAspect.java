@@ -57,7 +57,7 @@ public class LoggingAspect {
             return result;
         } catch (Exception e) {
             stopWatch.stop();
-            log.error("Exception in {}.{}: {}", className, methodName, e.getMessage());
+            log.info("Exception in {}.{}: {}", className, methodName, e.getMessage());
             throw e;
         }
     }
