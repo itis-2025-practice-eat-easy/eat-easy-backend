@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: authentication-service
+
+jwt:
+  mode: server
+  login-url: /api/v1/auth/login
+  refresh-url: /api/v1/auth/refresh
+  logout-url: /api/v1/auth/logout
+  issuer: authentication-service
+  tokens:
+    access:
+      header: Authorization
+      prefix: "Bearer "
+      expiration: 7m
+      key:
+        algorithm: RSA
+        private-key: ${JWT_ACCESS_PRIVATE_KEY}
+        public-key: ${JWT_ACCESS_PUBLIC_KEY}
+    refresh:
+      use-cookie: true
+      cookie-name: refresh_token
+      expiration: 48h
+      key:
+        algorithm: RSA
+        private-key: ${JWT_REFRESH_PRIVATE_KEY}
+        public-key: ${JWT_REFRESH_PUBLIC_KEY}
