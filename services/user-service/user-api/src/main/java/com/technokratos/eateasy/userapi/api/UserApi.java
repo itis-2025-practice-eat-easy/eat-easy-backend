@@ -19,67 +19,67 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@Tag(name = "User Management", description = "API для управления пользователями")
+@Tag(name = "User Management", description = "API for managing users")
 public interface UserApi {
 
-    @Operation(summary = "Получить всех пользователей", description = "Возвращает список всех зарегистрированных пользователей")
-    @ApiResponse(responseCode = "200", description = "Успешный запрос", content = @Content(schema = @Schema(implementation = UserResponseDto.class)))
+    @Operation(summary = "Get all users", description = "Returns a list of all registered users")
+    @ApiResponse(responseCode = "200", description = "Successful request", content = @Content(schema = @Schema(implementation = UserResponseDto.class)))
     @GetMapping
     ResponseEntity<List<UserResponseDto>> getAllUsers();
 
-    @Operation(summary = "Получить пользователя по ID", description = "Возвращает пользователя по его уникальному идентификатору")
+    @Operation(summary = "Get user by ID", description = "Returns a user by their unique identifier")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Пользователь найден", content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
-            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+            @ApiResponse(responseCode = "200", description = "User found", content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "User not found")
     })
     @GetMapping("/{id}")
     ResponseEntity<UserResponseDto> getUserById(
-            @Parameter(description = "UUID пользователя", required = true, example = "123e4567-e89b-12d3-a456-426614174000", in = ParameterIn.PATH)
+            @Parameter(description = "User UUID", required = true, example = "123e4567-e89b-12d3-a456-426614174000", in = ParameterIn.PATH)
             @PathVariable UUID id);
 
-    @Operation(summary = "Создать нового пользователя", description = "Регистрирует нового пользователя в системе")
+    @Operation(summary = "Create new user", description = "Registers a new user in the system")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Пользователь успешно создан", content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
-            @ApiResponse(responseCode = "400", description = "Невалидные данные пользователя")
+            @ApiResponse(responseCode = "201", description = "User successfully created", content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid user data")
     })
     @PostMapping
     ResponseEntity<UserResponseDto> createUser(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Данные нового пользователя", required = true,
+                    description = "New user data", required = true,
                     content = @Content(schema = @Schema(implementation = UserRequestDto.class)))
             @Valid @RequestBody UserRequestDto userDto);
 
-    @Operation(summary = "Получить пользователя по email", description = "Возвращает пользователя по его email адресу")
+    @Operation(summary = "Get user by email", description = "Returns a user by their email address")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Пользователь найден", content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
-            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+            @ApiResponse(responseCode = "200", description = "User found", content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "User not found")
     })
     @GetMapping(params = "email")
     ResponseEntity<UserResponseDto> getUserByEmail(
-            @Parameter(description = "Email пользователя", required = true, example = "user@example.com", in = ParameterIn.QUERY)
+            @Parameter(description = "User email", required = true, example = "user@example.com", in = ParameterIn.QUERY)
             @RequestParam @NotBlank @Email String email);
 
-    @Operation(summary = "Обновить данные пользователя", description = "Обновляет информацию о существующем пользователе")
+    @Operation(summary = "Update user data", description = "Updates the information of an existing user")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Данные пользователя обновлены", content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
-            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+            @ApiResponse(responseCode = "200", description = "User data updated", content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "User not found")
     })
     @PutMapping("/{id}")
     ResponseEntity<UserResponseDto> updateUser(
-            @Parameter(description = "UUID пользователя", required = true, example = "123e4567-e89b-12d3-a456-426614174000", in = ParameterIn.PATH)
+            @Parameter(description = "User UUID", required = true, example = "123e4567-e89b-12d3-a456-426614174000", in = ParameterIn.PATH)
             @PathVariable UUID id,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Обновленные данные пользователя", required = true,
+                    description = "Updated user data", required = true,
                     content = @Content(schema = @Schema(implementation = UserRequestDto.class)))
             @Valid @RequestBody UserRequestDto userDto);
 
-    @Operation(summary = "Удалить пользователя", description = "Удаляет пользователя из системы по его ID")
+    @Operation(summary = "Delete user", description = "Deletes a user from the system by their ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Пользователь успешно удален"),
-            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+            @ApiResponse(responseCode = "204", description = "User successfully deleted"),
+            @ApiResponse(responseCode = "404", description = "User not found")
     })
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteUser(
-            @Parameter(description = "UUID пользователя", required = true, example = "123e4567-e89b-12d3-a456-426614174000", in = ParameterIn.PATH)
+            @Parameter(description = "User UUID", required = true, example = "123e4567-e89b-12d3-a456-426614174000", in = ParameterIn.PATH)
             @PathVariable UUID id);
 }

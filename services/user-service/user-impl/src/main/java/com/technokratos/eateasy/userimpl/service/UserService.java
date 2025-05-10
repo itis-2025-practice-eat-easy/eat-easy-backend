@@ -1,4 +1,4 @@
-package com.technokratos.eateasy.userapi.service;
+package com.technokratos.eateasy.userimpl.service;
 
 import com.technokratos.eateasy.userapi.dto.UserRequestDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;

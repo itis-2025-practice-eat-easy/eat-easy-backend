@@ -1,4 +1,4 @@
-package com.technokratos.eateasy.userapi.exception;
+package com.technokratos.eateasy.userimpl.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

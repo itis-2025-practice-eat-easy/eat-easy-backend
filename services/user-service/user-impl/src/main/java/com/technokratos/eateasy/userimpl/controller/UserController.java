@@ -1,11 +1,9 @@
 package com.technokratos.eateasy.userimpl.controller;
 
 import com.technokratos.eateasy.userapi.api.UserApi;
-
-
 import com.technokratos.eateasy.userapi.dto.UserRequestDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
-import com.technokratos.eateasy.userapi.service.UserService;
+import com.technokratos.eateasy.userimpl.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

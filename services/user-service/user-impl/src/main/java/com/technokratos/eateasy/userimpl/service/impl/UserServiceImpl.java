@@ -1,14 +1,14 @@
-package com.technokratos.eateasy.userimpl.service;
+package com.technokratos.eateasy.userimpl.service.impl;
 
 
 import com.technokratos.eateasy.userapi.dto.UserRequestDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
-import com.technokratos.eateasy.userapi.exception.UserAlreadyExistsException;
-import com.technokratos.eateasy.userapi.exception.UserNotFoundException;
-import com.technokratos.eateasy.userapi.service.UserService;
+import com.technokratos.eateasy.userimpl.exception.UserAlreadyExistsException;
+import com.technokratos.eateasy.userimpl.exception.UserNotFoundException;
 import com.technokratos.eateasy.userimpl.mapper.UserMapper;
 import com.technokratos.eateasy.userimpl.model.UserEntity;
 import com.technokratos.eateasy.userimpl.repository.UserRepository;
+import com.technokratos.eateasy.userimpl.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
