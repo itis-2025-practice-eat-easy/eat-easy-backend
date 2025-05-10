@@ -1,6 +1,7 @@
 package com.technokratos.eateasy.jwtauthenticationstarter.dto.request;
 
 import lombok.experimental.SuperBuilder;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Data transfer object representing login credentials with fingerprint validation.
@@ -10,6 +11,7 @@ import lombok.experimental.SuperBuilder;
  * </p>
  */
 @SuperBuilder
+@Jacksonized
 public class LoginRequest extends FingerprintRequest {
 
     /**

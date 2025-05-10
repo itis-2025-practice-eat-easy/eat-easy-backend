@@ -2,6 +2,7 @@ package com.technokratos.eateasy.jwtauthenticationstarter.dto.request;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Base request type containing client fingerprint for security context binding.
@@ -10,6 +11,7 @@ import lombok.experimental.SuperBuilder;
  * </p>
  */
 @SuperBuilder
+@Jacksonized
 @RequiredArgsConstructor
 public class FingerprintRequest {
 

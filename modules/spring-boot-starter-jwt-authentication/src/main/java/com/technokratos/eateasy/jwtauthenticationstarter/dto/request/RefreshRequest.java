@@ -1,6 +1,7 @@
 package com.technokratos.eateasy.jwtauthenticationstarter.dto.request;
 
 import lombok.experimental.SuperBuilder;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Refresh token request DTO containing token value and client fingerprint.
@@ -9,6 +10,7 @@ import lombok.experimental.SuperBuilder;
  * </p>
  */
 @SuperBuilder
+@Jacksonized
 public class RefreshRequest extends FingerprintRequest{
 
     private final String refreshToken;

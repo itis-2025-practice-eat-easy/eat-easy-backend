@@ -48,6 +48,7 @@ public class RefreshConfig {
                 .refreshTokenCookieReader(cookieReader)
                 .authenticationSuccessHandler(refreshSuccessHandler)
                 .authenticationFailureHandler(refreshFailureHandler)
+                .requestMapper(requestMapper)
                 .build();
     }
 
