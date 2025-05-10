@@ -40,7 +40,7 @@ public class UserMapper {
 
     public void updateEntity(UserEntity entity, UserRequestDto dto) {
         if (dto == null || entity == null) {
-            return;
+            return ;
         }
 
         if (dto.getUsername() != null) {
