@@ -11,6 +11,7 @@ ext {
     dbSuffix = "-db"
 }
 
+
 subprojects {
     if (hasJavaSources(project)) {
         apply plugin: 'java'
