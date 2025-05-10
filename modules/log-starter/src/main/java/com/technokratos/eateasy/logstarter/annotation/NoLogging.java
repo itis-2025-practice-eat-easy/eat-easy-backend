@@ -1,4 +1,4 @@
-package om.technokratos.eateasy.logstarter.annotation;
+package com.technokratos.eateasy.logstarter.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,5 +7,4 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface NoLogging {
-}
+public @interface NoLogging { }

@@ -1,77 +1,63 @@
-package om.technokratos.eateasy.logstarter.aspect;
+package com.technokratos.eateasy.logstarter.aspect;
 
-
-import om.technokratos.eateasy.logstarter.annotation.NoLogging;
-import om.technokratos.eateasy.logstarter.properties.LoggingProperties;
+import com.technokratos.eateasy.logstarter.properties.LoggingProperties;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import com.technokratos.eateasy.logstarter.annotation.NoLogging;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
 import java.util.Arrays;
 
 @Aspect
-@Component
+@Slf4j
+@RequiredArgsConstructor
 public class LoggingAspect {
+
     private final LoggingProperties properties;
 
-    public LoggingAspect(LoggingProperties properties) {
-        this.properties = properties;
-    }
-
-    @Around("execution(public * com.technokratos.eateasy..*.*(..)) && " +
+    @Around("execution(public * *(..)) && " +
             "(within(@org.springframework.stereotype.Service *) || " +
+            "within(@org.springframework.stereotype.Repository *) || " +
             "within(@org.springframework.stereotype.Controller *) || " +
-            "within(@org.springframework.stereotype.Repository *))")
+            "within(@org.springframework.web.bind.annotation.RestController *))")
     public Object logMethod(ProceedingJoinPoint joinPoint) throws Throwable {
         if (!properties.isEnabled()) {
             return joinPoint.proceed();
         }
-
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Logger logger = LoggerFactory.getLogger(joinPoint.getTarget().getClass());
-
-        // Проверка аннотации NoLogging
         if (signature.getMethod().isAnnotationPresent(NoLogging.class)) {
             return joinPoint.proceed();
         }
-
         String methodName = signature.getMethod().getName();
         String className = joinPoint.getTarget().getClass().getSimpleName();
-
         if (properties.isLogParameters()) {
             Object[] args = joinPoint.getArgs();
             String parameters = Arrays.toString(args);
-            logger.info("Entering {}.{} with parameters: {}", className, methodName, parameters);
+            log.info("Entering {}.{} with parameters: {}", className, methodName, parameters);
         } else {
-            logger.info("Entering {}.{}", className, methodName);
+            log.info("Entering {}.{}", className, methodName);
         }
-
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-
         try {
             Object result = joinPoint.proceed();
             stopWatch.stop();
-
             if (properties.isLogReturnValues() && !void.class.equals(signature.getReturnType())) {
-                logger.info("Exiting {}.{} with result: {}", className, methodName, result);
+                log.info("Exiting {}.{} with result: {}", className, methodName, result);
             } else {
-                logger.info("Exiting {}.{}", className, methodName);
+                log.info("Exiting {}.{}", className, methodName);
             }
-
             if (properties.isLogExecutionTime()) {
-                logger.info("Execution time of {}.{}: {} ms", className, methodName, stopWatch.getTotalTimeMillis());
+                log.info("Execution time of {}.{}: {} ms", className, methodName, stopWatch.getTotalTimeMillis());
             }
-
             return result;
         } catch (Exception e) {
             stopWatch.stop();
-            logger.error("Exception in {}.{}: {}", className, methodName, e.getMessage());
+            log.error("Exception in {}.{}: {}", className, methodName, e.getMessage());
             throw e;
         }
     }

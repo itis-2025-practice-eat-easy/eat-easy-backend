@@ -1,4 +1,4 @@
-package om.technokratos.eateasy.logstarter.properties;
+package com.technokratos.eateasy.logstarter.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
