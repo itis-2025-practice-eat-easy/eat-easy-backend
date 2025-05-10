@@ -1,6 +1,5 @@
 subprojects {
-    apply plugin: 'java'
-
+    apply plugin: 'java-library'
 
     jar.archiveFileName = "${project.name}.jar"
 
