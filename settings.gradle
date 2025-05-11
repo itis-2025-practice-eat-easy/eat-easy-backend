@@ -1,4 +1,8 @@
 rootProject.name = 'eat-easy-backend'
+
 include 'modules'
 include 'services'
 
+include ':services:product-service:product-api'
+include ':services:product-service:product-impl'
+include ':services:product-service:product-db'

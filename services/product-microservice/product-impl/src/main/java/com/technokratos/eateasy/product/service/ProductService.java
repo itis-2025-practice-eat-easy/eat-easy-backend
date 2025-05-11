@@ -1,0 +1,104 @@
+package com.technokratos.eateasy.product.service;
+
+
+import com.technokratos.eateasy.product.dto.product.ProductRequest;
+import com.technokratos.eateasy.product.dto.product.ProductResponse;
+import com.technokratos.eateasy.product.entity.Product;
+import com.technokratos.eateasy.product.exception.ProductAlreadyExistsException;
+import com.technokratos.eateasy.product.exception.ProductNotFoundException;
+import com.technokratos.eateasy.product.mapper.ProductMapper;
+import com.technokratos.eateasy.product.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class ProductService {
+
+    private final ProductRepository productRepository;
+
+    private final ProductMapper productMapper;
+
+    public ProductResponse getById(UUID productId) {
+        return productRepository.findById(productId)
+                .map(productMapper::toResponse)
+                .orElseThrow(() ->
+                        new ProductNotFoundException("Product not found with id %s"
+                                .formatted(productId)));
+    }
+
+    @Transactional
+    public ProductResponse create(ProductRequest product) {
+        try {
+            log.info("Create product {}", product);
+            return productMapper.toResponse(productRepository
+                    .save(productMapper
+                            .toEntity(product)));
+        } catch (DataIntegrityViolationException e) {
+            log.error("Duplicate product {}", product);
+            throw new ProductAlreadyExistsException("Product already exists");
+        }
+    }
+
+    @Transactional
+    public void updateQuantity(UUID id, Integer quantity) {
+        try {
+           int affectedRows = productRepository.updateQuantityIfNotNegative(id, quantity);
+            log.info("Updated product with id: {}", id);
+            if (affectedRows == 0) {
+                log.warn("Product with id: {} not found", id);
+                throw new ProductNotFoundException("Product not found with id %s"
+                        .formatted(id));
+            }
+        } catch (DataIntegrityViolationException e) {
+            log.error("Invalid product data with id {}", id);
+            throw new DataIntegrityViolationException("Data integrity violation");
+        }
+    }
+
+    @Transactional
+    public void update(UUID id, ProductRequest product) {
+        try {
+            int affectedRows = productRepository.update(id, prepareUpdatesMap(productMapper
+                    .toEntity(product)));
+            log.info("Updated product with id: {}", id);
+            if(affectedRows == 0) {
+                log.warn("Product with id: {} not found", id);
+                throw new ProductNotFoundException("Product not found with id %s"
+                        .formatted(id));
+            }
+        } catch (DataIntegrityViolationException e) {
+            log.error("Invalid product data with id {}", id);
+            throw new DataIntegrityViolationException("Data integrity violation");
+        }
+    }
+
+    @Transactional
+    public void delete(UUID id) {
+        log.info("Delete product with id: {}", id);
+        if (productRepository.deleteById(id) == 0) {
+            log.warn("Product with id: {} not found", id);
+            throw new ProductNotFoundException("Product not found with id %s"
+                    .formatted(id));
+        }
+    }
+
+    private Map<String, Object> prepareUpdatesMap(Product product) {
+        Map<String, Object> updates = new LinkedHashMap<>();
+        if (product.getTitle() != null) updates.put("title", product.getTitle());
+        if (product.getDescription() != null) updates.put("description", product.getDescription());
+        if (product.getPhotoUrl() != null) updates.put("photo_url", product.getPhotoUrl());
+        if (product.getPrice() != null) updates.put("price", product.getPrice());
+        if (product.getQuantity() != null) updates.put("quantity", product.getQuantity());
+        return updates;
+    }
+}

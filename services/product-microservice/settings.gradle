@@ -1,5 +1,0 @@
-rootProject.name = 'product-microservice'
-include 'api'
-include 'db'
-include 'impl'
-
