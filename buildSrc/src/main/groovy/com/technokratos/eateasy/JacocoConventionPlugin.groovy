@@ -2,8 +2,11 @@ package com.technokratos.eateasy
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 
 class JacocoConventionPlugin implements Plugin<Project> {
+
+    private static final String JACOCO_VERSION = '0.8.13'
 
     private static final String[] EXCLUDE = [
             '**/dto/**',
@@ -31,55 +34,53 @@ class JacocoConventionPlugin implements Plugin<Project> {
     }
 
     private void configureForJavaProject(Project project) {
-        project.with {
-            apply plugin: 'jacoco'
-            jacoco {
-                toolVersion = '0.8.13'
-            }
+        project.pluginManager.apply('jacoco')
 
-            afterEvaluate {
-                tasks.named('jacocoTestReport') {
-                    reports {
-                        xml.required = true
-                        html.required = true
-                    }
+        project.jacoco {
+            toolVersion = JACOCO_VERSION
+        }
 
-                    classDirectories.setFrom(files(classDirectories.files.collect {
-                        fileTree(dir: it,
-                                include: INCLUDE,
-                                exclude: EXCLUDE
-                        )
-                    }))
+        project.afterEvaluate {
+            configureJacocoTestReport(project)
+            configureJacocoTestCoverageVerification(project)
+        }
+    }
 
-                    dependsOn tasks.named('test')
-                    mustRunAfter tasks.named('test')
-                }
+    private void configureJacocoTestReport(Project project) {
+        Task jacocoTestReport = project.tasks.named('jacocoTestReport').get()
+        jacocoTestReport.reports {
+            xml.required = true
+            html.required = true
+        }
+        jacocoTestReport.classDirectories.setFrom(createFilteredClassDirectories(jacocoTestReport))
+        jacocoTestReport.dependsOn(project.tasks.named('test'))
+        jacocoTestReport.mustRunAfter(project.tasks.named('test'))
+    }
 
-                tasks.named('jacocoTestCoverageVerification') {
-                    violationRules {
-                        rule {
-                            limit {
-                                counter = 'LINE'
-                                minimum = MINIMUM_COVERAGE
-                            }
-                        }
+    private Object createFilteredClassDirectories(Task jacocoTestReport) {
+        jacocoTestReport.classDirectories.files.collect {
+            project.fileTree(dir: it, include: INCLUDE, exclude: EXCLUDE)
+        }
+    }
 
-                        rule {
-                            limit {
-                                counter = 'BRANCH'
-                                minimum = MINIMUM_COVERAGE
-                            }
-                        }
-                    }
-                }
+    private void configureJacocoTestCoverageVerification(Project project) {
+        Task jacocoTestCoverageVerification = project.tasks.named('jacocoTestCoverageVerification').get()
 
-                tasks.named('check') {
-                    dependsOn tasks.named('jacocoTestCoverageVerification')
-                }
+        jacocoTestCoverageVerification.violationRules {
+            createCoverageRule('LINE')
+            createCoverageRule('BRANCH')
+        }
 
-                tasks.named('test') {
-                    finalizedBy tasks.named('jacocoTestReport')
-                }
+        project.tasks.named('check').configure {
+            dependsOn jacocoTestCoverageVerification
+        }
+    }
+
+    private void createCoverageRule(String counterName) {
+        rule {
+            limit {
+                counter = counterName
+                minimum = MINIMUM_COVERAGE
             }
         }
     }
