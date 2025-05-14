@@ -23,8 +23,13 @@ dependencyManagement {
 dependencies {
     implementation 'org.slf4j:slf4j-api'
     implementation 'org.springframework:spring-web'
-    testImplementation platform("org.junit:junit-bom:${junitVersion}")
+    compileOnly 'jakarta.servlet:jakarta.servlet-api'
+
+    testImplementation 'org.mockito:mockito-core'
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'jakarta.servlet:jakarta.servlet-api'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
+    testImplementation platform("org.junit:junit-bom:${junitVersion}")
 }
 
 test {
