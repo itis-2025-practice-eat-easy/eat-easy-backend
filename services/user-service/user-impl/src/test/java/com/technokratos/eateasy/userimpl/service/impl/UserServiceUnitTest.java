@@ -79,7 +79,7 @@ class UserServiceUnitTest {
         when(userRepository.findAll()).thenReturn(List.of(userEntity));
         when(userMapper.toDto(userEntity)).thenReturn(userResponseDto);
 
-        List<UserResponseDto> result = userService.getAllUsers();
+        List<UserResponseDto> result = userService.getAll();
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -91,7 +91,7 @@ class UserServiceUnitTest {
         when(userRepository.findById(userEntity.getId())).thenReturn(Optional.of(userEntity));
         when(userMapper.toDto(userEntity)).thenReturn(userResponseDto);
 
-        UserResponseDto result = userService.getUserById(userEntity.getId());
+        UserResponseDto result = userService.getById(userEntity.getId());
 
         assertNotNull(result);
         assertEquals(userResponseDto, result);
@@ -102,7 +102,7 @@ class UserServiceUnitTest {
         UUID nonExistentId = UUID.randomUUID();
         when(userRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> userService.getUserById(nonExistentId));
+        assertThrows(UserNotFoundException.class, () -> userService.getById(nonExistentId));
     }
 
     @Test
@@ -113,7 +113,7 @@ class UserServiceUnitTest {
         when(userRepository.save(userEntity)).thenReturn(userEntity);
         when(userMapper.toDto(userEntity)).thenReturn(userResponseDto);
 
-        UserResponseDto result = userService.createUser(userRequestDto);
+        UserResponseDto result = userService.create(userRequestDto);
 
         assertNotNull(result);
         assertEquals(userResponseDto, result);
@@ -123,7 +123,7 @@ class UserServiceUnitTest {
     void createUserUsernameExceptionTest() {
         when(userRepository.existsByUsername(userRequestDto.getUsername())).thenReturn(true);
 
-        assertThrows(UserAlreadyExistsException.class, () -> userService.createUser(userRequestDto));
+        assertThrows(UserAlreadyExistsException.class, () -> userService.create(userRequestDto));
     }
 
     @Test
@@ -131,7 +131,7 @@ class UserServiceUnitTest {
         when(userRepository.existsByUsername(userRequestDto.getUsername())).thenReturn(false);
         when(userRepository.existsByEmail(userRequestDto.getEmail())).thenReturn(true);
 
-        assertThrows(UserAlreadyExistsException.class, () -> userService.createUser(userRequestDto));
+        assertThrows(UserAlreadyExistsException.class, () -> userService.create(userRequestDto));
     }
 
 
@@ -140,7 +140,7 @@ class UserServiceUnitTest {
         UUID nonExistentId = UUID.randomUUID();
         when(userRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> userService.updateUser(nonExistentId, userRequestDto));
+        assertThrows(UserNotFoundException.class, () -> userService.update(nonExistentId, userRequestDto));
     }
 
     @Test
@@ -151,7 +151,7 @@ class UserServiceUnitTest {
         when(userRepository.existsByUsername("not_rbrmnv")).thenReturn(true);
 
         assertThrows(UserAlreadyExistsException.class,
-                () -> userService.updateUser(userEntity.getId(), userRequestDto));
+                () -> userService.update(userEntity.getId(), userRequestDto));
     }
 
 
@@ -159,7 +159,7 @@ class UserServiceUnitTest {
     void deleteUserTest() {
         when(userRepository.existsById(userEntity.getId())).thenReturn(true);
 
-        userService.deleteUser(userEntity.getId());
+        userService.delete(userEntity.getId());
 
         verify(userRepository, times(1)).deleteById(userEntity.getId());
     }
@@ -169,6 +169,6 @@ class UserServiceUnitTest {
         UUID nonExistentId = UUID.randomUUID();
         when(userRepository.existsById(nonExistentId)).thenReturn(false);
 
-        assertThrows(UserNotFoundException.class, () -> userService.deleteUser(nonExistentId));
+        assertThrows(UserNotFoundException.class, () -> userService.delete(nonExistentId));
     }
 }

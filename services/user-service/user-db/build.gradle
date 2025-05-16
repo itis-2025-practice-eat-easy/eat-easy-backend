@@ -22,11 +22,11 @@ liquibase {
     activities {
         main {
             classpath "$projectDir/db/changelog"
-            changelogFile 'db.changelog-master.yaml'
-            url 'jdbc:postgresql://localhost:5432/user_service_dev'
-            username 'postgres'
-            password '12345'
-            driver 'org.postgresql.Driver'
+            changelogFile project.property('db.changelogFile')
+            url project.property('db.url')
+            username project.property('db.username')
+            password project.property('db.password')
+            driver project.property('db.driver')
         }
     }
 }

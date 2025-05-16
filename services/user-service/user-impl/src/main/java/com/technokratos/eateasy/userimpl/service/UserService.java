@@ -8,15 +8,15 @@ import java.util.UUID;
 
 public interface UserService {
 
-    List<UserResponseDto> getAllUsers();
+    List<UserResponseDto> getAll();
 
-    UserResponseDto  getUserById(UUID id);
+    UserResponseDto getById(UUID id);
 
-    UserResponseDto  createUser(UserRequestDto userDto);
+    UserResponseDto create(UserRequestDto userDto);
 
-    UserResponseDto updateUser(UUID id, UserRequestDto userDto);
+    UserResponseDto update(UUID id, UserRequestDto userDto);
 
-    void deleteUser(UUID id);
+    void delete(UUID id);
 
-    UserResponseDto  getUserByEmail(String email);
+    UserResponseDto getByEmail(String email);
 }

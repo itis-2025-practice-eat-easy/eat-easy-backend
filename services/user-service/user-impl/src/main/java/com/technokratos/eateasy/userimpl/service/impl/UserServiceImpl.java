@@ -29,36 +29,36 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public List<UserResponseDto> getAllUsers() {
+    public List<UserResponseDto> getAll() {
         return userRepository.findAll().stream()
                 .map(userMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public UserResponseDto getUserById(UUID id) {
+    public UserResponseDto getById(UUID id) {
         return userRepository.findById(id)
                 .map(userMapper::toDto)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> new UserNotFoundException(String.format("User not found with id: %s!", id)));
     }
 
     @Override
-    public UserResponseDto getUserByEmail(String email) {
+    public UserResponseDto getByEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(userMapper::toDto)
-                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+                .orElseThrow(() -> new UserNotFoundException(String.format("User not found with email: %s!", email)));
     }
 
     @Transactional
     @Override
-    public UserResponseDto createUser(UserRequestDto userDto) {
+    public UserResponseDto create(UserRequestDto userDto) {
         if (userRepository.existsByUsername(userDto.getUsername())) {
-            log.warn("Username already exists: {}", userDto.getUsername());
+            log.debug("Username already exists: {}", userDto.getUsername());
             throw new UserAlreadyExistsException("Username already exists");
         }
         
         if (userRepository.existsByEmail(userDto.getEmail())) {
-            log.warn("Email already exists: {}", userDto.getEmail());
+            log.debug("Email already exists: {}", userDto.getEmail());
             throw new UserAlreadyExistsException("Email already exists");
         }
 
@@ -70,19 +70,19 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponseDto updateUser(UUID id, UserRequestDto userDto) {
+    public UserResponseDto update(UUID id, UserRequestDto userDto) {
         UserEntity existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> new UserNotFoundException(String.format("User not found with id: %s!", id)));
 
         if (!existingUser.getUsername().equals(userDto.getUsername()) && 
             userRepository.existsByUsername(userDto.getUsername())) {
-            log.warn("Username already exists: {}", userDto.getUsername());
+            log.debug("Username already exists: {}", userDto.getUsername());
             throw new UserAlreadyExistsException("Username already exists");
         }
 
         if (!existingUser.getEmail().equals(userDto.getEmail()) && 
             userRepository.existsByEmail(userDto.getEmail())) {
-            log.warn("Email already exists: {}", userDto.getEmail());
+            log.debug("Email already exists: {}", userDto.getEmail());
             throw new UserAlreadyExistsException("Email already exists");
         }
 
@@ -94,12 +94,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void deleteUser(UUID id) {
-        if (!userRepository.existsById(id)) {
-            log.warn("User not found with id: " + id);
-            throw new UserNotFoundException("User not found with id: " + id);
-        }
+    public void delete(UUID id) {
         userRepository.deleteById(id);
-        log.info("User deleted with ID: {}", id);
+        log.info(String.format("User deleted with id: %s!", id));
     }
 }

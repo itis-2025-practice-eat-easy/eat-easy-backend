@@ -1,5 +1,6 @@
 package com.technokratos.eateasy.userimpl.model;
 
+import com.technokratos.eateasy.userapi.roleenum.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,4 +31,8 @@ public class UserEntity {
     @Column(name = "last_name")
     private String lastName;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20, nullable = false)
+    @Builder.Default
+    private UserRole role = UserRole.USER;
 }

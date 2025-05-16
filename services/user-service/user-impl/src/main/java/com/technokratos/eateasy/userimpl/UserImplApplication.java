@@ -9,7 +9,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EntityScan("com.technokratos.eateasy.userimpl.model")
-@ComponentScan("com.technokratos.eateasy")
+@ComponentScan({
+        "com.technokratos.eateasy.userimpl", // Основной пакет модуля
+        "com.technokratos.eateasy.userapi"   // Если нужно явно подключить API
+})
 @EnableJpaRepositories("com.technokratos.eateasy.userimpl.repository")
 @EnableAspectJAutoProxy
 public class UserImplApplication {

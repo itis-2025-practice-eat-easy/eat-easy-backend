@@ -69,7 +69,7 @@ class UserControllerTest {
 
     @Test
     void testGetAllUsers() throws Exception {
-        when(userService.getAllUsers()).thenReturn(Collections.singletonList(userResponseDto));
+        when(userService.getAll()).thenReturn(Collections.singletonList(userResponseDto));
 
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
@@ -82,7 +82,7 @@ class UserControllerTest {
 
     @Test
     void testGetUserById() throws Exception {
-        when(userService.getUserById(USER_ID)).thenReturn(userResponseDto);
+        when(userService.getById(USER_ID)).thenReturn(userResponseDto);
 
         mockMvc.perform(get("/users/{id}", USER_ID))
                 .andExpect(status().isOk())
@@ -95,7 +95,7 @@ class UserControllerTest {
 
     @Test
     void testCreateUser() throws Exception {
-        when(userService.createUser(any(UserRequestDto.class))).thenReturn(userResponseDto);
+        when(userService.create(any(UserRequestDto.class))).thenReturn(userResponseDto);
 
         mockMvc.perform(post("/users")
                         .contentType("application/json")
@@ -109,7 +109,7 @@ class UserControllerTest {
 
     @Test
     void testGetUserByEmail() throws Exception {
-        when(userService.getUserByEmail(EMAIL)).thenReturn(userResponseDto);
+        when(userService.getByEmail(EMAIL)).thenReturn(userResponseDto);
 
         mockMvc.perform(get("/users?email=" + EMAIL))
                 .andExpect(status().isOk())
@@ -121,7 +121,7 @@ class UserControllerTest {
 
     @Test
     void testUpdateUser() throws Exception {
-        when(userService.updateUser(any(UUID.class), any(UserRequestDto.class))).thenReturn(userResponseDto);
+        when(userService.update(any(UUID.class), any(UserRequestDto.class))).thenReturn(userResponseDto);
 
         mockMvc.perform(put("/users/{id}", USER_ID)
                         .contentType("application/json")

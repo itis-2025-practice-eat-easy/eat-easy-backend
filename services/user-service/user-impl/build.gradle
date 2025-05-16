@@ -17,8 +17,11 @@ dependencies {
     testImplementation 'org.mockito:mockito-core'
     testImplementation 'org.mockito:mockito-junit-jupiter'
     testImplementation("org.testcontainers:junit-jupiter")
-    implementation 'com.h2database:h2'
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
+}
 
 
+tasks.named('test') {
+    useJUnitPlatform()
 }

@@ -3,6 +3,7 @@ package com.technokratos.eateasy.userimpl.mapper;
 
 import com.technokratos.eateasy.userapi.dto.UserRequestDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
+import com.technokratos.eateasy.userapi.roleenum.UserRole;
 import com.technokratos.eateasy.userimpl.model.UserEntity;
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +25,7 @@ public class UserMapper {
                         .email(entity.getEmail())
                         .firstName(entity.getFirstName())
                         .lastName(entity.getLastName())
+                        .role(String.valueOf(entity.getRole()))
                         .build();
     }
 
@@ -35,6 +37,7 @@ public class UserMapper {
                         .password(passwordEncoder.encode(dto.getPassword()))
                         .firstName(dto.getFirstName())
                         .lastName(dto.getLastName())
+                        .role(dto.getRole() != null ? dto.getRole() : UserRole.USER)
                         .build();
     }
 

@@ -52,4 +52,11 @@ public class UserResponseDto {
     )
     private String lastName;
 
+    @Schema(
+            description = "Role of the user",
+            example = "User",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED
+    )
+    private String role;
+
 }

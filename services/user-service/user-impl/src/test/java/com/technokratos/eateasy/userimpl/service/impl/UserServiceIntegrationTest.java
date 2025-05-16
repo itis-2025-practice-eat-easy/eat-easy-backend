@@ -44,7 +44,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void testCreateUser() {
-        UserResponseDto userResponseDto = userService.createUser(userRequestDto);
+        UserResponseDto userResponseDto = userService.create(userRequestDto);
 
         assertNotNull(userResponseDto);
         assertNotNull(userResponseDto.getId());
@@ -54,7 +54,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void testCreateUser_UsernameAlreadyExists() {
-        userService.createUser(userRequestDto);
+        userService.create(userRequestDto);
 
         UserRequestDto duplicateUser = new UserRequestDto();
         duplicateUser.setUsername(USERNAME);
@@ -62,15 +62,15 @@ public class UserServiceIntegrationTest {
         duplicateUser.setPassword(PASSWORD);
 
         assertThrows(UserAlreadyExistsException.class, () -> {
-            userService.createUser(duplicateUser);
+            userService.create(duplicateUser);
         });
     }
 
     @Test
     void testGetUserById() {
-        UserResponseDto createdUser = userService.createUser(userRequestDto);
+        UserResponseDto createdUser = userService.create(userRequestDto);
 
-        UserResponseDto foundUser = userService.getUserById(createdUser.getId());
+        UserResponseDto foundUser = userService.getById(createdUser.getId());
 
         assertNotNull(foundUser);
         assertEquals(createdUser.getId(), foundUser.getId());
@@ -78,9 +78,9 @@ public class UserServiceIntegrationTest {
 
     @Test
     void testGetUserByEmail() {
-        userService.createUser(userRequestDto);
+        userService.create(userRequestDto);
 
-        UserResponseDto foundUser = userService.getUserByEmail(EMAIL);
+        UserResponseDto foundUser = userService.getByEmail(EMAIL);
 
         assertNotNull(foundUser);
         assertEquals(EMAIL, foundUser.getEmail());
@@ -88,12 +88,12 @@ public class UserServiceIntegrationTest {
 
     @Test
     void testUpdateUser() {
-        UserResponseDto createdUser = userService.createUser(userRequestDto);
+        UserResponseDto createdUser = userService.create(userRequestDto);
 
         userRequestDto.setUsername(USERNAME + "NEW");
         userRequestDto.setEmail(EMAIL + "NEW");
 
-        UserResponseDto updatedUser = userService.updateUser(createdUser.getId(), userRequestDto);
+        UserResponseDto updatedUser = userService.update(createdUser.getId(), userRequestDto);
 
         assertNotNull(updatedUser);
         assertEquals(USERNAME + "NEW", updatedUser.getUsername());
@@ -102,19 +102,19 @@ public class UserServiceIntegrationTest {
 
     @Test
     void testDeleteUser() {
-        UserResponseDto createdUser = userService.createUser(userRequestDto);
+        UserResponseDto createdUser = userService.create(userRequestDto);
 
-        userService.deleteUser(createdUser.getId());
+        userService.delete(createdUser.getId());
 
         assertThrows(UserNotFoundException.class, () -> {
-            userService.getUserById(createdUser.getId());
+            userService.getById(createdUser.getId());
         });
     }
 
     @Test
     void testDeleteUser_UserNotFound() {
         assertThrows(UserNotFoundException.class, () -> {
-            userService.deleteUser(UUID.randomUUID());
+            userService.delete(UUID.randomUUID());
         });
     }
 }
