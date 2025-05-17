@@ -1,70 +1,21 @@
-plugins {
-    id 'org.springframework.boot' version '3.4.5' apply false
-    id 'io.spring.dependency-management' version '1.1.7' apply false
-}
-
-ext {
-    springBootVersion = '3.4.5'
-    serviceSuffix = "-service"
-    apiSuffix = "-api"
-    implSuffix = "-impl"
-    dbSuffix = "-db"
-}
-
-
 subprojects {
-    if (hasJavaSources(project)) {
-        apply plugin: 'java'
-        apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-library'
 
-        dependencies {
-            compileOnly "org.projectlombok:lombok"
-            annotationProcessor "org.projectlombok:lombok"
-        }
+    jar.archiveFileName = "${project.name}.jar"
 
-        if (!isSpringBootProject(project)) {
-            dependencyManagement {
-                imports {
-                    mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
-                }
-            }
-        }
+    ext {
+        lombokVersion = '1.18.22'
+    }
 
-        configurations {
-            compileOnly {
-                extendsFrom annotationProcessor
-            }
-        }
 
-        tasks.withType(Jar).configureEach {
-            archiveFileName = "${project.name}.jar"
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
         }
     }
 
-    if (isSpringBootProject(project)) {
-        apply plugin: 'org.springframework.boot'
+    dependencies {
+        compileOnly "org.projectlombok:lombok:${lombokVersion}"
+        annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     }
-}
-
-
-/**
- * Checks if the given project contains Java source files.
- *
- * @param p the project to check
- * @return true if the project has a src/main/java directory, false otherwise
- */
-def hasJavaSources(Project p) {
-    return file("${p.projectDir}/src/main/java").exists()
-}
-
-/**
- * Determines if the given project is a Spring Boot project.
- * A project is considered a Spring Boot project if it has Java sources
- * and its name ends with either the serviceSuffix or implSuffix.
- *
- * @param p the project to check
- * @return true if the project is a Spring Boot project, false otherwise
- */
-def isSpringBootProject(Project p) {
-    return hasJavaSources(p) && (p.name.endsWith(serviceSuffix) || p.name.endsWith(implSuffix))
 }
