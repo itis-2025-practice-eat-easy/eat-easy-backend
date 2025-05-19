@@ -2,8 +2,10 @@ package com.technokratos.eateasy.userimpl.service;
 
 import com.technokratos.eateasy.userapi.dto.UserRequestDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
+import com.technokratos.eateasy.userimpl.model.UserEntity;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface UserService {
@@ -19,4 +21,6 @@ public interface UserService {
     void delete(UUID id);
 
     UserResponseDto getByEmail(String email);
+
+    Optional<UserEntity> getEntityByEmail(String email);
 }

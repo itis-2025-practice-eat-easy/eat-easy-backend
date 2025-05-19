@@ -2,6 +2,7 @@ package com.technokratos.eateasy.userapi.api;
 
 import com.technokratos.eateasy.userapi.dto.UserRequestDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
+import com.technokratos.eateasy.userapi.dto.UserWithHashPasswordResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -64,7 +65,7 @@ public interface UserApi {
     @GetMapping(params = "email")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    UserResponseDto getUserByEmail(
+    UserWithHashPasswordResponseDto getUserByEmail(
             @Parameter(description = "User email", required = true, example = "user@example.com", in = ParameterIn.QUERY)
             @RequestParam @NotBlank @Email String email);
 

@@ -3,6 +3,7 @@ package com.technokratos.eateasy.userimpl.controller;
 import com.technokratos.eateasy.userapi.api.UserApi;
 import com.technokratos.eateasy.userapi.dto.UserRequestDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
+import com.technokratos.eateasy.userapi.dto.UserWithHashPasswordResponseDto;
 import com.technokratos.eateasy.userimpl.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +38,12 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public UserResponseDto getUserByEmail(String email) {
+    public UserWithHashPasswordResponseDto getUserByEmail(String email) {
         log.info("Received request to get user by email: {}", email);
-        return service.getByEmail(email);
+        return new UserWithHashPasswordResponseDto(
+                service.getByEmail(email),
+                service.getEntityByEmail(email).get().getPassword()
+        );
     }
 
     @Override
