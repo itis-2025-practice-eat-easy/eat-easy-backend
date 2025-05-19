@@ -154,21 +154,12 @@ class UserServiceUnitTest {
                 () -> userService.update(userEntity.getId(), userRequestDto));
     }
 
-
-    @Test
-    void deleteUserTest() {
-        when(userRepository.existsById(userEntity.getId())).thenReturn(true);
-
-        userService.delete(userEntity.getId());
-
-        verify(userRepository, times(1)).deleteById(userEntity.getId());
-    }
-
     @Test
     void deleteUserExceptionTest() {
-        UUID nonExistentId = UUID.randomUUID();
-        when(userRepository.existsById(nonExistentId)).thenReturn(false);
+        UUID id = UUID.randomUUID();
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> userService.delete(nonExistentId));
+        assertThrows(UserNotFoundException.class, () -> userService.delete(id));
+        verify(userRepository, never()).deleteById(any());
     }
 }

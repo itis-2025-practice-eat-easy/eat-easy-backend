@@ -1,5 +1,7 @@
 package com.technokratos.eateasy.userapi.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.technokratos.eateasy.userapi.roleenum.UserRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +22,7 @@ public class UserResponseDto {
             example = "123e4567-e89b-12d3-a456-426614174000",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
+    @JsonProperty("id")
     private UUID id;
 
     @Schema(
@@ -29,6 +32,7 @@ public class UserResponseDto {
             minLength = 3,
             maxLength = 50
     )
+    @JsonProperty("username")
     private String username;
 
     @Schema(
@@ -36,6 +40,7 @@ public class UserResponseDto {
             example = "john.doe@example.com",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
+    @JsonProperty("email")
     private String email;
 
     @Schema(
@@ -43,6 +48,7 @@ public class UserResponseDto {
             example = "John",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
+    @JsonProperty("first_name")
     private String firstName;
 
     @Schema(
@@ -50,6 +56,7 @@ public class UserResponseDto {
             example = "Doe",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
+    @JsonProperty("last_name")
     private String lastName;
 
     @Schema(
@@ -57,6 +64,8 @@ public class UserResponseDto {
             example = "User",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
-    private String role;
+
+    @JsonProperty("role")
+    private UserRole role;
 
 }

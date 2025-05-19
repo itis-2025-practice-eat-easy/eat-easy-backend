@@ -25,7 +25,7 @@ public class UserMapper {
                         .email(entity.getEmail())
                         .firstName(entity.getFirstName())
                         .lastName(entity.getLastName())
-                        .role(String.valueOf(entity.getRole()))
+                        .role(entity.getRole())
                         .build();
     }
 
@@ -57,6 +57,9 @@ public class UserMapper {
         }
         if (dto.getLastName() != null) {
             entity.setLastName(dto.getLastName());
+        }
+        if (dto.getRole() != null){
+            entity.setRole(dto.getRole());
         }
     }
 }
