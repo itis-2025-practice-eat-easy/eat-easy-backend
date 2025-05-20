@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:14:///eateasy-db
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    username: postgres
+    password: 12345
+    hikari:
+      maximum-pool-size: 2
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true

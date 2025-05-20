@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - include:
+      file: v1.0/v1.0-create_table_users.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: v1.0/v1.1-drop_column_created_at.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: v1.0/v1.2-create_role_column.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: v1.0/v1.3-recreate_role_column.yaml
+      relativeToChangelogFile: true
