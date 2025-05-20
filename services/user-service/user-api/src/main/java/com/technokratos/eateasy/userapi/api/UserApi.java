@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Tag(name = "User Management", description = "API for managing users")
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 public interface UserApi {
 
     @Operation(summary = "Get all users", description = "Returns a list of all registered users")
