@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: robert
+      changes:
+        - sql:
+            sql: CREATE TYPE user_role AS ENUM ('USER', 'ADMIN', 'COURIER', 'STOREKEEPER');
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: role
+                  type: user_role
+                  constraints:
+                    nullable: false
+                  defaultValue: 'USER'
