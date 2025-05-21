@@ -1,5 +1,6 @@
 package com.technokratos.eateasy.jwtauthenticationstarter.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
@@ -23,6 +24,7 @@ public class FingerprintRequest {
      */
     private final String fingerprint;
 
+    @JsonProperty
     public String fingerprint() {
         return fingerprint;
     }

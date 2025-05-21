@@ -1,5 +1,6 @@
 package com.technokratos.eateasy.jwtauthenticationstarter.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
@@ -20,6 +21,7 @@ public class RefreshRequest extends FingerprintRequest{
         this.refreshToken = refreshToken;
     }
 
+    @JsonProperty
     public String refreshToken() {
         return refreshToken;
     }
