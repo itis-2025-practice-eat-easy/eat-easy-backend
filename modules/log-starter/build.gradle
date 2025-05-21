@@ -4,23 +4,14 @@ plugins {
 	id 'maven-publish'
 }
 
-ext {
-	springBootVersion = '3.4.5'
-	lombokVersion = '1.18.30'
-}
-
 dependencies {
-	implementation "org.springframework.boot:spring-boot-starter-aop:${springBootVersion}"
-	implementation "org.springframework.boot:spring-boot-autoconfigure:${springBootVersion}"
+	implementation "org.springframework.boot:spring-boot-starter-aop"
+	implementation "org.springframework.boot:spring-boot-autoconfigure"
 	implementation "org.springframework:spring-web"
-
-
-	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"
-
-	compileOnly "org.projectlombok:lombok:${lombokVersion}"
-	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-
-	testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+	compileOnly "org.projectlombok:lombok"
+	annotationProcessor "org.projectlombok:lombok"
+	testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
 publishing {
