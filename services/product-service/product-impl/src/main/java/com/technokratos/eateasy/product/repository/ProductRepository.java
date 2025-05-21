@@ -1,110 +1,67 @@
 package com.technokratos.eateasy.product.repository;
 
-
-
 import com.technokratos.eateasy.product.entity.Product;
 import com.technokratos.eateasy.product.util.QueryProvider;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
 public class ProductRepository {
 
-    private final DataSource dataSource;
+    private final JdbcTemplate jdbcTemplate;
     private final QueryProvider queryProvider;
 
+    private final RowMapper<Product> productRowMapper = (rs, rowNum) -> Product.builder()
+            .id(UUID.fromString(rs.getString("id")))
+            .title(rs.getString("title"))
+            .description(rs.getString("description"))
+            .photoUrl(rs.getString("photo_url"))
+            .price(rs.getBigDecimal("price"))
+            .quantity(rs.getInt("quantity"))
+            .createdAt(rs.getTimestamp("created_at"))
+            .popularity(rs.getInt("popularity"))
+            .build();
 
-   public Optional<Product> findById(UUID productId) {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(queryProvider.getSqlQueryForProduct("find_by_id"))) {
-                statement.setObject(1, productId);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        return Optional.of(Product.builder()
-                                .id(UUID.fromString(resultSet.getString("id")))
-                                .title(resultSet.getString("title"))
-                                .description(resultSet.getString("description"))
-                                .photoUrl(resultSet.getString("photo_url"))
-                                .price(resultSet.getBigDecimal("price"))
-                                .quantity(resultSet.getInt("quantity"))
-                                .createdAt(resultSet.getTimestamp("created_at"))
-                                .popularity(resultSet.getInt("popularity"))
-                                .build());
-                    } else {
-                        return Optional.empty();
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Database error", e);
-        }
+    public Optional<Product> findById(UUID productId) {
+        String sql = queryProvider.getSqlQueryForProduct("find_by_id");
+        List<Product> results = jdbcTemplate.query(sql, productRowMapper, productId);
+        return results.stream().findFirst();
     }
 
     public Product save(Product product) {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(queryProvider.getSqlQueryForProduct("save"))) {
-                statement.setString(1, product.getTitle());
-                statement.setString(2, product.getDescription());
-                statement.setString(3, product.getPhotoUrl());
-                statement.setBigDecimal(4, product.getPrice());
-                statement.setInt(5, product.getQuantity());
-                statement.setTimestamp(6, product.getCreatedAt());
-                statement.setInt(7,product.getPopularity());
-                try(ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        return Product.builder()
-                                .id(UUID.fromString(resultSet.getString("id")))
-                                .title(resultSet.getString("title"))
-                                .description(resultSet.getString("description"))
-                                .photoUrl(resultSet.getString("photo_url"))
-                                .price(resultSet.getBigDecimal("price"))
-                                .quantity(resultSet.getInt("quantity"))
-                                .createdAt(resultSet.getTimestamp("created_at"))
-                                .popularity(resultSet.getInt("popularity"))
-                                .build();
-                    } else {
-                        return null;
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            String sqlState = e.getSQLState();
-            if (sqlState != null && (
-                    sqlState.startsWith("23") ||
-                            sqlState.equals("22001") ||
-                            sqlState.equals("22003")
-            )) {
-                throw new DataIntegrityViolationException("Data integrity violation error", e);
-            }
+        String sql = queryProvider.getSqlQueryForProduct("save");
+        try {
+            return jdbcTemplate.queryForObject(sql, productRowMapper,
+                    product.getTitle(),
+                    product.getDescription(),
+                    product.getPhotoUrl(),
+                    product.getPrice(),
+                    product.getQuantity(),
+                    product.getCreatedAt(),
+                    product.getPopularity()
+            );
+        } catch (DataIntegrityViolationException e) {
+            throw e;
+        } catch (Exception e) {
             throw new RuntimeException("Database error", e);
         }
     }
 
     public int updateQuantityIfNotNegative(UUID productId, Integer quantity) {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(queryProvider.getSqlQueryForProduct("update_quantity"))) {
-                statement.setObject(1, productId);
-                statement.setInt(2, quantity);
-                return statement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            String sqlState = e.getSQLState();
-            if (sqlState != null && (
-                    sqlState.startsWith("23") ||
-                            sqlState.equals("22001") ||
-                            sqlState.equals("22003")
-            )) {
-                throw new DataIntegrityViolationException("Data integrity violation error", e);
-            }
+        String sql = queryProvider.getSqlQueryForProduct("update_quantity");
+        try {
+            return jdbcTemplate.update(sql, productId, quantity);
+        } catch (DataIntegrityViolationException e) {
+            throw e;
+        } catch (Exception e) {
             throw new RuntimeException("Database error", e);
         }
     }
@@ -113,7 +70,6 @@ public class ProductRepository {
         if (updates.isEmpty()) return 0;
 
         Set<String> allowedColumns = Set.of("title", "description", "photo_url", "price", "category", "quantity");
-
         StringBuilder sql = new StringBuilder("UPDATE product SET ");
         List<Object> params = new ArrayList<>();
 
@@ -130,36 +86,54 @@ public class ProductRepository {
         sql.append(" WHERE id = ?");
         params.add(productId);
 
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-                for (int i = 0; i < params.size(); i++) {
-                    ps.setObject(i + 1, params.get(i));
-                }
-                return ps.executeUpdate();
-            }
-        } catch (SQLException e) {
-            String sqlState = e.getSQLState();
-            if (sqlState != null && (
-                    sqlState.startsWith("23") ||
-                            sqlState.equals("22001") ||
-                            sqlState.equals("22003")
-            )) {
-                throw new DataIntegrityViolationException("Data integrity violation error", e);
-            }
+        try {
+            return jdbcTemplate.update(sql.toString(), params.toArray());
+        } catch (DataIntegrityViolationException e) {
+            throw e;
+        } catch (Exception e) {
             throw new RuntimeException("Database error", e);
         }
     }
-
 
     public int deleteById(UUID productId) {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(queryProvider.getSqlQueryForProduct("delete_by_id"))) {
-                statement.setObject(1, productId);
-                return statement.executeUpdate();
-            }
-        } catch (SQLException e) {
+        String sql = queryProvider.getSqlQueryForProduct("delete_by_id");
+        try {
+            return jdbcTemplate.update(sql, productId);
+        } catch (Exception e) {
             throw new RuntimeException("Database error", e);
         }
     }
 
+    public List<Product> getByCategoryId(UUID categoryId,
+                                       String orderBy,
+                                       Integer page,
+                                       Integer pageSize,
+                                       BigDecimal minPrice,
+                                       BigDecimal maxPrice) {
+        StringBuilder sql = new StringBuilder(queryProvider
+                .getSqlQueryForProduct("find_by_category"));
+        List<Object> params = new ArrayList<>();
+        params.add(categoryId);
+
+        if (minPrice != null) {
+            sql.append(" AND price >= ?");
+            params.add(minPrice);
+        }
+        if (maxPrice != null) {
+            sql.append(" AND price <= ?");
+            params.add(maxPrice);
+        }
+        switch (orderBy) {
+                case "price" -> sql.append(" ORDER BY price ASC");
+                case "popularity" -> sql.append(" ORDER BY popularity DESC");
+                case "new" -> sql.append(" ORDER BY created_at DESC");
+            }
+
+        if(pageSize != null && page != null) {
+            sql.append(" LIMIT ? OFFSET ?");
+            params.add(pageSize);
+            params.add(page * pageSize);
+        }
+        return jdbcTemplate.query(sql.toString(),productRowMapper, params.toArray());
+    }
 }

@@ -13,7 +13,8 @@ import java.time.Instant;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
-    @Mapping(target = "createdAt", expression = "java(getCurrentTimestamp())")    @Mapping(target = "popularity", constant = "0")
+    @Mapping(target = "createdAt", expression = "java(getCurrentTimestamp())")
+    @Mapping(target = "popularity", constant = "0")
     Product toEntity(ProductRequest productRequest);
 
     @Mapping(target = "categories", expression = "java(new java.util.ArrayList<>())")

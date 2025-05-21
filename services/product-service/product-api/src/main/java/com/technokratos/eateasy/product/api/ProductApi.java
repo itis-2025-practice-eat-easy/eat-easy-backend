@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -29,7 +28,9 @@ public interface ProductApi {
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
     @GetMapping("/{id}")
-    ResponseEntity<ProductResponse> getById(
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    ProductResponse getById(
             @Parameter(description = "Product UUID", example = "c7e2f6b4-98b8-4f98-89b2-8295e8d25b5a", required = true)
             @PathVariable("id") UUID productId);
 
@@ -41,7 +42,8 @@ public interface ProductApi {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<ProductResponse> create(
+    @ResponseBody
+    ProductResponse create(
             @RequestBody(
                     description = "Product to create",
                     required = true,
@@ -61,12 +63,14 @@ public interface ProductApi {
 
     @Operation(summary = "Update the quantity of a product (add or subtract the provided value)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Product quantity updated successfully"),
+            @ApiResponse(responseCode = "204", description = "Product quantity updated successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid quantity data"),
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
     @PatchMapping("/{id}/count")
-    ResponseEntity<Void> updateQuantity(
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    void updateQuantity(
             @Parameter(description = "Product UUID", example = "c7e2f6b4-98b8-4f98-89b2-8295e8d25b5a", required = true)
             @PathVariable("id") UUID productId,
 
@@ -79,12 +83,14 @@ public interface ProductApi {
 
     @Operation(summary = "Update a product's details (partial update)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Product updated successfully"),
+            @ApiResponse(responseCode = "204", description = "Product updated successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid product data"),
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
     @PatchMapping("/{id}")
-    ResponseEntity<Void> update(
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    void update(
             @Parameter(description = "Product UUID", example = "c7e2f6b4-98b8-4f98-89b2-8295e8d25b5a", required = true)
             @PathVariable("id") UUID productId,
 
@@ -107,7 +113,9 @@ public interface ProductApi {
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    void delete(
             @Parameter(description = "Product UUID", example = "c7e2f6b4-98b8-4f98-89b2-8295e8d25b5a", required = true)
             @PathVariable("id") UUID productId);
 }

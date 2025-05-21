@@ -2,12 +2,14 @@ package com.technokratos.eateasy.product.dto.product;
 
 import com.technokratos.eateasy.product.dto.category.CategoryResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Builder
 public record ProductResponse(
         @Schema(description = "Unique product identifier", example = "c7e2f6b4-98b8-4f98-89b2-8295e8d25b5a")
         UUID id,
@@ -31,5 +33,8 @@ public record ProductResponse(
         Integer quantity,
 
         @Schema(description = "Product creation date", example = "2025-05-08T12:00:00")
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+
+        @Schema(description = "Product popularity", example = "5")
+        Integer popularity
 ) {}

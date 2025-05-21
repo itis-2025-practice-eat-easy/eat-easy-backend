@@ -26,41 +26,32 @@ public class ProductController implements ProductApi {
     private final ProductCategoryFacade productCategoryFacade;
 
     @Override
-    public ResponseEntity<ProductResponse> getById(UUID id) {
+    public ProductResponse getById(UUID id) {
         log.info("Received request to get product by id: {}", id);
-        return ResponseEntity.ok(productCategoryFacade.getById(id));
+        return productCategoryFacade.getById(id);
     }
 
     @Override
-    public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest product) {
+    public ProductResponse create(@Valid @RequestBody ProductRequest product) {
         log.info("Received request to create product: {}", product);
-        ProductResponse savedProduct = productCategoryFacade.create(product);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(savedProduct.id())
-                .toUri();
-        return ResponseEntity.created(location).body(savedProduct);
+        return productCategoryFacade.create(product);
     }
 
     @Override
-    public ResponseEntity<Void> updateQuantity(UUID id, @Valid @RequestBody Integer quantity) {
+    public void updateQuantity(UUID id, @Valid @RequestBody Integer quantity) {
         log.info("Received request to update product quantity: {},  with id: {}", quantity, id);
         productService.updateQuantity(id, quantity);
-        return ResponseEntity.noContent().build();
     }
 
     @Override
-    public ResponseEntity<Void> update(UUID id, @RequestBody ProductRequest product) {
+    public void update(UUID id, @RequestBody ProductRequest product) {
         log.info("Received request to update product with id: {}, data: {}", id, product);
         productCategoryFacade.update(id, product);
-        return ResponseEntity.noContent().build();
     }
 
     @Override
-    public ResponseEntity<Void> delete(UUID id) {
+    public void delete(UUID id) {
         log.info("Received request to delete product with id: {}", id);
         productService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 }

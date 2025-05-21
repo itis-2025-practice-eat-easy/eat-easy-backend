@@ -3,7 +3,6 @@ package com.technokratos.eateasy.product.service;
 
 import com.technokratos.eateasy.product.dto.category.CategoryRequest;
 import com.technokratos.eateasy.product.dto.category.CategoryResponse;
-import com.technokratos.eateasy.product.dto.product.ProductResponse;
 import com.technokratos.eateasy.product.entity.Category;
 import com.technokratos.eateasy.product.exception.CategoryAlreadyExistsException;
 import com.technokratos.eateasy.product.exception.CategoryNotFoundException;
@@ -12,7 +11,6 @@ import com.technokratos.eateasy.product.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,20 +51,21 @@ public class CategoryService {
         }
     }
 
-    public ResponseEntity<List<ProductResponse>> getProductsByCategory() {
-        return null;
-    }
 
     public List<CategoryResponse> getCategoriesByProductId(UUID productId) {
-        List<Category> categories = categoryRepository.getCategoriesByProductId(productId)
-                .orElseThrow(() ->
-                        new CategoryNotFoundException("Category not found for product with id: %s"
-                                .formatted(productId)));
+        List<Category> categories = categoryRepository.getCategoriesByProductId(productId);
         return categories.stream()
                     .map(category -> new CategoryResponse(category.getId(), category.getTitle()))
                     .collect(Collectors.toList());
     }
 
     public void updateCategoriesByProductId(List<UUID> categories, UUID productId) {
+        categoryRepository.updateCategoriesByProductId(categories,productId);
+    }
+
+    public CategoryResponse getById(UUID id) {
+        return categoryRepository.findById(id).map(categoryMapper::toResponse)
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id %s"
+                .formatted(id)));
     }
 }

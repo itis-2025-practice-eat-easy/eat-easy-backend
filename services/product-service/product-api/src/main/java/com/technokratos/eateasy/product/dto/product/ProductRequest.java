@@ -2,11 +2,13 @@ package com.technokratos.eateasy.product.dto.product;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+@Builder
 public record ProductRequest(
         @NotBlank(message = "Product title cannot be empty")
         @Size(max = 255, message = "Product title is longer than 255 characters")
@@ -32,7 +34,7 @@ public record ProductRequest(
 
         @NotEmpty(message = "Product category cannot be empty")
         @Size(max = 255, message = "Product category is longer than 255 characters")
-        @Schema(description = "Product category", example = "Fruits")
+        @Schema(description = "Product categories", example = "c7e2f6b4-98b8-4f98-89b2-8295e8d25b5a")
         List<UUID> categories,
 
         @NotNull(message = "Product quantity cannot be null")

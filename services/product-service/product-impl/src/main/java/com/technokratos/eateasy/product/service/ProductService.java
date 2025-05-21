@@ -15,9 +15,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,12 +31,12 @@ public class ProductService {
 
     private final ProductMapper productMapper;
 
-    public ProductResponse getById(UUID productId) {
-        return productRepository.findById(productId)
+    public ProductResponse getById(UUID id) {
+        return productRepository.findById(id)
                 .map(productMapper::toResponse)
                 .orElseThrow(() ->
                         new ProductNotFoundException("Product not found with id %s"
-                                .formatted(productId)));
+                                .formatted(id)));
     }
 
     @Transactional
@@ -55,7 +58,7 @@ public class ProductService {
            int affectedRows = productRepository.updateQuantityIfNotNegative(id, quantity);
             log.info("Updated product with id: {}", id);
             if (affectedRows == 0) {
-                log.warn("Product with id: {} not found", id);
+                log.info("Product with id: {} not found", id);
                 throw new ProductNotFoundException("Product not found with id %s"
                         .formatted(id));
             }
@@ -72,7 +75,7 @@ public class ProductService {
                     .toEntity(product)));
             log.info("Updated product with id: {}", id);
             if(affectedRows == 0) {
-                log.warn("Product with id: {} not found", id);
+                log.info("Product with id: {} not found", id);
                 throw new ProductNotFoundException("Product not found with id %s"
                         .formatted(id));
             }
@@ -86,7 +89,7 @@ public class ProductService {
     public void delete(UUID id) {
         log.info("Delete product with id: {}", id);
         if (productRepository.deleteById(id) == 0) {
-            log.warn("Product with id: {} not found", id);
+            log.info("Product with id: {} not found", id);
             throw new ProductNotFoundException("Product not found with id %s"
                     .formatted(id));
         }
@@ -100,5 +103,18 @@ public class ProductService {
         if (product.getPrice() != null) updates.put("price", product.getPrice());
         if (product.getQuantity() != null) updates.put("quantity", product.getQuantity());
         return updates;
+    }
+
+    public List<ProductResponse> getByCategoryId(UUID id,
+                                               String order_by,
+                                               Integer page,
+                                               Integer page_size,
+                                               BigDecimal max_price,
+                                               BigDecimal min_price) {
+
+       return productRepository.getByCategoryId(id, order_by, page, page_size, max_price, min_price)
+                .stream()
+                .map(productMapper::toResponse)
+                .collect(Collectors.toList());
     }
 }

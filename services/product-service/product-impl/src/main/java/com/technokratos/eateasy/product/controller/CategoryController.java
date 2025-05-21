@@ -4,18 +4,16 @@ import com.technokratos.eateasy.product.api.CategoryApi;
 import com.technokratos.eateasy.product.dto.category.CategoryRequest;
 import com.technokratos.eateasy.product.dto.category.CategoryResponse;
 import com.technokratos.eateasy.product.dto.product.ProductResponse;
-import com.technokratos.eateasy.product.entity.Category;
 import com.technokratos.eateasy.product.service.CategoryService;
+import com.technokratos.eateasy.product.service.ProductCategoryFacade;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,32 +21,29 @@ import java.util.List;
 public class CategoryController implements CategoryApi {
 
     private final CategoryService categoryService;
+    private final ProductCategoryFacade productCategoryFacade;
 
     @Override
-    public ResponseEntity<List<CategoryResponse>> getAll() {
+    public List<CategoryResponse> getAll() {
         log.info("Received request to get all categories");
-        return ResponseEntity.ok(categoryService.getAll());
+        return categoryService.getAll();
     }
 
     @Override
-    public ResponseEntity<CategoryResponse> create(@Valid @RequestBody CategoryRequest category) {
+    public CategoryResponse create(@Valid @RequestBody CategoryRequest category) {
         log.info("Received request to create a category {}", category);
-        CategoryResponse savedCategory = categoryService.create(category);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(savedCategory.id())
-                .toUri();
-        return ResponseEntity.created(location).body(savedCategory);
+        return categoryService.create(category);
     }
 
     @Override
-    public ResponseEntity<List<ProductResponse>> getProductsByCategory(Long id,
-                                                                       String order_by,
-                                                                       String page,
-                                                                       String page_size,
-                                                                       String max_price,
-                                                                       String min_price) {
-        return categoryService.getProductsByCategory();
+    public List<ProductResponse> getProductsByCategory(
+            UUID id,
+            String order_by,
+            Integer page,
+            Integer page_size,
+            BigDecimal max_price,
+            BigDecimal min_price
+    ){
+        return productCategoryFacade.getProductsByCategoryId(id, order_by, page, page_size, max_price, min_price);
     }
 }

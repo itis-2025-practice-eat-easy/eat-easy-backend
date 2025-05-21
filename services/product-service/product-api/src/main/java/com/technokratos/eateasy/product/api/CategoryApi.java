@@ -12,10 +12,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
+import jakarta.validation.constraints.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "Categories", description = "Category management (creating and retrieving product categories)")
 @RequestMapping("api/v1/categories")
@@ -25,10 +29,11 @@ public interface CategoryApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Categories retrieved successfully",
                     content = @Content(schema = @Schema(implementation = CategoryResponse.class))),
-            @ApiResponse(responseCode = "404", description = "No categories found")
     })
     @GetMapping
-    ResponseEntity<List<CategoryResponse>> getAll();
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    List<CategoryResponse> getAll();
 
     @Operation(summary = "Create a new category")
     @ApiResponses(value = {
@@ -36,8 +41,9 @@ public interface CategoryApi {
             @ApiResponse(responseCode = "400", description = "Invalid category data")
     })
     @PostMapping
-    ResponseEntity<CategoryResponse> create(
-
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    CategoryResponse create(
             @RequestBody(
                     description = "Category to create",
                     required = true,
@@ -57,23 +63,28 @@ public interface CategoryApi {
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @GetMapping("/{id}/products")
-    ResponseEntity<List<ProductResponse>> getProductsByCategory(
-            @Parameter(description = "Category ID", example = "1", required = true)
-            @PathVariable Long id,
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    List<ProductResponse> getProductsByCategory(
+            @Parameter(description = "Category ID", example = "f0272540-93bd-4a9d-8ca7-c55a4136585a", required = true)
+            @PathVariable("id") UUID id,
 
-            @Parameter(description = "Field by which products should be ordered", example = "price")
-            @RequestParam(required = false) String order_by,
+            @RequestParam(name = "order_by", required = false, defaultValue = "popularity")
+            //@Pattern(regexp = "^(new|price|popularity)$", message = "order_by must be one of: new, price, popularity")
+            String order_by,
 
-            @Parameter(description = "Page number", example = "1")
-            @RequestParam(required = false) String page,
+            @RequestParam(name = "page", required = false)
+            Integer page,
 
-            @Parameter(description = "Number of products per page", example = "10")
-            @RequestParam(required = false) String page_size,
+            @RequestParam(name = "page_size", required = false)
+            Integer page_size,
 
-            @Parameter(description = "Max price for product filter", example = "100.0")
-            @RequestParam(required = false) String max_price,
+            @RequestParam(name = "max_price", required = false)
+            BigDecimal max_price,
 
-            @Parameter(description = "Min price for product filter", example = "1.0")
-            @RequestParam(required = false) String min_price
+            @RequestParam(name = "min_price", required = false)
+            BigDecimal min_price
+
     );
+
 }

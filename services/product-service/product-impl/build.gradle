@@ -22,9 +22,37 @@ dependencies {
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.testcontainers:postgresql'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    testImplementation 'org.liquibase:liquibase-core'
+
 }
 
 tasks.withType(JavaCompile) {
     options.annotationProcessorPath = configurations.annotationProcessor
     options.compilerArgs = ['-Amapstruct.defaultComponentModel=spring']
+}
+//tasks.register('copyMigrations', Copy) {
+//    from project(':services:product-service:product-db').file('db/changelog')
+//    into "${layout.buildDirectory.dir("resources/test").get()}/db/changelog"
+//}
+
+tasks.register('copyMigrations', Copy) {
+    from project(':services:product-service:product-db').file('db')
+    into "${layout.buildDirectory.dir("resources/test").get()}/db"
+}
+
+tasks.named('test') {
+    dependsOn copyMigrations
+    useJUnitPlatform()
+}
+
+configurations.configureEach {
+    resolutionStrategy {
+        force 'org.apache.commons:commons-text:1.12.0'
+    }
 }
