@@ -34,12 +34,13 @@ class JwtAccessTokenGeneratorServiceTest {
     private static final String EXTRA_CLAIM_KEY = "key";
     private static final String EXTRA_CLAIM_VALUE = "value";
     private static final Map<String, Object> EXTRA_CLAIMS = Map.of(EXTRA_CLAIM_KEY, EXTRA_CLAIM_VALUE);
+    private static final String USER_ID_CLAIM = "uid";
+    private static final String AUTHORITIES_CLAIM = "authorities";
 
     @Mock
     @Token(ACCESS)
     private JwtGeneratorService jwtGenerator;
 
-    @InjectMocks
     private JwtAccessTokenGeneratorService service;
 
     private IdentifiableUserDetails<UUID> identifiableUserDetails;
@@ -51,6 +52,11 @@ class JwtAccessTokenGeneratorServiceTest {
         userDetails = User.withUsername(USERNAME)
                 .password(PASSWORD)
                 .authorities(AUTHORITY)
+                .build();
+        service = JwtAccessTokenGeneratorService.builder()
+                .jwtGenerator(jwtGenerator)
+                .userIdClaim(USER_ID_CLAIM)
+                .authoritiesClaim(AUTHORITIES_CLAIM)
                 .build();
         when(jwtGenerator.generate(any(), any())).thenReturn(TOKEN);
     }
@@ -68,8 +74,8 @@ class JwtAccessTokenGeneratorServiceTest {
         Map<String, Object> claims = claimsCaptor.getValue();
 
         assertAll(
-                () -> assertEquals(USER_ID, claims.get(JwtAccessTokenServiceConstants.USER_ID)),
-                () -> assertEquals(List.of(AUTHORITY), claims.get(JwtAccessTokenServiceConstants.AUTHORITIES)),
+                () -> assertEquals(USER_ID, claims.get(USER_ID_CLAIM)),
+                () -> assertEquals(List.of(AUTHORITY), claims.get(AUTHORITIES_CLAIM)),
                 () -> assertEquals(EXTRA_CLAIM_VALUE, claims.get(EXTRA_CLAIM_KEY))
         );
     }
@@ -83,7 +89,7 @@ class JwtAccessTokenGeneratorServiceTest {
         service.generate(userDetails, Collections.emptyMap());
 
         verify(jwtGenerator).generate(eq(userDetails), claimsCaptor.capture());
-        assertFalse(claimsCaptor.getValue().containsKey(JwtAccessTokenServiceConstants.USER_ID));
+        assertFalse(claimsCaptor.getValue().containsKey(USER_ID_CLAIM));
     }
 
     private static class TestIdentifiableUserDetails implements IdentifiableUserDetails<UUID> {

@@ -11,8 +11,9 @@ import org.springframework.core.annotation.Order;
 @ConditionalOnProperty(prefix = "jwt", name = "mode", havingValue = "server")
 public class RequestCachingConfig {
 
+    private static final int REQUEST_CACHING_FILTER_ORDER = -106;
+
     @Bean
-    @Order(-106)
     public HttpServletRequestBodyCachingFilter httpServletRequestBodyCachingFilter() {
         return new HttpServletRequestBodyCachingFilter();
     }
@@ -22,7 +23,7 @@ public class RequestCachingConfig {
         FilterRegistrationBean<HttpServletRequestBodyCachingFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(httpServletRequestBodyCachingFilter());
         registrationBean.addUrlPatterns("/*");
-        registrationBean.setOrder(-106);
+        registrationBean.setOrder(REQUEST_CACHING_FILTER_ORDER);
         return registrationBean;
     }
 }

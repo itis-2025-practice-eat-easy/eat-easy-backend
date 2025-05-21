@@ -5,7 +5,6 @@ import com.technokratos.eateasy.jwtauthenticationstarter.security.userdetails.Ac
 import com.technokratos.eateasy.jwtauthenticationstarter.security.userdetails.AccessTokenUserDetails;
 import com.technokratos.eateasy.jwtauthenticationstarter.security.userdetails.IdentifiableUserDetails;
 import com.technokratos.eateasy.jwtauthenticationstarter.token.access.service.AccessTokenParserService;
-import com.technokratos.eateasy.jwtauthenticationstarter.token.access.service.impl.JwtAccessTokenServiceConstants;
 import com.technokratos.eateasy.jwtauthenticationstarter.token.claimexctractor.ConfigurableClaimExtractor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +38,8 @@ class AccessTokenAuthenticationProviderTest {
     private static final String USERNAME = "user";
     private static final UUID USER_ID = UUID.randomUUID();
     private static final List<GrantedAuthority> AUTHORITIES = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    private static final String USER_ID_CLAIM = "uid";
+    private static final String AUTHORITIES_CLAIM = "authorities";
 
     @Mock
     private AccessTokenParserService tokenParser;
@@ -55,6 +56,8 @@ class AccessTokenAuthenticationProviderTest {
                 .authoritiesExtractor(authoritiesExtractor)
                 .tokenParser(tokenParser)
                 .userIdExtractor(userIdExtractor)
+                .userIdClaim(USER_ID_CLAIM)
+                .authoritiesClaim(AUTHORITIES_CLAIM)
                 .build();
     }
 
@@ -157,7 +160,7 @@ class AccessTokenAuthenticationProviderTest {
     void postConstructShouldInitializeClaimNames() {
         provider.init();
 
-        verify(authoritiesExtractor).claimName(JwtAccessTokenServiceConstants.AUTHORITIES);
-        verify(userIdExtractor).claimName(JwtAccessTokenServiceConstants.USER_ID);
+        verify(authoritiesExtractor).claimName(AUTHORITIES_CLAIM);
+        verify(userIdExtractor).claimName(USER_ID_CLAIM);
     }
 }

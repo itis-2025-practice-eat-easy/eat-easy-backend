@@ -22,7 +22,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static com.technokratos.eateasy.jwtauthenticationstarter.qualifier.Token.TokenType.REFRESH;
-import static com.technokratos.eateasy.jwtauthenticationstarter.token.refresh.service.impl.RefreshTokenServiceConstants.REFRESH_TOKEN_ID;
 
 /**
  * Refresh token validation and parsing service with fingerprint verification.
@@ -46,10 +45,11 @@ public class JwtRefreshTokenParserService implements RefreshTokenParserService {
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenRepository repository;
     private final ConfigurableClaimExtractor<? extends UUID> refreshTokenIdExtractor;
+    private final String refreshTokenIdClaim;
 
     @PostConstruct
     public void init() {
-        refreshTokenIdExtractor.claimName(REFRESH_TOKEN_ID);
+        refreshTokenIdExtractor.claimName(refreshTokenIdClaim);
     }
 
     /** {@inheritDoc} */

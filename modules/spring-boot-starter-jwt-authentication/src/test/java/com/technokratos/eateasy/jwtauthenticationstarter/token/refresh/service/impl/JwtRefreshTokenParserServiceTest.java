@@ -36,6 +36,7 @@ class JwtRefreshTokenParserServiceTest {
     private static final String FINGERPRINT_HASH = "hashed-fingerprint";
     private static final UUID TOKEN_ID = UUID.randomUUID();
     private static final UUID MISSING_TOKEN_ID = UUID.randomUUID();
+    private static final String REFRESH_TOKEN_ID_CLAIM = "rti";
 
     @Mock(strictness = Mock.Strictness.LENIENT)
     @Token(REFRESH)
@@ -74,6 +75,7 @@ class JwtRefreshTokenParserServiceTest {
                 .passwordEncoder(passwordEncoder)
                 .repository(repository)
                 .refreshTokenIdExtractor(refreshTokenIdExtractor)
+                .refreshTokenIdClaim(REFRESH_TOKEN_ID_CLAIM)
                 .build();
         tokenParser.init();
         when(jwtParser.extractUsername(VALID_TOKEN)).thenReturn(USERNAME);
@@ -99,7 +101,7 @@ class JwtRefreshTokenParserServiceTest {
     @Test
     void validateValidTokenAndFingerprintShouldSucceed() {
         assertDoesNotThrow(() -> tokenParser.validate(VALID_TOKEN, FINGERPRINT));
-        verify(refreshTokenIdExtractor).claimName(RefreshTokenServiceConstants.REFRESH_TOKEN_ID);
+        verify(refreshTokenIdExtractor).claimName(REFRESH_TOKEN_ID_CLAIM);
     }
 
     @Test

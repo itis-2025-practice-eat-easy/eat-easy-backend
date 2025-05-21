@@ -88,7 +88,7 @@ public class JwtProperties {
      */
     @Getter
     @Setter
-    public static class TokenConfig {
+    public static class TokenConfig<T extends ClaimsProperties> {
         /**
          * Token validity duration
          */
@@ -97,6 +97,8 @@ public class JwtProperties {
 
         /** Cryptographic key configuration */
         private KeyProperties key = new KeyProperties();
+
+        protected T claims;
     }
 
     /**
@@ -104,7 +106,7 @@ public class JwtProperties {
      */
     @Getter
     @Setter
-    public static class AccessTokenConfig extends TokenConfig {
+    public static class AccessTokenConfig extends TokenConfig<AccessClaimsProperties> {
         /** HTTP header name for access token */
         @NotEmpty
         private String header = "Authorization";
@@ -112,6 +114,10 @@ public class JwtProperties {
         /** Authorization scheme prefix */
         @NotEmpty
         private String prefix = "Bearer ";
+
+        public AccessTokenConfig() {
+            this.claims = new AccessClaimsProperties();
+        }
     }
 
     /**
@@ -119,12 +125,16 @@ public class JwtProperties {
      */
     @Getter
     @Setter
-    public static class RefreshTokenConfig extends TokenConfig {
+    public static class RefreshTokenConfig extends TokenConfig<RefreshClaimsProperties> {
         /** Enable cookie-based refresh token storage */
         private boolean useCookie = true;
 
         /** Cookie name for refresh token storage */
         private String cookieName = "refresh_token";
+
+        public RefreshTokenConfig() {
+            this.claims = new RefreshClaimsProperties();
+        }
     }
 
     /**
@@ -145,5 +155,26 @@ public class JwtProperties {
 
         /** Secret key resource path (symmetric algorithms) */
         private Resource secretKey;
+    }
+
+    @Getter
+    @Setter
+    public static class ClaimsProperties {
+        @NotEmpty
+        private String userId = "uid";
+    }
+
+    @Getter
+    @Setter
+    public static class AccessClaimsProperties extends ClaimsProperties {
+        @NotEmpty
+        private String authorities = "authorities";
+    }
+
+    @Getter
+    @Setter
+    public static class RefreshClaimsProperties extends ClaimsProperties {
+        @NotEmpty
+        private String refreshTokenId = "rti";
     }
 }

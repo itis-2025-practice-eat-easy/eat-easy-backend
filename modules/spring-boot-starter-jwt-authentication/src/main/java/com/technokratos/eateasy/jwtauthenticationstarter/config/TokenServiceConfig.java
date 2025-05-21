@@ -60,7 +60,11 @@ public class TokenServiceConfig {
         @Bean
         @ConditionalOnMissingBean
         public AccessTokenGeneratorService accessTokenGeneratorService() {
-            return new JwtAccessTokenGeneratorService(accessTokenGeneratorService);
+            return JwtAccessTokenGeneratorService.builder()
+                    .jwtGenerator(accessTokenGeneratorService)
+                    .userIdClaim(jwtProperties.getTokens().getAccess().getClaims().getUserId())
+                    .authoritiesClaim(jwtProperties.getTokens().getAccess().getClaims().getAuthorities())
+                    .build();
         }
 
         @ConditionalOnMissingBean
@@ -71,6 +75,8 @@ public class TokenServiceConfig {
                     .passwordEncoder(passwordEncoder)
                     .jwtGenerator(refreshTokenGeneratorService)
                     .expiration(jwtProperties.getTokens().getRefresh().getExpiration())
+                    .refreshTokenIdClaim(jwtProperties.getTokens().getRefresh().getClaims().getRefreshTokenId())
+                    .userIdClaim(jwtProperties.getTokens().getRefresh().getClaims().getUserId())
                     .build();
         }
 
@@ -82,6 +88,7 @@ public class TokenServiceConfig {
                     .passwordEncoder(passwordEncoder)
                     .repository(refreshTokenRepository)
                     .refreshTokenIdExtractor(refreshTokenIdExtractor())
+                    .refreshTokenIdClaim(jwtProperties.getTokens().getRefresh().getClaims().getRefreshTokenId())
                     .build();
         }
 

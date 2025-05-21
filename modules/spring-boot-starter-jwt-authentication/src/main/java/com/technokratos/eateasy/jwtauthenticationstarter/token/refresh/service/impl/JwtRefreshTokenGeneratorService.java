@@ -19,8 +19,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.technokratos.eateasy.jwtauthenticationstarter.qualifier.Token.TokenType.REFRESH;
-import static com.technokratos.eateasy.jwtauthenticationstarter.token.refresh.service.impl.RefreshTokenServiceConstants.REFRESH_TOKEN_ID;
-import static com.technokratos.eateasy.jwtauthenticationstarter.token.refresh.service.impl.RefreshTokenServiceConstants.USER_ID;
 
 /**
  * Refresh token generator service implementation with token persistence.
@@ -45,6 +43,9 @@ public class JwtRefreshTokenGeneratorService implements RefreshTokenGeneratorSer
     @Token(REFRESH)
     private final JwtGeneratorService jwtGenerator;
     private final Duration expiration;
+
+    private final String userIdClaim;
+    private final String refreshTokenIdClaim;
 
     /**
      * Generates and persists refresh token with security claims
@@ -93,12 +94,12 @@ public class JwtRefreshTokenGeneratorService implements RefreshTokenGeneratorSer
             return;
         }
 
-        claims.put(USER_ID, identifiable.getId());
+        claims.put(userIdClaim, identifiable.getId());
         log.debug("Add user id to refresh token claims: {}", identifiable.getId());
     }
 
     private void putRefreshTokenId(UUID tokenId, Map<String, Object> claims) {
-        claims.put(REFRESH_TOKEN_ID, tokenId);
+        claims.put(refreshTokenIdClaim, tokenId);
         log.debug("Add refresh token id to refresh token claims: {}", tokenId);
     }
 }

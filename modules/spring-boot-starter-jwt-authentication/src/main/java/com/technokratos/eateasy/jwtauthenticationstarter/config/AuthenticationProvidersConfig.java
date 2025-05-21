@@ -1,5 +1,6 @@
 package com.technokratos.eateasy.jwtauthenticationstarter.config;
 
+import com.technokratos.eateasy.jwtauthenticationstarter.properties.JwtProperties;
 import com.technokratos.eateasy.jwtauthenticationstarter.security.authenticationprovider.AccessTokenAuthenticationProvider;
 import com.technokratos.eateasy.jwtauthenticationstarter.security.authenticationprovider.RefreshTokenAuthenticationProvider;
 import com.technokratos.eateasy.jwtauthenticationstarter.token.access.service.AccessTokenParserService;
@@ -7,6 +8,7 @@ import com.technokratos.eateasy.jwtauthenticationstarter.token.claimexctractor.C
 import com.technokratos.eateasy.jwtauthenticationstarter.token.claimexctractor.impl.AuthoritiesClaimExtractor;
 import com.technokratos.eateasy.jwtauthenticationstarter.token.claimexctractor.impl.UuidClaimExtractor;
 import com.technokratos.eateasy.jwtauthenticationstarter.token.refresh.service.RefreshTokenService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -22,8 +24,11 @@ import java.io.Serializable;
 import java.util.Collection;
 
 @Configuration
+@RequiredArgsConstructor
 @ConditionalOnExpression("'${jwt.mode:off}'.equals('off') == false")
 public class AuthenticationProvidersConfig {
+
+    private final JwtProperties jwtProperties;
 
     @Bean
     @ConditionalOnMissingBean
@@ -54,6 +59,8 @@ public class AuthenticationProvidersConfig {
                 .tokenParser(parserService)
                 .userIdExtractor(userIdExtractor)
                 .authoritiesExtractor(authoritiesExtractor)
+                .authoritiesClaim(jwtProperties.getTokens().getAccess().getClaims().getAuthorities())
+                .userIdClaim(jwtProperties.getTokens().getAccess().getClaims().getUserId())
                 .build();
     }
 

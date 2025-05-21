@@ -3,11 +3,11 @@ package com.technokratos.eateasy.authenticationservice.integrationtest;
 import com.redis.testcontainers.RedisContainer;
 import com.technokratos.eateasy.jwtauthenticationstarter.dto.request.RefreshRequest;
 import com.technokratos.eateasy.jwtauthenticationstarter.dto.response.TokenResponse;
+import com.technokratos.eateasy.jwtauthenticationstarter.properties.JwtProperties;
 import com.technokratos.eateasy.jwtauthenticationstarter.qualifier.Token;
 import com.technokratos.eateasy.jwtauthenticationstarter.token.access.service.AccessTokenParserService;
 import com.technokratos.eateasy.jwtauthenticationstarter.token.refresh.model.RefreshTokenEntity;
 import com.technokratos.eateasy.jwtauthenticationstarter.token.refresh.service.RefreshTokenService;
-import com.technokratos.eateasy.jwtauthenticationstarter.token.refresh.service.impl.RefreshTokenServiceConstants;
 import com.technokratos.eateasy.jwtservice.JwtGeneratorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -80,15 +80,17 @@ public class RefreshIT {
     private @MockitoBean UserDetailsService userDetailsService;
     @Token(Token.TokenType.REFRESH)
     private @Autowired JwtGeneratorService refreshTokenGeneratorService;
-
+    private @Autowired JwtProperties jwtProperties;
 
     private String token;
+    private String refreshTokenIdClaim;
 
     @BeforeEach
     void setUp() {
+        refreshTokenIdClaim = jwtProperties.getTokens().getRefresh().getClaims().getRefreshTokenId();
         Objects.requireNonNull(redisTemplate.getConnectionFactory()).getConnection().serverCommands().flushDb();
         when(userDetailsService.loadUserByUsername(eq(LOGIN))).thenReturn(USER);
-        token = refreshTokenGeneratorService.generate(USER, Map.of(RefreshTokenServiceConstants.REFRESH_TOKEN_ID, REFRESH_TOKEN_ID));
+        token = refreshTokenGeneratorService.generate(USER, Map.of(refreshTokenIdClaim, REFRESH_TOKEN_ID));
         redisTemplate.opsForValue().set(refreshTokenKeyPrefix + REFRESH_TOKEN_ID, TOKEN_ENTITY);
     }
 

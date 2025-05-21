@@ -4,6 +4,7 @@ import com.technokratos.eateasy.jwtauthenticationstarter.qualifier.Token;
 import com.technokratos.eateasy.jwtauthenticationstarter.security.userdetails.IdentifiableUserDetails;
 import com.technokratos.eateasy.jwtauthenticationstarter.token.access.service.AccessTokenGeneratorService;
 import com.technokratos.eateasy.jwtservice.JwtGeneratorService;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
@@ -16,8 +17,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.technokratos.eateasy.jwtauthenticationstarter.qualifier.Token.TokenType.ACCESS;
-import static com.technokratos.eateasy.jwtauthenticationstarter.token.access.service.impl.JwtAccessTokenServiceConstants.AUTHORITIES;
-import static com.technokratos.eateasy.jwtauthenticationstarter.token.access.service.impl.JwtAccessTokenServiceConstants.USER_ID;
 
 /**
  * JWT access token generator implementation that enriches tokens with security context claims.
@@ -32,19 +31,22 @@ import static com.technokratos.eateasy.jwtauthenticationstarter.token.access.ser
  * @see AccessTokenGeneratorService
  */
 @Slf4j
+@Builder
 @RequiredArgsConstructor
 public class JwtAccessTokenGeneratorService implements AccessTokenGeneratorService {
 
     @Token(ACCESS)
     private final JwtGeneratorService jwtGenerator;
+    private final String userIdClaim;
+    private final String authoritiesClaim;
 
     /**
      * Generates access token with combined standard and custom claims.
      * <p>
      * Standard claims include:
      * <ul>
-     *   <li>{@value JwtAccessTokenServiceConstants#USER_ID} - if user implements {@link IdentifiableUserDetails}</li>
-     *   <li>{@value JwtAccessTokenServiceConstants#AUTHORITIES} - normalized list of authorities</li>
+     *   <li>userIdClaim - if user implements {@link IdentifiableUserDetails}</li>
+     *   <li>authoritiesClaim - normalized list of authorities</li>
      * </ul>
      *
      * @param userDetails authenticated user details
@@ -70,7 +72,7 @@ public class JwtAccessTokenGeneratorService implements AccessTokenGeneratorServi
             return;
         }
 
-        claims.put(USER_ID, identifiable.getId());
+        claims.put(userIdClaim, identifiable.getId());
         log.debug("Add user id to access token: {}", identifiable.getId());
     }
 
@@ -80,7 +82,7 @@ public class JwtAccessTokenGeneratorService implements AccessTokenGeneratorServi
                 .filter(Objects::nonNull)
                 .toList();
 
-        claims.put(AUTHORITIES, authorities);
+        claims.put(authoritiesClaim, authorities);
         log.debug("Add authorities to access token: {}", authorities);
     }
 }

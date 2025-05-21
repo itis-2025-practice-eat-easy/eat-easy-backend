@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.technokratos.eateasy.jwtauthenticationstarter.qualifier.Token.TokenType.REFRESH;
-import static com.technokratos.eateasy.jwtauthenticationstarter.token.refresh.service.impl.RefreshTokenServiceConstants.REFRESH_TOKEN_ID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -40,6 +39,8 @@ class JwtRefreshTokenGeneratorServiceTest {
     private static final Duration EXPIRATION = Duration.ofHours(1);
     private static final UUID REFRESH_TOKEN_ENTITY_ID = UUID.randomUUID();
     private static final String TOKEN = "refresh.token";
+    private static final String REFRESH_TOKEN_ID_CLAIM = "rti";
+    private static final String USER_ID_CLAIM = "uid";
 
     @Mock(strictness = Mock.Strictness.LENIENT)
     private RefreshTokenRepository repository;
@@ -70,6 +71,8 @@ class JwtRefreshTokenGeneratorServiceTest {
                 .passwordEncoder(passwordEncoder)
                 .jwtGenerator(jwtGenerator)
                 .expiration(EXPIRATION)
+                .refreshTokenIdClaim(REFRESH_TOKEN_ID_CLAIM)
+                .userIdClaim(USER_ID_CLAIM)
                 .build();
 
         when(repository.save(any())).thenReturn(REFRESH_TOKEN_ENTITY_ID);
@@ -114,8 +117,8 @@ class JwtRefreshTokenGeneratorServiceTest {
         Map<String, Object> claims = claimsCaptor.getValue();
 
         assertAll(
-                () -> assertEquals(REFRESH_TOKEN_ENTITY_ID, claims.get(REFRESH_TOKEN_ID)),
-                () -> assertEquals(USER_ID, claims.get(RefreshTokenServiceConstants.USER_ID))
+                () -> assertEquals(REFRESH_TOKEN_ENTITY_ID, claims.get(REFRESH_TOKEN_ID_CLAIM)),
+                () -> assertEquals(USER_ID, claims.get(USER_ID_CLAIM))
         );
     }
 
@@ -132,7 +135,7 @@ class JwtRefreshTokenGeneratorServiceTest {
         tokenGenerator.generate(userDetails, FINGERPRINT);
 
         verify(jwtGenerator).generate(any(), claimsCaptor.capture());
-        assertFalse(claimsCaptor.getValue().containsKey(RefreshTokenServiceConstants.USER_ID));
+        assertFalse(claimsCaptor.getValue().containsKey(USER_ID_CLAIM));
     }
 
     private static class TestIdentifiableUserDetails implements IdentifiableUserDetails<UUID> {

@@ -4,7 +4,6 @@ import com.technokratos.eateasy.jwtauthenticationstarter.security.authentication
 import com.technokratos.eateasy.jwtauthenticationstarter.security.userdetails.AccessTokenIdentifiableUserDetails;
 import com.technokratos.eateasy.jwtauthenticationstarter.security.userdetails.AccessTokenUserDetails;
 import com.technokratos.eateasy.jwtauthenticationstarter.token.access.service.AccessTokenParserService;
-import com.technokratos.eateasy.jwtauthenticationstarter.token.access.service.impl.JwtAccessTokenServiceConstants;
 import com.technokratos.eateasy.jwtauthenticationstarter.token.claimexctractor.ConfigurableClaimExtractor;
 import jakarta.annotation.PostConstruct;
 import lombok.Builder;
@@ -42,11 +41,13 @@ public class AccessTokenAuthenticationProvider implements AuthenticationProvider
     private final AccessTokenParserService tokenParser;
     private final ConfigurableClaimExtractor<? extends Collection<? extends GrantedAuthority>> authoritiesExtractor;
     private final ConfigurableClaimExtractor<? extends Serializable> userIdExtractor;
+    private final String userIdClaim;
+    private final String authoritiesClaim;
 
     @PostConstruct
     protected void init() {
-        authoritiesExtractor.claimName(JwtAccessTokenServiceConstants.AUTHORITIES);
-        userIdExtractor.claimName(JwtAccessTokenServiceConstants.USER_ID);
+        authoritiesExtractor.claimName(authoritiesClaim);
+        userIdExtractor.claimName(userIdClaim);
     }
 
     /**
