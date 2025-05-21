@@ -6,8 +6,8 @@ dependencies {
     implementation project(':modules:spring-boot-starter-jwt-authentication')
 
     testImplementation 'com.redis:testcontainers-redis'
-    testImplementation project(":modules:jwt-service-library")
     testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation project(":modules:jwt-service-library")
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -17,4 +17,50 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+tasks.register('generateRsaKeys') {
+    description = 'Generates RSA key pairs for access and refresh tokens'
+
+    def resourcesDir = layout.buildDirectory.dir('resources/test/security')
+    def keySize = 2048
+    def keyDir = resourcesDir.get().asFile
+
+    doLast {
+        keyDir.mkdirs()
+
+        logger.lifecycle("Генерация ключей для ACCESS токена...")
+        generateKeyPair(keyDir, 'access', keySize)
+        logger.lifecycle("Генерация ключей для REFRESH токена...")
+        generateKeyPair(keyDir, 'refresh', keySize)
+
+        logger.lifecycle("Все ключи успешно созданы в ${keyDir}")
+    }
+}
+
+def generateKeyPair(File keyDir, String name, int keySize) {
+    generatePublicKey(keyDir, name, keySize)
+    generatePrivateKey(keyDir, name)
+}
+
+def generatePublicKey(File keyDir, String name, int keySize) {
+    exec {
+        commandLine 'openssl', 'genpkey',
+                '-algorithm', 'RSA',
+                '-out', "${keyDir}/${name}_private.pem",
+                '-pkeyopt', "rsa_keygen_bits:${keySize}"
+    }
+}
+
+def generatePrivateKey(File keyDir, String name) {
+    exec {
+        commandLine 'openssl', 'rsa',
+                '-pubout',
+                '-in', "${keyDir}/${name}_private.pem",
+                '-out', "${keyDir}/${name}_public.pem"
+    }
+}
+
+processTestResources {
+    dependsOn generateRsaKeys
 }
