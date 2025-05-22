@@ -1,3 +1,7 @@
+plugins {
+    id 'com.technokratos.jacoco-convention'
+}
+
 subprojects {
     group = 'com.technokratos.eateasy'
     version = '1.0-SNAPSHOT'
@@ -15,5 +19,3 @@ subprojects {
         }
     }
 }
-
-
