@@ -36,10 +36,7 @@ tasks.withType(JavaCompile) {
     options.annotationProcessorPath = configurations.annotationProcessor
     options.compilerArgs = ['-Amapstruct.defaultComponentModel=spring']
 }
-//tasks.register('copyMigrations', Copy) {
-//    from project(':services:product-service:product-db').file('db/changelog')
-//    into "${layout.buildDirectory.dir("resources/test").get()}/db/changelog"
-//}
+
 
 tasks.register('copyMigrations', Copy) {
     from project(':services:product-service:product-db').file('db')

@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,25 +65,49 @@ public interface CategoryApi {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     List<ProductResponse> getProductsByCategory(
-            @Parameter(description = "Category ID", example = "f0272540-93bd-4a9d-8ca7-c55a4136585a", required = true)
-            @PathVariable("id") UUID id,
 
+            @Parameter(
+                    description = "Category ID (UUID)",
+                    example = "f0272540-93bd-4a9d-8ca7-c55a4136585a",
+                    required = true
+            )
+            @PathVariable("id")
+            UUID id,
+
+            @Parameter(
+                    description = "Sorting criteria: 'popularity', 'price', or 'new'",
+                    example = "popularity"
+            )
             @RequestParam(name = "order_by", required = false, defaultValue = "popularity")
-            //@Pattern(regexp = "^(new|price|popularity)$", message = "order_by must be one of: new, price, popularity")
-            String order_by,
+            String orderBy,
 
+            @Parameter(
+                    description = "Page number (0-based)",
+                    example = "0"
+            )
             @RequestParam(name = "page", required = false)
             Integer page,
 
+            @Parameter(
+                    description = "Number of products per page (1–100)",
+                    example = "20"
+            )
             @RequestParam(name = "page_size", required = false)
-            Integer page_size,
+            Integer pageSize,
 
+            @Parameter(
+                    description = "Maximum product price for filtering",
+                    example = "99.99"
+            )
             @RequestParam(name = "max_price", required = false)
-            BigDecimal max_price,
+            BigDecimal maxPrice,
 
+            @Parameter(
+                    description = "Minimum product price for filtering",
+                    example = "10.00"
+            )
             @RequestParam(name = "min_price", required = false)
-            BigDecimal min_price
-
+            BigDecimal minPrice
     );
 
 }

@@ -147,7 +147,6 @@ class ProductControllerIntegrationTest {
                 .title("Green Apple")
                 .price(BigDecimal.valueOf(3.99))
                 .build();
-        System.out.println(updateRequest);
 
         ResponseEntity<Void> response = restTemplate.exchange(
                 "/api/v1/products/" + productId,

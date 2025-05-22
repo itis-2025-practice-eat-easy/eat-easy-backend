@@ -2,7 +2,6 @@ package com.technokratos.eateasy.product.repository;
 
 import com.technokratos.eateasy.product.entity.Product;
 import com.technokratos.eateasy.product.util.QueryProvider;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,6 +17,8 @@ public class ProductRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final QueryProvider queryProvider;
+    private final static Set<String> allowedColumns = Set
+            .of("title", "description", "photo_url", "price", "category", "quantity");
 
     private final RowMapper<Product> productRowMapper = (rs, rowNum) -> Product.builder()
             .id(UUID.fromString(rs.getString("id")))
@@ -69,14 +70,13 @@ public class ProductRepository {
     public int update(UUID productId, Map<String, Object> updates) {
         if (updates.isEmpty()) return 0;
 
-        Set<String> allowedColumns = Set.of("title", "description", "photo_url", "price", "category", "quantity");
         StringBuilder sql = new StringBuilder("UPDATE product SET ");
         List<Object> params = new ArrayList<>();
 
         for (Map.Entry<String, Object> entry : updates.entrySet()) {
             String column = entry.getKey();
             if (!allowedColumns.contains(column)) {
-                throw new IllegalArgumentException("Invalid column name: " + column);
+                throw new IllegalArgumentException("Invalid column name: %s".formatted(column));
             }
             sql.append(column).append(" = ?, ");
             params.add(entry.getValue());

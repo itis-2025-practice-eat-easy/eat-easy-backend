@@ -2,6 +2,7 @@ package com.technokratos.eateasy.product.service;
 
 import com.technokratos.eateasy.product.dto.product.ProductRequest;
 import com.technokratos.eateasy.product.dto.product.ProductResponse;
+import com.technokratos.eateasy.product.dto.product.ProductUpdateRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,26 +40,24 @@ public class ProductCategoryFacade {
     }
 
     @Transactional
-    public void update(UUID id, ProductRequest productRequest) {
-        if (!(productRequest.categories() == null || productRequest.categories().isEmpty())){
-            categoryService.updateCategoriesByProductId(productRequest.categories(), id);
+    public void update(UUID id, ProductUpdateRequest productUpdateRequest) {
+        if (!(productUpdateRequest.categories() == null || productUpdateRequest.categories().isEmpty())){
+            categoryService.updateCategoriesByProductId(productUpdateRequest.categories(), id);
         }
         log.info("Updated product with id: {}", id);
-        productService.update(id, productRequest);
+        productService.update(id, productUpdateRequest);
     }
 
     public List<ProductResponse> getProductsByCategoryId(UUID id,
-                                                         String order_by,
+                                                         String orderBy,
                                                          Integer page,
-                                                         Integer page_size,
-                                                         BigDecimal max_price,
-                                                         BigDecimal min_price) {
+                                                         Integer pageSize,
+                                                         BigDecimal maxPrice,
+                                                         BigDecimal minPrice) {
         categoryService.getById(id); //check if category exists
         List<ProductResponse> products =  productService
-                .getByCategoryId(id, order_by, page, page_size, max_price, min_price);
-        products.forEach(product -> {
-            product.categories().addAll(categoryService.getCategoriesByProductId(product.id()));
-        });
+                .getByCategoryId(id, orderBy, page, pageSize, maxPrice, minPrice);
+        products.forEach(product -> product.categories().addAll(categoryService.getCategoriesByProductId(product.id())));
         return products;
     }
 }

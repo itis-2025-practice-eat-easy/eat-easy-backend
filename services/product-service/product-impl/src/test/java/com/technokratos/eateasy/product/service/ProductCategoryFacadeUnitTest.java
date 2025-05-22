@@ -3,6 +3,7 @@ package com.technokratos.eateasy.product.service;
 import com.technokratos.eateasy.product.dto.category.CategoryResponse;
 import com.technokratos.eateasy.product.dto.product.ProductRequest;
 import com.technokratos.eateasy.product.dto.product.ProductResponse;
+import com.technokratos.eateasy.product.dto.product.ProductUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,12 +36,22 @@ class ProductCategoryFacadeUnitTest {
     private UUID productId;
     private ProductRequest productRequest;
     private ProductResponse productResponse;
+    private ProductUpdateRequest productUpdateRequest;
 
     @BeforeEach
     void setUp() {
         productId = UUID.randomUUID();
 
         productRequest = ProductRequest.builder()
+                .title("Product name")
+                .description("Description")
+                .photoUrl("http://example.com/image.jpg")
+                .price(BigDecimal.valueOf(100))
+                .categories(List.of(UUID.randomUUID(), UUID.randomUUID()))
+                .quantity(10)
+                .build();
+
+        productUpdateRequest = ProductUpdateRequest.builder()
                 .title("Product name")
                 .description("Description")
                 .photoUrl("http://example.com/image.jpg")
@@ -100,14 +111,14 @@ class ProductCategoryFacadeUnitTest {
 
     @Test
     void update_ShouldUpdateCategoriesAndProduct_WhenCategoriesNotEmpty() {
-        facade.update(productId, productRequest);
-        verify(categoryService).updateCategoriesByProductId(productRequest.categories(), productId);
-        verify(productService).update(productId, productRequest);
+        facade.update(productId, productUpdateRequest);
+        verify(categoryService).updateCategoriesByProductId(productUpdateRequest.categories(), productId);
+        verify(productService).update(productId, productUpdateRequest);
     }
 
     @Test
     void update_ShouldOnlyUpdateProduct_WhenCategoriesEmpty() {
-        ProductRequest request = ProductRequest.builder()
+        ProductUpdateRequest request = ProductUpdateRequest.builder()
                 .title("Product")
                 .description("Desc")
                 .photoUrl("http://example.com/image.jpg")

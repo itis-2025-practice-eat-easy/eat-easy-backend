@@ -2,6 +2,7 @@ package com.technokratos.eateasy.product.api;
 
 import com.technokratos.eateasy.product.dto.product.ProductRequest;
 import com.technokratos.eateasy.product.dto.product.ProductResponse;
+import com.technokratos.eateasy.product.dto.product.ProductUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -97,7 +98,7 @@ public interface ProductApi {
             @RequestBody(
                     description = "Fields to update in the product",
                     required = true,
-                    content = @Content(schema = @Schema(implementation = ProductRequest.class),
+                    content = @Content(schema = @Schema(implementation = ProductUpdateRequest.class),
                             examples = @ExampleObject(value = """
                                 {
                                   "price": 2.49,
@@ -105,7 +106,7 @@ public interface ProductApi {
                                 }
                             """))
             )
-            ProductRequest product);
+            ProductUpdateRequest product);
 
     @Operation(summary = "Delete a product by its ID")
     @ApiResponses(value = {

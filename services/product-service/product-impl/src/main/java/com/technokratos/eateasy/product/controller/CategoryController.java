@@ -38,12 +38,12 @@ public class CategoryController implements CategoryApi {
     @Override
     public List<ProductResponse> getProductsByCategory(
             UUID id,
-            String order_by,
+            String orderBy,
             Integer page,
-            Integer page_size,
-            BigDecimal max_price,
-            BigDecimal min_price
+            Integer pageSize,
+            BigDecimal maxPrice,
+            BigDecimal minPrice
     ){
-        return productCategoryFacade.getProductsByCategoryId(id, order_by, page, page_size, max_price, min_price);
+        return productCategoryFacade.getProductsByCategoryId(id, orderBy, page, pageSize, maxPrice, minPrice);
     }
 }

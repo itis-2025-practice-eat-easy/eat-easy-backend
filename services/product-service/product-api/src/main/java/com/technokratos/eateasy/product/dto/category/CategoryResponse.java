@@ -15,5 +15,4 @@ public record CategoryResponse(
 
         @Schema(description = "Category title", example = "Beverages")
         String title
-) {
-}
+) {}

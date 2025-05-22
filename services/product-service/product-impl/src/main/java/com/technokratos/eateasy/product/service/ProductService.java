@@ -3,6 +3,7 @@ package com.technokratos.eateasy.product.service;
 
 import com.technokratos.eateasy.product.dto.product.ProductRequest;
 import com.technokratos.eateasy.product.dto.product.ProductResponse;
+import com.technokratos.eateasy.product.dto.product.ProductUpdateRequest;
 import com.technokratos.eateasy.product.entity.Product;
 import com.technokratos.eateasy.product.exception.ProductAlreadyExistsException;
 import com.technokratos.eateasy.product.exception.ProductNotFoundException;
@@ -69,7 +70,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void update(UUID id, ProductRequest product) {
+    public void update(UUID id, ProductUpdateRequest product) {
         try {
             int affectedRows = productRepository.update(id, prepareUpdatesMap(productMapper
                     .toEntity(product)));
@@ -106,13 +107,13 @@ public class ProductService {
     }
 
     public List<ProductResponse> getByCategoryId(UUID id,
-                                               String order_by,
+                                               String orderBy,
                                                Integer page,
-                                               Integer page_size,
-                                               BigDecimal max_price,
-                                               BigDecimal min_price) {
+                                               Integer pageSize,
+                                               BigDecimal maxPrice,
+                                               BigDecimal minPrice) {
 
-       return productRepository.getByCategoryId(id, order_by, page, page_size, max_price, min_price)
+       return productRepository.getByCategoryId(id, orderBy, page, pageSize, maxPrice, minPrice)
                 .stream()
                 .map(productMapper::toResponse)
                 .collect(Collectors.toList());

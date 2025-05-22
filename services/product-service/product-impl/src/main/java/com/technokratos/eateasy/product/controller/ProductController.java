@@ -4,17 +4,15 @@ package com.technokratos.eateasy.product.controller;
 import com.technokratos.eateasy.product.api.ProductApi;
 import com.technokratos.eateasy.product.dto.product.ProductRequest;
 import com.technokratos.eateasy.product.dto.product.ProductResponse;
+import com.technokratos.eateasy.product.dto.product.ProductUpdateRequest;
 import com.technokratos.eateasy.product.service.ProductCategoryFacade;
 import com.technokratos.eateasy.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.UUID;
 
 @RestController
@@ -44,7 +42,7 @@ public class ProductController implements ProductApi {
     }
 
     @Override
-    public void update(UUID id, @RequestBody ProductRequest product) {
+    public void update(UUID id, @Valid @RequestBody ProductUpdateRequest product) {
         log.info("Received request to update product with id: {}, data: {}", id, product);
         productCategoryFacade.update(id, product);
     }
