@@ -52,12 +52,12 @@ class JacocoConventionPlugin implements Plugin<Project> {
             xml.required = true
             html.required = true
         }
-        jacocoTestReport.classDirectories.setFrom(createFilteredClassDirectories(jacocoTestReport))
+        jacocoTestReport.classDirectories.setFrom(createFilteredClassDirectories(jacocoTestReport, project))
         jacocoTestReport.dependsOn(project.tasks.named('test'))
         jacocoTestReport.mustRunAfter(project.tasks.named('test'))
     }
 
-    private Object createFilteredClassDirectories(Task jacocoTestReport) {
+    private Object createFilteredClassDirectories(Task jacocoTestReport, Project project) {
         jacocoTestReport.classDirectories.files.collect {
             project.fileTree(dir: it, include: INCLUDE, exclude: EXCLUDE)
         }
@@ -67,21 +67,22 @@ class JacocoConventionPlugin implements Plugin<Project> {
         Task jacocoTestCoverageVerification = project.tasks.named('jacocoTestCoverageVerification').get()
 
         jacocoTestCoverageVerification.violationRules {
-            createCoverageRule('LINE')
-            createCoverageRule('BRANCH')
+            rule {
+                limit {
+                    counter = 'LINE'
+                    minimum = MINIMUM_COVERAGE
+                }
+            }
+            rule {
+                limit {
+                    counter = 'BRANCH'
+                    minimum = MINIMUM_COVERAGE
+                }
+            }
         }
 
         project.tasks.named('check').configure {
             dependsOn jacocoTestCoverageVerification
-        }
-    }
-
-    private void createCoverageRule(String counterName) {
-        rule {
-            limit {
-                counter = counterName
-                minimum = MINIMUM_COVERAGE
-            }
         }
     }
 
