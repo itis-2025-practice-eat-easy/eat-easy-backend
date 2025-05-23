@@ -1,3 +1,3 @@
 DELETE
 FROM product_category
-WHERE category_id = ?;
+WHERE product_id = ?;

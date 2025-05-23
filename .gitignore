@@ -44,3 +44,4 @@ bin/
 
 *.pem
 
+services/product-service/product-db/gradle.properties

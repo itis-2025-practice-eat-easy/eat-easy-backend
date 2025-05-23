@@ -15,7 +15,6 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 
     implementation 'org.projectlombok:lombok:1.18.36'
-    annotationProcessor 'org.projectlombok:lombok:1.18.36'
     annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
     implementation project(':services:product-service:product-api')
