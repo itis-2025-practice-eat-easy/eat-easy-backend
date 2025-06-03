@@ -1,8 +1,27 @@
+plugins {
+    id 'com.diffplug.spotless' version '6.25.0'
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
+
+
+
+spotless {
+    java {
+        target 'src/**/*.java'
+        encoding 'UTF-8'
+        googleJavaFormat()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
+
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'

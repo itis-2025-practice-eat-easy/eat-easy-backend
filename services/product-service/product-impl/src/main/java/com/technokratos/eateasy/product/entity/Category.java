@@ -1,8 +1,7 @@
 package com.technokratos.eateasy.product.entity;
 
-import lombok.*;
-
 import java.util.UUID;
+import lombok.*;
 
 @Getter
 @Setter
@@ -10,6 +9,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class Category {
-    private UUID id;
-    private String title;
+  private UUID id;
+  private String title;
 }

@@ -1,6 +1,5 @@
 package com.technokratos.eateasy.product;
 
-
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -9,8 +8,6 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(profiles = "test")
 public class ProductApplicationTest {
 
-    @Test
-    void contextLoads() {
-
-    }
+  @Test
+  void contextLoads() {}
 }

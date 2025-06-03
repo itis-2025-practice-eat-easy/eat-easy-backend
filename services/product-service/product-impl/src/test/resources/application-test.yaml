@@ -3,7 +3,7 @@ spring:
     url: jdbc:tc:postgresql:14:///eateasy-db
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     username: postgres
-    password: 12345
+    password: postgres
     hikari:
       maximum-pool-size: 2
   liquibase:
