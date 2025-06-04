@@ -10,7 +10,8 @@ import com.technokratos.eateasy.product.entity.Product;
 import com.technokratos.eateasy.product.exception.ProductAlreadyExistsException;
 import com.technokratos.eateasy.product.exception.ProductNotFoundException;
 import com.technokratos.eateasy.product.mapper.ProductMapper;
-import com.technokratos.eateasy.product.repository.ProductRepository;
+import com.technokratos.eateasy.product.repository.impl.ProductRepositoryImpl;
+import com.technokratos.eateasy.product.service.impl.ProductServiceImpl;
 import java.math.BigDecimal;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,11 +24,11 @@ import org.springframework.dao.DataIntegrityViolationException;
 @ExtendWith(MockitoExtension.class)
 class ProductServiceUnitTest {
 
-  @Mock private ProductRepository productRepository;
+  @Mock private ProductRepositoryImpl productRepository;
 
   @Mock private ProductMapper productMapper;
 
-  @InjectMocks private ProductService productService;
+  @InjectMocks private ProductServiceImpl productService;
 
   private Product product;
   private ProductRequest productRequest;

@@ -7,6 +7,9 @@ import com.technokratos.eateasy.product.dto.category.CategoryResponse;
 import com.technokratos.eateasy.product.dto.product.ProductRequest;
 import com.technokratos.eateasy.product.dto.product.ProductResponse;
 import com.technokratos.eateasy.product.dto.product.ProductUpdateRequest;
+import com.technokratos.eateasy.product.service.impl.CategoryServiceImpl;
+import com.technokratos.eateasy.product.service.impl.ProductCategoryFacadeImpl;
+import com.technokratos.eateasy.product.service.impl.ProductServiceImpl;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,11 +26,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class ProductCategoryFacadeUnitTest {
 
-  @Mock private ProductService productService;
+  @Mock private ProductServiceImpl productService;
 
-  @Mock private CategoryService categoryService;
+  @Mock private CategoryServiceImpl categoryService;
 
-  @InjectMocks private ProductCategoryFacade facade;
+  @InjectMocks private ProductCategoryFacadeImpl facade;
 
   private UUID productId;
   private ProductRequest productRequest;

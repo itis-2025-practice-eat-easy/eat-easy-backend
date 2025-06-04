@@ -9,7 +9,8 @@ import com.technokratos.eateasy.product.entity.Category;
 import com.technokratos.eateasy.product.exception.CategoryAlreadyExistsException;
 import com.technokratos.eateasy.product.exception.CategoryNotFoundException;
 import com.technokratos.eateasy.product.mapper.CategoryMapper;
-import com.technokratos.eateasy.product.repository.CategoryRepository;
+import com.technokratos.eateasy.product.repository.impl.CategoryRepositoryImpl;
+import com.technokratos.eateasy.product.service.impl.CategoryServiceImpl;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,11 +22,11 @@ import org.springframework.dao.DataIntegrityViolationException;
 @ExtendWith(MockitoExtension.class)
 class CategoryServiceUnitTest {
 
-  @Mock private CategoryRepository categoryRepository;
+  @Mock private CategoryRepositoryImpl categoryRepository;
 
   @Mock private CategoryMapper categoryMapper;
 
-  @InjectMocks private CategoryService categoryService;
+  @InjectMocks private CategoryServiceImpl categoryService;
 
   private Category category;
   private CategoryRequest categoryRequest;
