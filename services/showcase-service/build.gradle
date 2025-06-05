@@ -1,0 +1,51 @@
+// Переменная для указания версии BOM (Bill of Materials) Spring Cloud.
+// Используется в блоке dependencyManagement для управления версиями зависимостей Spring Cloud.
+ext {
+    springCloudVersion = "2024.0.1"
+}
+
+// Указываем версию Java, которую будет использовать Gradle при компиляции.
+// В данном случае используется Java 17.
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+group = 'com.technokratos'
+version = 'unspecified'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // База
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Зависимость для регистрации и обнаружения микросервисов через Consul.
+    implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery'
+
+    // Зависимость для использования OpenFeign — декларативного HTTP-клиента для межсервисных запросов.
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    // Зависимость для Spring Boot Actuator — мониторинг и метрики приложения (например, /actuator/health).
+    //помогает консулу понять что сервис жив, и если что сразу отвечать "сервис недоступен",
+    //а не мучаться, пытаясь дать какой-то ответ
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+}
+
+// Управление зависимостями через BOM Spring Cloud.
+// Это позволяет автоматически подставлять совместимые версии зависимостей Spring Cloud.
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+    }
+}
+
+// Принудительная установка версии библиотеки httpclient.
+configurations.all {
+    resolutionStrategy {
+        force 'org.apache.httpcomponents:httpclient:4.5.14'
+    }
+}

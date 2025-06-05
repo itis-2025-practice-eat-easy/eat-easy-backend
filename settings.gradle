@@ -6,3 +6,5 @@ include ':services:user-service:user-impl'
 include ':services:user-service:user-db'
 
 include ':modules:log-starter'
+include 'services:api-gateway-service'
+include 'services:showcase-service'

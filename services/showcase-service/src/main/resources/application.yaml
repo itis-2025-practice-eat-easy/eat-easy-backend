@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: showcase-service #задаем имя приложения, оно понадобится для консула
+
+  # регистрируем сервис в консуле
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        register: true
+        enabled: true
+        service-name: ${spring.application.name}
+        prefer-ip-address: true
+        health-check-path: /actuator/health
+        health-check-interval: 10s
+        scheme: http
+        deregister: true
+server:
+  port: 8090
