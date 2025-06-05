@@ -1,5 +1,9 @@
 rootProject.name = 'eat-easy-backend'
 
+include 'modules:jwt-service-library'
+include 'modules:spring-boot-starter-jwt-authentication'
+include 'services:authentication-service'
+
 include 'modules:common'
 include ':services:user-service:user-api'
 include ':services:user-service:user-impl'

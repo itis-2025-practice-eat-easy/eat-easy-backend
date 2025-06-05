@@ -1,0 +1,16 @@
+jwt:
+  tokens:
+    access:
+      expiration: 3m
+      key:
+        private-key: classpath:/security/access_private.pem
+        public-key: classpath:/security/access_public.pem
+    refresh:
+      expiration: 10m
+      key:
+        private-key: classpath:/security/refresh_private.pem
+        public-key: classpath:/security/refresh_public.pem
+
+logging:
+  level:
+    com.technokratos.eateasy: trace
