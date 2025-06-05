@@ -43,5 +43,3 @@ bin/
 .DS_Store
 
 *.pem
-
-services/product-service/product-db/gradle.properties
