@@ -29,7 +29,7 @@ public class RedisRefreshTokenRepository implements RefreshTokenRepository {
 
         Duration expirationTime = calculateExpirationTime(refreshTokenEntity);
 
-        if (!expirationTime.isPositive()) {
+        if (expirationTime.isNegative() || expirationTime.isZero()) {
             log.warn("Skipping save of refresh token with expired TTL: id={}", id);
             return id;
         }
