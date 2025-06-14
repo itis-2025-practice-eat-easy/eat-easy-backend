@@ -2,6 +2,10 @@ plugins {
     id 'com.technokratos.key-generation'
 }
 
+ext {
+    jacocoExclude = '**/dto/**,**/exception/**,**/*Exception.class,**/OpenApiConfig.class'
+}
+
 dependencies {
     implementation project(':modules:common')
     implementation 'org.springframework.boot:spring-boot-starter-web'

@@ -1,6 +1,11 @@
 package com.technokratos.eateasy.authenticationservice.config;
 
 import com.technokratos.eateasy.jwtauthenticationstarter.configurer.SecurityConfigurer;
+import com.technokratos.eateasy.jwtauthenticationstarter.properties.JwtProperties;
+import com.technokratos.eateasy.jwtauthenticationstarter.utils.refreshtokencookiewriter.RefreshTokenCookieWriter;
+import com.technokratos.eateasy.jwtauthenticationstarter.utils.refreshtokencookiewriter.impl.SimpleRefreshTokenCookieWriter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +18,12 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@RequiredArgsConstructor
 public class AuthenticationConfig {
+
+    private final JwtProperties jwtProperties;
+    @Value("${custom.use-https}")
+    private final boolean useHttps;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -32,6 +42,16 @@ public class AuthenticationConfig {
                 .password(passwordEncoder().encode("admin"))
                 .roles("USER")
                 .build());
+    }
+
+    @Bean
+    public RefreshTokenCookieWriter refreshTokenCookieWriter() {
+        return SimpleRefreshTokenCookieWriter.builder()
+                .cookieName(jwtProperties.getTokens().getRefresh().getCookieName())
+                .expiration(jwtProperties.getTokens().getRefresh().getExpiration())
+                .refreshUrl(jwtProperties.getRefreshUrl())
+                .isSecure(useHttps)
+                .build();
     }
 
     @Bean

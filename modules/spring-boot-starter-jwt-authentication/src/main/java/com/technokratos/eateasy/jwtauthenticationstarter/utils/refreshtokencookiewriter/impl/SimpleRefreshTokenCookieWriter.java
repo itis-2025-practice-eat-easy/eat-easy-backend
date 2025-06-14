@@ -29,6 +29,7 @@ public class SimpleRefreshTokenCookieWriter implements RefreshTokenCookieWriter 
     private final String cookieName;
     private final Duration expiration;
     private final String refreshUrl;
+    private final boolean isSecure;
 
     @Override
     public void write(String refreshToken, HttpServletResponse response) {
@@ -47,8 +48,8 @@ public class SimpleRefreshTokenCookieWriter implements RefreshTokenCookieWriter 
         refreshTokenCookie.setMaxAge(calculateMaxAge(expiration));
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setPath(refreshUrl);
-        refreshTokenCookie.setAttribute("SameSite", "Strict");
-        refreshTokenCookie.setAttribute("Partitioned", Boolean.TRUE.toString());
+        refreshTokenCookie.setAttribute("SameSite", "Lax");
+        refreshTokenCookie.setSecure(isSecure);
 
         return refreshTokenCookie;
     }

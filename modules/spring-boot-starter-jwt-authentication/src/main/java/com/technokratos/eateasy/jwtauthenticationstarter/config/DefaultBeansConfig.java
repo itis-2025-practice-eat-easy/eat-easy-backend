@@ -60,6 +60,7 @@ public class DefaultBeansConfig {
                     .cookieName(jwtProperties.getTokens().getRefresh().getCookieName())
                     .expiration(jwtProperties.getTokens().getRefresh().getExpiration())
                     .refreshUrl(jwtProperties.getRefreshUrl())
+                    .isSecure(false)
                     .build();
         }
     }

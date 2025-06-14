@@ -45,6 +45,7 @@ jwt:
         public-key: ${JWT_REFRESH_PUBLIC_KEY}
 
 custom:
+  use-https: ${CUSTOM_USE_HTTPS:false}
   repository:
     refresh-token:
       key-prefix: "refresh:"
