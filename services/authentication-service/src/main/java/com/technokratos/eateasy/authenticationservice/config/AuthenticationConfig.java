@@ -36,10 +36,17 @@ public class AuthenticationConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, SecurityConfigurer configurer) throws Exception {
-        http
-                .cors(AbstractHttpConfigurer::disable);
-
         configurer.configure(http);
+
+        http
+                .cors(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/swagger-ui.html").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/api/v1/webhooks/**").permitAll()
+                        .anyRequest().authenticated());
+
         return http.build();
     }
 }

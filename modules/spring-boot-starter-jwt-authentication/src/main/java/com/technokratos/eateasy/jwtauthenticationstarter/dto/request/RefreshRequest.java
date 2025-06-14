@@ -1,6 +1,7 @@
 package com.technokratos.eateasy.jwtauthenticationstarter.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
@@ -12,8 +13,10 @@ import lombok.extern.jackson.Jacksonized;
  */
 @SuperBuilder
 @Jacksonized
+@Schema(description = "Refresh token request containing the refresh token and device fingerprint")
 public class RefreshRequest extends FingerprintRequest{
 
+    @Schema(description = "JWT refresh token", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
     private final String refreshToken;
 
     public RefreshRequest(String fingerprint, String refreshToken) {

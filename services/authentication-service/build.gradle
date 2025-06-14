@@ -3,10 +3,12 @@ plugins {
 }
 
 dependencies {
+    implementation project(':modules:common')
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8'
     implementation project(':modules:spring-boot-starter-jwt-authentication')
 
     testImplementation 'com.redis:testcontainers-redis'

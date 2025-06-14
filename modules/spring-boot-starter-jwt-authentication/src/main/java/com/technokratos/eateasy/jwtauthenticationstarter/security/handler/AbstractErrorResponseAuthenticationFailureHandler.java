@@ -1,7 +1,7 @@
 package com.technokratos.eateasy.jwtauthenticationstarter.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.technokratos.eateasy.jwtauthenticationstarter.dto.response.ErrorResponse;
+import com.technokratos.eateasy.common.dto.response.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

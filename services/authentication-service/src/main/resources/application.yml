@@ -3,10 +3,22 @@ spring:
     name: authentication-service
   data:
     redis:
-      host: ${REDIS_HOST:localhost}
+      host: ${REDIS_HOST:127.0.0.1}
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD:eat-easy}
       timeout: 3s
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  model-and-view-allowed: true
+  override-with-generic-response: false
 
 jwt:
   mode: server
@@ -36,3 +48,7 @@ custom:
   repository:
     refresh-token:
       key-prefix: "refresh:"
+  swagger:
+    server: ${CUSTOM_SWAGGER_SERVER:http://localhost:8081}
+server:
+  port: 8081
