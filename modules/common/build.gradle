@@ -6,6 +6,7 @@ ext {
     springBootVersion = '3.4.5'
     jjwtVersion = '0.12.6'
     junitVersion = '5.10.0'
+    jacocoExclude = '**/exception/**,**/*Exception.class'
 }
 
 java {
