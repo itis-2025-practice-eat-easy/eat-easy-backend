@@ -13,6 +13,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.UUID;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,7 +69,8 @@ public interface ProductApi {
                                   "description": "Fresh organic bananas from Ecuador.",
                                   "photoUrl": "http://example.com/images/banana.jpg",
                                   "price": 1.99,
-                                  "category": "Fruits",
+                                  "categories": ["6231b5c9-0a6a-4ab3-8122-76ffc5b5d496", 
+                                  "edac0369-45d3-4f67-b8c3-ea8bc7fa03b0"],                                          
                                   "quantity": 150
                                 }
                             """)))
@@ -96,7 +100,8 @@ public interface ProductApi {
               required = true,
               content = @Content(schema = @Schema(type = "integer", example = "5")))
           @org.springframework.web.bind.annotation.RequestBody
-          @Valid
+          @Min(value = -10000)
+          @Max(value = 10000)
           Integer quantity);
 
   @Operation(summary = "Update a product's details (partial update)")
@@ -138,7 +143,7 @@ public interface ProductApi {
   @Operation(summary = "Delete a product by its ID")
   @ApiResponses(
       value = {
-        @ApiResponse(responseCode = "200", description = "Product deleted successfully"),
+        @ApiResponse(responseCode = "204", description = "Product deleted successfully"),
         @ApiResponse(responseCode = "404", description = "Product not found")
       })
   @DeleteMapping("/{id}")

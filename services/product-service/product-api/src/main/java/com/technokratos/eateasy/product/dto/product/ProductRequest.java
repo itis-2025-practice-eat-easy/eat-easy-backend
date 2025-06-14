@@ -37,7 +37,7 @@ public record ProductRequest(
         @Schema(description = "Product price in USD", example = "1.99")
         BigDecimal price,
     @NotEmpty(message = "Product category cannot be empty")
-        @Size(max = 255, message = "Product category is longer than 255 characters")
+        @Size(min = 1, max = 100, message = "Must contain between 1 and 100 categories")
         @Schema(
             description = "Product categories",
             example = "c7e2f6b4-98b8-4f98-89b2-8295e8d25b5a")

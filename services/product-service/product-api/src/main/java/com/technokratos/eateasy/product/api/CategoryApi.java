@@ -90,14 +90,16 @@ public interface CategoryApi {
               description = "Sorting criteria: 'popularity', 'price', or 'new'",
               example = "popularity")
           @RequestParam(name = "order_by", required = false, defaultValue = "popularity")
+          @Pattern(regexp = "popularity|price|new", message = "order_by must be one of: popularity, price, new")
           String orderBy,
       @Parameter(description = "Page number (0-based)", example = "0")
           @RequestParam(name = "page", required = false, defaultValue = "0")
           @Min(0)
+          @Max(1000)
           Integer page,
       @Parameter(description = "Number of products per page (1–100)", example = "20")
           @RequestParam(name = "page_size", required = false, defaultValue = "20")
-          @Min(5)
+          @Min(1)
           @Max(1000)
           Integer pageSize,
       @Parameter(description = "Maximum product price for filtering", example = "99.99")
