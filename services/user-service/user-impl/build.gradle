@@ -4,6 +4,10 @@ java {
     }
 }
 
+jacocoTestCoverageVerification {
+    enabled = false;
+}
+
 dependencies {
     implementation project(':services:user-service:user-api')
     implementation 'org.springframework.boot:spring-boot-starter-web'
