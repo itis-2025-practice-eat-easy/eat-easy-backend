@@ -1,0 +1,45 @@
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    config-url: /api-docs-config.json
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    consul:
+      host: ${CONSUL_HOST:127.0.0.1}
+      port: ${CONSUL_PORT:8500}
+      discovery:
+        enabled: true
+        register: true
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/users/**
+
+        - id: user-service-swagger
+          uri: lb://user-service
+          predicates:
+            - Path=/user-swagger/**
+
+        - id: authentication-service
+          uri: lb://authentication-service
+          predicates:
+            - Path=/api/v1/auth/**
+
+        - id: authentication-swagger
+          uri: lb://authentication-service
+          predicates:
+              - Path=/authentication-swagger/**

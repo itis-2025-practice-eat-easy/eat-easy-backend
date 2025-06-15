@@ -62,9 +62,10 @@ public class AuthenticationConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/swagger-ui.html").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/v3/api-docs/**").permitAll()
-                        .requestMatchers("/api/v1/webhooks/**").permitAll()
+                        .requestMatchers("/authentication-swagger/swagger-ui/**").permitAll()
+                        .requestMatchers("/authentication-swagger/v3/api-docs/**").permitAll()
+                        .requestMatchers("/authentication-swagger/api/v1/webhooks/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated());
 
         return http.build();
