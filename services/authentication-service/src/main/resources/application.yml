@@ -75,6 +75,12 @@ custom:
       key-prefix: "refresh:"
   swagger:
     server: ${CUSTOM_SWAGGER_SERVER:http://localhost:8081}
+  service:
+    user-service:
+      name: user-service
+  internal:
+    header: ${CUSTOM_INTERNAL_HEADER:X-Internal-Request}
+    secret-key: ${CUSTOM_INTERNAL_SECRET_KEY:secret-key}
 
 server:
   port: 8081

@@ -30,20 +30,6 @@ public class AuthenticationConfig {
         return new BCryptPasswordEncoder();
     }
 
-    /*
-     Provides an in-memory user details service with a temporary admin user.
-     <p>
-     This stub implementation will be replaced when the User Microservice becomes available.
-     </p>
-     */
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new InMemoryUserDetailsManager(User.withUsername("admin")
-                .password(passwordEncoder().encode("admin"))
-                .roles("USER")
-                .build());
-    }
-
     @Bean
     public RefreshTokenCookieWriter refreshTokenCookieWriter() {
         return SimpleRefreshTokenCookieWriter.builder()
@@ -66,6 +52,7 @@ public class AuthenticationConfig {
                         .requestMatchers("/authentication-swagger/v3/api-docs/**").permitAll()
                         .requestMatchers("/authentication-swagger/api/v1/webhooks/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/api/v1/auth/test").permitAll()
                         .anyRequest().authenticated());
 
         return http.build();
