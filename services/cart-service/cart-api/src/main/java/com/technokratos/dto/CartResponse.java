@@ -7,5 +7,6 @@ import java.util.UUID;
 public record  CartResponse (
         UUID id,
         UUID userId,
+        Boolean isBlocked,
         Map<UUID, Integer> products
 ){}

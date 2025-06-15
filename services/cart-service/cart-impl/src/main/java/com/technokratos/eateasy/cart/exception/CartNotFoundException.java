@@ -1,9 +1,12 @@
 package com.technokratos.eateasy.cart.exception;
 
-import java.io.Serializable;
+import com.technokratos.eateasy.common.exception.NotFoundServiceException;
 
-public class CartNotFoundException extends RuntimeException{
-    public CartNotFoundException(String s) {
-        super(s);
+import java.io.Serializable;
+import java.util.UUID;
+
+public class CartNotFoundException extends NotFoundServiceException {
+    public CartNotFoundException(UUID cartId) {
+        super("Cart with id " + cartId + " not found");
     }
 }

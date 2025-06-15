@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     implementation project(':services:cart-service:cart-api')
+    implementation project(':modules:common')
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     runtimeOnly 'org.postgresql:postgresql'

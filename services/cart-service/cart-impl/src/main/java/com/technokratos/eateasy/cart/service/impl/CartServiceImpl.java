@@ -1,8 +1,8 @@
 package com.technokratos.eateasy.cart.service.impl;
 
-import com.technokratos.dto.CartRequest;
 import com.technokratos.dto.CartResponse;
 import com.technokratos.dto.ProductRequest;
+import com.technokratos.eateasy.cart.entity.Cart;
 import com.technokratos.eateasy.cart.exception.CartNotFoundException;
 import com.technokratos.eateasy.cart.mapper.CartMapper;
 import com.technokratos.eateasy.cart.repository.CartRepository;
@@ -20,16 +20,14 @@ public class CartServiceImpl implements CartService {
 
     private final CartRepository repository;
     private final CartMapper mapper;
-    public CartResponse create(CartRequest cart) {
-        return mapper.toResponse(repository.save(mapper.toEntity(cart)));
-    }
 
     public CartResponse getById(UUID id) {
-        return mapper.toResponse(repository.findById(id));
+        return mapper.toResponse(repository.findById(id)
+                .orElseThrow(() -> new CartNotFoundException(id)));
     }
 
-    public void addToCart(ProductRequest request, UUID userId) {
-        repository.addToCart(request.id(), request.quantity(), userId);
+    public void addToCart(ProductRequest request, UUID cartId) {
+        repository.addToCart(request.id(), request.quantity(), cartId);
         return;
     }
 
@@ -38,4 +36,5 @@ public class CartServiceImpl implements CartService {
                 .map(mapper::toResponse)
                 .toList();
     }
+
 }
