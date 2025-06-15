@@ -9,6 +9,8 @@ services:
     environment:
       - CONSUL_HOST=consul
       - CONSUL_PORT=8500
+
+      - SPRING_PROFILES_ACTIVE=dev
     networks:
       - eat-easy-net
 
