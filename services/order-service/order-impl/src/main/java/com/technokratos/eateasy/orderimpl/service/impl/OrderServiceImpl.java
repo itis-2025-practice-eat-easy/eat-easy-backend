@@ -33,17 +33,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void create(OrderRequestDto requestDto) {
+    public OrderResponseDto create(OrderRequestDto requestDto) {
         OrderEntity order = mapper.toEntity(requestDto);
-        order.setId(UUID.randomUUID());
+        UUID orderId = UUID.randomUUID();
+        order.setId(orderId);
 
-        //TODO: через фейгин вытащить id корзины (сервиса пока что нет)
+        //TODO:через фейгин вытащить id корзины (сервиса пока что нет (есть))
 
         order.setCartId(UUID.fromString("892346c8-aaf9-4458-b92c-1a0c95d03702"));
 
+        //TODO ПРоверитьт, что заказа с такой корзиной еще нет
 
         repository.save(order);
         log.info("Order created");
+        return getById(orderId);
     }
 
 
@@ -53,14 +56,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrderResponseDto> getPagableUserOrders(int page, int pageSize, Boolean actual) {
+    public Page<OrderResponseDto> getPagableUserOrders(UUID userId, int page, int pageSize, Boolean actual) {
 
-        //TODO: нужно получить id пользователя и добавить в запрос
+        //TODO:нужно получить id пользователя и добавить в запрос
+
+//        UUID userId = UUID.fromString("7923c6c9-aaf9-4458-b92c-1a0c95d03702");
 
         Pageable pageable = PageRequest.of(page, pageSize);
         List<OrderEntity> listOfOrders = (actual)
-                ? repository.findAllActual(pageable)
-                : repository.findAll(pageable);
+                ? repository.findAllActualByUser(userId, pageable)
+                : repository.findAllByUser(userId, pageable);
 
         List<OrderResponseDto> ordersDto = listOfOrders
                 .stream()

@@ -14,7 +14,6 @@ import java.util.UUID;
 @Builder
 public class OrderEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
     @Column(name = "cart_id", nullable = false)
     private UUID cartId;

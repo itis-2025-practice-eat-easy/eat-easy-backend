@@ -15,7 +15,7 @@ public interface OrderRepository {
 
     void save(OrderEntity order);
 
-    List<OrderEntity> findAll(Pageable pageable);
+    List<OrderEntity> findAllByUser(UUID userId, Pageable pageable);
 
-    List<OrderEntity> findAllActual(Pageable pageable);
+    List<OrderEntity> findAllActualByUser(UUID userId, Pageable pageable);
 }

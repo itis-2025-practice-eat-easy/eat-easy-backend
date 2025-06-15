@@ -1,12 +1,12 @@
 package com.technokratos.eateasy.orderapi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
 public record OrderRequestDto(
-        @JsonProperty("user_id")
-        UUID userId,
-        @JsonProperty("delivery_address")
-        String deliveryAddress
+        @NotNull UUID userId,
+        @NotBlank String deliveryAddress
 ) {}

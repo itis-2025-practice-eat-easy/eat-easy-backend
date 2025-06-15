@@ -11,9 +11,9 @@ import java.util.UUID;
 public interface OrderService {
     OrderResponseDto getById(UUID id);
 
-    void create(OrderRequestDto requestDto);
+    OrderResponseDto create(OrderRequestDto requestDto);
 
     List<StatusResponseDto> getListOfAllStatus(UUID orderId);
 
-    Page<OrderResponseDto> getPagableUserOrders(int page, int pageSize, Boolean actual);
+    Page<OrderResponseDto> getPagableUserOrders(UUID id, int page, int pageSize, Boolean actual);
 }

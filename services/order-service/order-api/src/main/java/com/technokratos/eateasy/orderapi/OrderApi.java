@@ -1,5 +1,7 @@
 package com.technokratos.eateasy.orderapi;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,19 +15,18 @@ public interface OrderApi {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    OrderResponseDto getById(@PathVariable UUID id);
+    OrderResponseDto getById(@PathVariable @NotNull UUID id);
+
+
 
     @PostMapping()
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
-    void create(@RequestBody OrderRequestDto requestDto);
+    OrderResponseDto create(@RequestBody @Valid OrderRequestDto requestDto);
 
     List<StatusResponseDto> getListOfAllStatus(UUID orderId);
 
-    Page<OrderResponseDto> getPagableUserOrders(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(name = "page_size", defaultValue = "10") int pageSize,
-            @RequestParam(required = false) Boolean actual
-    );
+
+
 
 }

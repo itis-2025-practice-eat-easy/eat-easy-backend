@@ -23,8 +23,8 @@ public class OrderController implements OrderApi {
         return service.getById(id);
     }
     @Override
-    public void create(OrderRequestDto requestDto) {
-        service.create(requestDto);
+    public OrderResponseDto create(OrderRequestDto requestDto) {
+        return service.create(requestDto);
     }
     @Override
     public List<StatusResponseDto> getListOfAllStatus(UUID orderId) {
@@ -32,12 +32,6 @@ public class OrderController implements OrderApi {
     }
 
 
-
-
-    @Override
-    public Page<OrderResponseDto> getPagableUserOrders(int page, int pageSize, Boolean actual) {
-        return service.getPagableUserOrders(page,pageSize,actual);
-    }
 
 
     //TODO: метод смены статуса (аргументы - id заказа, новый статус)

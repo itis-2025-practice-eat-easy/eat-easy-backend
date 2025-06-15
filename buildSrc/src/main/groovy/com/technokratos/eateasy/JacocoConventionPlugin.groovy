@@ -18,7 +18,7 @@ class JacocoConventionPlugin implements Plugin<Project> {
             "**/*.class"
     ]
 
-    private static final Float MINIMUM_COVERAGE = 0.0
+    private static final Float MINIMUM_COVERAGE = 0.5
 
     @Override
     void apply(Project rootProject) {

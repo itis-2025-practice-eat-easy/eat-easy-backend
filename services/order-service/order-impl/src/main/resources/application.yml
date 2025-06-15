@@ -29,7 +29,7 @@ spring:
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 server:
-  port: 8130
+  port: 8121
 #springdoc:
 #  swagger-ui:
 #    path: /swagger-ui.html
