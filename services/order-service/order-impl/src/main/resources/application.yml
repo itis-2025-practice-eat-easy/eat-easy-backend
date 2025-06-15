@@ -30,20 +30,6 @@ spring:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 server:
   port: 8121
-#springdoc:
-#  swagger-ui:
-#    path: /swagger-ui.html
-#    tags-sorter: alpha
-#    operations-sorter: alpha
-#  api-docs:
-#    path: /v3/api-docs
-#  default-consumes-media-type: application/json
-#  default-produces-media-type: application/json
-#
-#aop:
-#  auto: true
-#  proxy-target-class: true
-
 logging:
   level:
     com.technokratos.eateasy.orderapi: DEBUG

@@ -1,14 +1,17 @@
 package com.technokratos.eateasy.orderimpl.service.impl;
 
+import com.technokratos.eateasy.common.exception.ConflictServiceException;
 import com.technokratos.eateasy.common.exception.NotFoundServiceException;
-import com.technokratos.eateasy.orderapi.OrderRequestDto;
-import com.technokratos.eateasy.orderapi.OrderResponseDto;
-import com.technokratos.eateasy.orderapi.Page;
-import com.technokratos.eateasy.orderapi.StatusResponseDto;
+import com.technokratos.eateasy.orderapi.dto.OrderRequestDto;
+import com.technokratos.eateasy.orderapi.dto.OrderResponseDto;
+import com.technokratos.eateasy.orderapi.dto.Page;
+import com.technokratos.eateasy.orderapi.dto.OrderLogResponseDto;
+import com.technokratos.eateasy.orderimpl.mapper.OrderLogMapper;
 import com.technokratos.eateasy.orderimpl.mapper.OrderMapper;
 import com.technokratos.eateasy.orderimpl.model.OrderEntity;
 import com.technokratos.eateasy.orderimpl.repository.OrderRepository;
 import com.technokratos.eateasy.orderimpl.service.OrderService;
+import com.technokratos.eateasy.orderimpl.service.CartClientService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -24,56 +27,51 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository repository;
-    private final OrderMapper mapper;
+    private final OrderMapper orderMapper;
+    private final OrderLogMapper orderLogMapper;
+    private final CartClientService cartClientService;
     @Override
     public OrderResponseDto getById(UUID id) {
         return repository.findById(id)
-                .map(mapper::toDto)
+                .map(orderMapper::toDto)
                 .orElseThrow(() -> new NotFoundServiceException(String.format("Order not found with id: %s!", id)));
     }
-
     @Override
     public OrderResponseDto create(OrderRequestDto requestDto) {
-        OrderEntity order = mapper.toEntity(requestDto);
+        OrderEntity order = orderMapper.toEntity(requestDto);
         UUID orderId = UUID.randomUUID();
         order.setId(orderId);
-
-        //TODO:через фейгин вытащить id корзины (сервиса пока что нет (есть))
-
-        order.setCartId(UUID.fromString("892346c8-aaf9-4458-b92c-1a0c95d03702"));
-
-        //TODO ПРоверитьт, что заказа с такой корзиной еще нет
-
+        UUID cartId = cartClientService.getByUserId(requestDto.userId()).id();
+        order.setCartId(cartId);
+        if(repository.isOrderWithThisCartIdExist(cartId)){
+            throw new ConflictServiceException(
+                    "Order already exist!",
+                    String.format("Order with cart %s already exist", cartId)
+            );
+        }
         repository.save(order);
-        log.info("Order created");
         return getById(orderId);
     }
-
-
     @Override
-    public List<StatusResponseDto> getListOfAllStatus(UUID orderId) {
-        return repository.getListOfAllStatus(orderId);
+    public List<OrderLogResponseDto> getListOfAllStatus(UUID orderId) {
+        return repository.getListOfAllStatus(orderId)
+                .stream()
+                .map(orderLogMapper::toDto)
+                .collect(Collectors.toList());
     }
-
     @Override
-    public Page<OrderResponseDto> getPagableUserOrders(UUID userId, int page, int pageSize, Boolean actual) {
-
-        //TODO:нужно получить id пользователя и добавить в запрос
-
-//        UUID userId = UUID.fromString("7923c6c9-aaf9-4458-b92c-1a0c95d03702");
-
-        Pageable pageable = PageRequest.of(page, pageSize);
+    public Page<OrderResponseDto> getPageableUserOrders(UUID userId, int page, int pageSize, Boolean actual) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
         List<OrderEntity> listOfOrders = (actual)
                 ? repository.findAllActualByUser(userId, pageable)
                 : repository.findAllByUser(userId, pageable);
-
         List<OrderResponseDto> ordersDto = listOfOrders
                 .stream()
-                .map(mapper::toDto)
+                .map(orderMapper::toDto)
                 .collect(Collectors.toList());
-
+        int countOfOrders = repository.countByUser(userId);
         return Page.<OrderResponseDto>builder()
-                .totalOrders(ordersDto.size())
+                .totalOrders(countOfOrders)
                 .currentPage(page)
                 .ordersInPage(pageSize)
                 .orders(ordersDto)

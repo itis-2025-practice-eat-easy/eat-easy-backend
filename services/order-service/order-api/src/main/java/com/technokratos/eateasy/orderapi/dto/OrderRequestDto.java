@@ -1,4 +1,4 @@
-package com.technokratos.eateasy.orderapi;
+package com.technokratos.eateasy.orderapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;

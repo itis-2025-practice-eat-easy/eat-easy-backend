@@ -1,4 +1,4 @@
-package com.technokratos.eateasy.orderapi;
+package com.technokratos.eateasy.orderapi.dto;
 
 import java.util.UUID;
 

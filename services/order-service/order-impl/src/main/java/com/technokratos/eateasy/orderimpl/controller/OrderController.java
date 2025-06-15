@@ -1,10 +1,9 @@
 package com.technokratos.eateasy.orderimpl.controller;
 
-import com.technokratos.eateasy.orderapi.OrderApi;
-import com.technokratos.eateasy.orderapi.OrderRequestDto;
-import com.technokratos.eateasy.orderapi.OrderResponseDto;
-import com.technokratos.eateasy.orderapi.StatusResponseDto;
-import com.technokratos.eateasy.orderapi.Page;
+import com.technokratos.eateasy.orderapi.api.OrderApi;
+import com.technokratos.eateasy.orderapi.dto.OrderRequestDto;
+import com.technokratos.eateasy.orderapi.dto.OrderResponseDto;
+import com.technokratos.eateasy.orderapi.dto.OrderLogResponseDto;
 import com.technokratos.eateasy.orderimpl.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,16 +26,7 @@ public class OrderController implements OrderApi {
         return service.create(requestDto);
     }
     @Override
-    public List<StatusResponseDto> getListOfAllStatus(UUID orderId) {
-        return service.getListOfAllStatus(orderId);
+    public List<OrderLogResponseDto> getListOfAllStatus(UUID id) {
+        return service.getListOfAllStatus(id);
     }
-
-
-
-
-    //TODO: метод смены статуса (аргументы - id заказа, новый статус)
-
-
-
-
 }

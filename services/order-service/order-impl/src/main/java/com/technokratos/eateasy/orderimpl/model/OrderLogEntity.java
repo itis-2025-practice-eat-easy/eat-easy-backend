@@ -1,6 +1,5 @@
 package com.technokratos.eateasy.orderimpl.model;
 
-import com.technokratos.eateasy.orderimpl.util.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
