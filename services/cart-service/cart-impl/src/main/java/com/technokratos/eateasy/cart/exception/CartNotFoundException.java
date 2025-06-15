@@ -7,6 +7,6 @@ import java.util.UUID;
 
 public class CartNotFoundException extends NotFoundServiceException {
     public CartNotFoundException(UUID cartId) {
-        super("Cart with id " + cartId + " not found");
+        super("Cart with id %s not found".formatted(cartId));
     }
 }

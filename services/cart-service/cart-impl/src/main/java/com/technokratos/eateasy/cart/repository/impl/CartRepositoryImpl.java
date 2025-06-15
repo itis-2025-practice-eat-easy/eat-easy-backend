@@ -1,6 +1,9 @@
 package com.technokratos.eateasy.cart.repository.impl;
 
 import com.technokratos.eateasy.cart.entity.Cart;
+import com.technokratos.eateasy.cart.exception.CartDatabaseException;
+import com.technokratos.eateasy.cart.exception.CartIntegrityViolationException;
+import com.technokratos.eateasy.cart.exception.CartIsBlockedException;
 import com.technokratos.eateasy.cart.exception.CartNotFoundException;
 import com.technokratos.eateasy.cart.repository.CartRepository;
 import com.technokratos.eateasy.cart.util.QueryProvider;
@@ -11,7 +14,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,13 +56,13 @@ public class CartRepositoryImpl implements CartRepository {
             });
 
             if (rowsAffected == 0) {
-                throw new RuntimeException("Cart insert failed: no rows affected");
+                throw new CartDatabaseException(cart.getId());
             }
 
         } catch (DataIntegrityViolationException e) {
-            throw e;
+            throw new CartIntegrityViolationException(cart.getId());
         } catch (Exception e) {
-            throw new RuntimeException("Database error during cart save", e);
+            throw new CartDatabaseException(cart.getId());
         }
     }
 
@@ -128,14 +130,14 @@ public class CartRepositoryImpl implements CartRepository {
             throw new CartNotFoundException(cartId);
         }
         else if(cart.get().getIsBlocked() == true) {
-            throw new RuntimeException("Cannot add to cart: cart is blocked");
+            throw new CartIsBlockedException(cartId);
 
         }
 
         try {
             jdbcTemplate.update(sqlInsert, cartId, productId, quantity);
         } catch (EmptyResultDataAccessException e) {
-            throw new RuntimeException("No cart found for cart: " + cartId);
+            throw new CartNotFoundException(cartId);
         }
     }
 }

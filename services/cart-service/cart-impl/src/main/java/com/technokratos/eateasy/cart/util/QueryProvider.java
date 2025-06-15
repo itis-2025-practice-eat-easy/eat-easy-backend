@@ -46,7 +46,7 @@ public class QueryProvider {
                                 }
                             });
         } catch (IOException e) {
-            throw new RuntimeException("Error loading SQL queries from directory: " + directory, e);
+            throw new RuntimeException("Error loading SQL queries from directory: %s".formatted(directory), e);
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -56,7 +56,7 @@ public class QueryProvider {
         try {
             return Files.readString(path);
         } catch (IOException e) {
-            throw new RuntimeException("Error reading SQL file: " + path, e);
+            throw new RuntimeException("Error reading SQL file: %s".formatted(path), e);
         }
     }
 
