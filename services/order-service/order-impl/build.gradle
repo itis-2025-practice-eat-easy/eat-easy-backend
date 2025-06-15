@@ -1,0 +1,58 @@
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    springCloudVersion = "2024.0.1"
+}
+
+dependencies {
+    implementation project(':services:order-service:order-api')
+    implementation project(':modules:common')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // Зависимость для интеграции с Consul (регистрация и обнаружение сервисов)
+    implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery'
+
+    // Actuator для мониторинга состояния сервиса (/actuator/health)
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+
+
+
+
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+    }
+}
+
+// Принудительная установка версии Apache HttpClient (временно для стабильности)
+configurations.all {
+    resolutionStrategy {
+        force 'org.apache.httpcomponents:httpclient:4.5.14'
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

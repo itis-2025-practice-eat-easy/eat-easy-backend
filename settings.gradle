@@ -9,4 +9,11 @@ include ':services:user-service:user-api'
 include ':services:user-service:user-impl'
 include ':services:user-service:user-db'
 
+include ':services:order-service:order-api'
+include ':services:order-service:order-db'
+include ':services:order-service:order-impl'
+
 include ':modules:log-starter'
+//include 'services:order-service'
+//findProject(':services:order-service')?.name = 'order-service'
+
