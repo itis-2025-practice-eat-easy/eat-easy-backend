@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-created-at-to-user-cart
+      author: smesitejl
+      changes:
+        - addColumn:
+            tableName: user_cart
+            columns:
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
