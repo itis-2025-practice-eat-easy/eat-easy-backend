@@ -4,8 +4,6 @@ import com.technokratos.eateasy.common.exception.ConflictServiceException;
 import com.technokratos.eateasy.common.exception.NotFoundServiceException;
 import com.technokratos.eateasy.userapi.dto.UserRequestDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
-import com.technokratos.eateasy.userimpl.exception.UserAlreadyExistsException;
-import com.technokratos.eateasy.userimpl.exception.UserNotFoundException;
 import com.technokratos.eateasy.userimpl.mapper.UserMapper;
 import com.technokratos.eateasy.userimpl.model.UserEntity;
 import com.technokratos.eateasy.userimpl.repository.UserRepository;
