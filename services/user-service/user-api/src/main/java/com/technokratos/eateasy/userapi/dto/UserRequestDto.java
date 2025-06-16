@@ -14,14 +14,12 @@ import org.springframework.lang.Nullable;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Schema(description = "Data Transfer Object for creating or updating user information")
 public class UserRequestDto {
-
     @Schema(
             description = "Unique username for the user",
             example = "john_doe",
@@ -32,7 +30,6 @@ public class UserRequestDto {
     @NotBlank(message = "Username cannot be blank")
     @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
     private String username;
-
     @Schema(
             description = "User's email address",
             example = "john.doe@example.com",
@@ -42,7 +39,6 @@ public class UserRequestDto {
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "Email should be valid")
     private String email;
-
     @Schema(
             description = "User's password (minimum 8 characters)",
             example = "SecurePass123!",
@@ -53,7 +49,6 @@ public class UserRequestDto {
     @NotBlank(message = "Password cannot be blank")
     @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
-
     @Schema(
             description = "User's first name",
             example = "John",
@@ -62,7 +57,6 @@ public class UserRequestDto {
     @NotBlank(message = "First name cannot be blank")
     @Size(min = 2, max = 20, message = "First name must be between 3 and 20 characters")
     private String firstName;
-
     @Schema(
             description = "User's last name",
             example = "Doe",

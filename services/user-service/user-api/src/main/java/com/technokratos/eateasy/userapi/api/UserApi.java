@@ -67,7 +67,7 @@ public interface UserApi {
     @ResponseBody
     UserWithHashPasswordResponseDto getUserByEmail(
             @Parameter(description = "User email", required = true, example = "user@example.com", in = ParameterIn.QUERY)
-            @RequestParam @NotBlank @Email String email);
+            @RequestParam @NotBlank @Valid String email);
 
     @Operation(summary = "Update user data", description = "Updates the information of an existing user")
     @ApiResponses({

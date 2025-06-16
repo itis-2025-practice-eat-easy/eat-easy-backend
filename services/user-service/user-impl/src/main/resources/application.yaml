@@ -22,7 +22,6 @@ springdoc:
     path: /v3/api-docs
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
-
 aop:
   auto: true
   proxy-target-class: true
@@ -30,4 +29,3 @@ aop:
 logging:
   level:
     com.technokratos.eateasy.userapi.aop: DEBUG
-
