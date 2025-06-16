@@ -10,6 +10,9 @@ services:
       - CONSUL_HOST=consul
       - CONSUL_PORT=8500
 
+      - FRONTEND_ADDRESS=${FRONTEND_ADDRESS}
+      - BACKEND_ADDRESS=${BACKEND_ADDRESS}
+
       - SPRING_PROFILES_ACTIVE=server
     networks:
       - eat-easy-net

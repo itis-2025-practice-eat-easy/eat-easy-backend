@@ -6,7 +6,7 @@ spring:
           '[/**]':
             allowedOrigins: 
               - ${FRONTEND_ADDRESS}
-              - ${SERVER_ADDRESS}
+              - ${BACKEND_ADDRESS}
             allowedMethods:
               - GET
               - POST

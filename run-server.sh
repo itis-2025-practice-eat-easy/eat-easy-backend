@@ -1,6 +1,12 @@
-if [ -z "$SERVER_ADDRESS" ]; then
-  echo "❌ Переменная среды SERVER_ADDRESS не задана. Пожалуйста, задайте её командой:"
-  echo "export SERVER_ADDRESS=your-server-address"
+if [ -z "$BACKEND_ADDRESS" ]; then
+  echo "❌ Переменная среды BACKEND_ADDRESS не задана. Пожалуйста, задайте её командой:"
+  echo "export BACKEND_ADDRESS=your-backend-address"
+  exit 1
+fi
+
+if [ -z "$FRONTEND_ADDRESS" ]; then
+  echo "❌ Переменная среды FRONTEND_ADDRESS не задана. Пожалуйста, задайте её командой:"
+  echo "export FRONTEND_ADDRESS=your-backend-address"
   exit 1
 fi
 
