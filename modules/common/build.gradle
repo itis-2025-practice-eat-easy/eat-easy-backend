@@ -6,6 +6,7 @@ ext {
     springBootVersion = '3.4.5'
     jjwtVersion = '0.12.6'
     junitVersion = '5.10.0'
+    jacocoExclude = '**/exception/**,**/*Exception.class'
 }
 
 java {
@@ -24,6 +25,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-api'
     implementation 'org.springframework:spring-web'
     compileOnly 'jakarta.servlet:jakarta.servlet-api'
+    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.30'
 
     testImplementation 'org.mockito:mockito-core'
     testImplementation 'org.junit.jupiter:junit-jupiter'

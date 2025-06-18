@@ -1,0 +1,21 @@
+services:
+  api-gateway:
+    build:
+      context: ../../..
+      dockerfile: services/gateway-service/docker/Dockerfile
+    container_name: eat-easy-api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+
+      - SPRING_PROFILES_ACTIVE=dev
+    networks:
+      - eat-easy-net
+
+
+networks:
+  eat-easy-net:
+    driver: bridge
+    external: true

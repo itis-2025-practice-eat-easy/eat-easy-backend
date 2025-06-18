@@ -22,8 +22,9 @@ dependencyManagement {
 
 dependencies {
     implementation 'org.slf4j:slf4j-api'
-    implementation project(':modules:jwt-service-library')
+    implementation project(':modules:common')
     compileOnly 'jakarta.servlet:jakarta.servlet-api'
+    implementation project(':modules:jwt-service-library')
     implementation 'org.springframework.security:spring-security-core'
     implementation 'org.springframework.security:spring-security-web'
     implementation 'org.springframework.security:spring-security-config'
@@ -40,6 +41,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-validation'
     testImplementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.8.8'
 }
 
 test {

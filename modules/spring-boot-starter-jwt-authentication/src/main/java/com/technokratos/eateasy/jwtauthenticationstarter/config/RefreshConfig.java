@@ -63,6 +63,7 @@ public class RefreshConfig {
                 .objectMapper(objectMapper)
                 .requestMapper(requestMapper)
                 .cookieWriter(cookieWriter)
+                .useCookie(jwtProperties.getTokens().getRefresh().isUseCookie())
                 .build();
     }
 

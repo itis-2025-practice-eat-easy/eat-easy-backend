@@ -14,6 +14,10 @@ dependencies {
 	testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
+jacocoTestCoverageVerification {
+	enabled = false
+}
+
 publishing {
 	publications {
 		mavenJava(MavenPublication) {

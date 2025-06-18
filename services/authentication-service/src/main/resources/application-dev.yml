@@ -3,9 +3,13 @@ spring:
     name: authentication-service
   data:
     redis:
-      host: localhost
+      host: 127.0.0.1
       port: 6379
-      password: eat-easy
+      password: authentication
+  cloud:
+    consul:
+      discovery:
+        ip-address: host.docker.internal
 
 jwt:
   tokens:

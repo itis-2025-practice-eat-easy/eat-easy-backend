@@ -58,13 +58,17 @@ class JacocoConventionPlugin implements Plugin<Project> {
     }
 
     private Object createFilteredClassDirectories(Task jacocoTestReport, Project project) {
+        def include = project.hasProperty("jacocoInclude") ? project.property("jacocoInclude").split(",") : INCLUDE
+        def exclude = project.hasProperty("jacocoExclude") ? project.property("jacocoExclude").split(",") : EXCLUDE
+
         jacocoTestReport.classDirectories.files.collect {
-            project.fileTree(dir: it, include: INCLUDE, exclude: EXCLUDE)
+            project.fileTree(dir: it, include: include, exclude: exclude)
         }
     }
 
     private void configureJacocoTestCoverageVerification(Project project) {
         Task jacocoTestCoverageVerification = project.tasks.named('jacocoTestCoverageVerification').get()
+        jacocoTestCoverageVerification.classDirectories.setFrom(createFilteredClassDirectories(jacocoTestCoverageVerification, project))
 
         jacocoTestCoverageVerification.violationRules {
             rule {

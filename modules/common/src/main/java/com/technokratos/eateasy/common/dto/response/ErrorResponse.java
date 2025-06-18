@@ -1,5 +1,6 @@
 package com.technokratos.eateasy.common.dto.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
 import java.time.ZonedDateTime;
+
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 /**
  * Standardized error response structure for API error reporting.
@@ -17,31 +20,40 @@ import java.time.ZonedDateTime;
 @Slf4j
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Schema(description = "Standard structure for error responses")
 public class ErrorResponse {
 
     /**
      * UTC timestamp when error occurred
      */
+    @Schema(description = "The timestamp when the error occurred",
+            requiredMode = REQUIRED, example = "2025-05-27T10:15:30+03:00")
     protected final ZonedDateTime timestamp;
 
     /**
      * HTTP status code (e.g., 400)
      */
+    @Schema(description = "HTTP status code of the error", requiredMode = REQUIRED, example = "400")
     protected final int httpStatus;
 
     /**
      * Request path that triggered the error
      */
+    @Schema(description = "The path of the request that caused the error",
+            requiredMode = REQUIRED, example = "/api/v1/users")
     protected final String path;
 
     /**
      * Human-readable error description
      */
+    @Schema(description = "Short description of the error", requiredMode = REQUIRED, example = "Validation failed")
     protected final String error;
 
     /**
      * Optional structured error details (may be {@code null})
      */
+    @Schema(description = "Detailed error object or message for debugging",
+            example = "{\"field\": \"email\", \"message\": \"must not be blank\"}")
     protected final Object details;
 
 

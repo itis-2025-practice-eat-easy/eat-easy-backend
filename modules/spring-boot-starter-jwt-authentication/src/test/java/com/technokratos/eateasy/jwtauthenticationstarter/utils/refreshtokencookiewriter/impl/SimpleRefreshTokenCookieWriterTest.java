@@ -30,7 +30,7 @@ class SimpleRefreshTokenCookieWriterTest {
 
     @BeforeEach
     void setUp() {
-        cookieWriter = new SimpleRefreshTokenCookieWriter(COOKIE_NAME, EXPIRATION, REFRESH_PATH);
+        cookieWriter = new SimpleRefreshTokenCookieWriter(COOKIE_NAME, EXPIRATION, REFRESH_PATH, false);
     }
 
     @Test
@@ -46,8 +46,7 @@ class SimpleRefreshTokenCookieWriterTest {
                 () -> assertEquals(TOKEN, cookie.getValue()),
                 () -> assertEquals(REFRESH_PATH, cookie.getPath()),
                 () -> assertTrue(cookie.isHttpOnly()),
-                () -> assertEquals("Strict", cookie.getAttribute("SameSite")),
-                () -> assertEquals("true", cookie.getAttribute("Partitioned")),
+                () -> assertEquals("Lax", cookie.getAttribute("SameSite")),
                 () -> assertEquals(EXPIRATION.toSeconds(), cookie.getMaxAge())
         );
     }
@@ -70,7 +69,7 @@ class SimpleRefreshTokenCookieWriterTest {
     void writeWhenHaveOverflowShouldUserIntegerMaxValue() {
         Duration hugeDuration = Duration.ofSeconds(Integer.MAX_VALUE + 1L);
         SimpleRefreshTokenCookieWriter writer =
-                new SimpleRefreshTokenCookieWriter(COOKIE_NAME, hugeDuration, REFRESH_PATH);
+                new SimpleRefreshTokenCookieWriter(COOKIE_NAME, hugeDuration, REFRESH_PATH, false);
 
         writer.write(TOKEN, response);
         verify(response).addCookie(cookieCaptor.capture());

@@ -10,3 +10,4 @@ include ':services:user-service:user-impl'
 include ':services:user-service:user-db'
 
 include ':modules:log-starter'
+include 'services:gateway-service'
