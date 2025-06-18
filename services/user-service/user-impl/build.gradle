@@ -18,7 +18,6 @@ dependencies {
     testImplementation 'org.testcontainers:postgresql'
     testImplementation 'org.testcontainers:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
     testImplementation 'org.liquibase:liquibase-core'
 
     testCompileOnly 'org.projectlombok:lombok'

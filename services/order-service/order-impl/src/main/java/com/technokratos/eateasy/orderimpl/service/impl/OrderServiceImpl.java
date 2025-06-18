@@ -54,6 +54,9 @@ public class OrderServiceImpl implements OrderService {
     }
     @Override
     public List<OrderLogResponseDto> getListOfAllStatus(UUID orderId) {
+        if (getById(orderId) == null){
+            throw new NotFoundServiceException(String.format("Order not found with id: %s!", orderId));
+        }
         return repository.getListOfAllStatus(orderId)
                 .stream()
                 .map(orderLogMapper::toDto)

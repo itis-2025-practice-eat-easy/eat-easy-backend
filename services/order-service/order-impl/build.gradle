@@ -34,6 +34,15 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.testcontainers:postgresql'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.liquibase:liquibase-core'
+
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 dependencyManagement {
@@ -42,9 +51,15 @@ dependencyManagement {
     }
 }
 
+tasks.register('copyMigrations', Copy) {
+    from project(':services:order-service:order-db').file('db')
+    into "${layout.buildDirectory.dir("resources/test").get()}/db"
+}
+
 configurations.all {
     resolutionStrategy {
         force 'org.apache.httpcomponents:httpclient:4.5.14'
+        force 'org.apache.commons:commons-text:1.12.0'
     }
 }
 
