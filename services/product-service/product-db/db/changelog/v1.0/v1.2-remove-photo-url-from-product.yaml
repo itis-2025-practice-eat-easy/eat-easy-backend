@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-remove-photo-url-from-product
+      author: robert
+      changes:
+        - dropColumn:
+            columnName: photo_url
+            tableName: product

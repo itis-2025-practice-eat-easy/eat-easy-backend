@@ -2,3 +2,7 @@ databaseChangeLog:
   - include:
       file: v1.0/v1.0-create_table_products.yaml
       relativeToChangelogFile: true
+  - include:
+      file: v1.0/v1.1-create_table_image_reference_and_add_image_url_column.yaml
+  - include:
+      file: v1.0/v1.2-remove-photo-url-from-product.yaml

@@ -25,4 +25,6 @@ public interface ProductRepository {
       Integer pageSize,
       BigDecimal minPrice,
       BigDecimal maxPrice);
+
+  boolean isProductExist(String title);
 }

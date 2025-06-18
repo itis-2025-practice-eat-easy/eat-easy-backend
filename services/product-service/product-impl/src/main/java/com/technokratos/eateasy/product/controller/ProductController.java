@@ -1,5 +1,7 @@
 package com.technokratos.eateasy.product.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.technokratos.eateasy.product.api.ProductApi;
 import com.technokratos.eateasy.product.dto.product.ProductRequest;
 import com.technokratos.eateasy.product.dto.product.ProductResponse;
@@ -10,6 +12,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,9 +29,9 @@ public class ProductController implements ProductApi {
   }
 
   @Override
-  public ProductResponse create(ProductRequest product) {
+  public ProductResponse create(String product, MultipartFile avatarFile) {
     log.info("Received request to create product: {}", product);
-    return productCategoryFacade.create(product);
+    return productCategoryFacade.create(product, avatarFile);
   }
 
   @Override
@@ -38,9 +41,9 @@ public class ProductController implements ProductApi {
   }
 
   @Override
-  public void update(UUID id, ProductUpdateRequest product) {
+  public void update(UUID id, String product, MultipartFile avatarFile) {
     log.info("Received request to update product with id: {}, data: {}", id, product);
-    productCategoryFacade.update(id, product);
+    productCategoryFacade.update(id, product, avatarFile);
   }
 
   @Override

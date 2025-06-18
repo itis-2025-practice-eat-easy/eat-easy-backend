@@ -17,7 +17,9 @@ import java.util.UUID;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Products", description = "Product management (food and grocery items)")
 @RequestMapping("/api/v1/products")
@@ -50,33 +52,13 @@ public interface ProductApi {
         @ApiResponse(responseCode = "400", description = "Invalid product data"),
         @ApiResponse(responseCode = "409", description = "Product already exists")
       })
-  @PostMapping
+  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
   ProductResponse create(
-      @io.swagger.v3.oas.annotations.parameters.RequestBody(
-              description = "Product to create",
-              required = true,
-              content =
-                  @Content(
-                      schema = @Schema(implementation = ProductRequest.class),
-                      examples =
-                          @ExampleObject(
-                              value =
-                                  """
-                                {
-                                  "title": "Organic Banana",
-                                  "description": "Fresh organic bananas from Ecuador.",
-                                  "photoUrl": "http://example.com/images/banana.jpg",
-                                  "price": 1.99,
-                                  "categories": ["6231b5c9-0a6a-4ab3-8122-76ffc5b5d496", 
-                                  "edac0369-45d3-4f67-b8c3-ea8bc7fa03b0"],                                          
-                                  "quantity": 150
-                                }
-                            """)))
-          @org.springframework.web.bind.annotation.RequestBody
-          @Valid
-          ProductRequest product);
+          @RequestParam("product") @Valid String product,
+          @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile
+          );
 
   @Operation(summary = "Update the quantity of a product (add or subtract the provided value)")
   @ApiResponses(
@@ -121,24 +103,8 @@ public interface ProductApi {
               required = true)
           @PathVariable("id")
           UUID productId,
-      @io.swagger.v3.oas.annotations.parameters.RequestBody(
-              description = "Fields to update in the product",
-              required = true,
-              content =
-                  @Content(
-                      schema = @Schema(implementation = ProductUpdateRequest.class),
-                      examples =
-                          @ExampleObject(
-                              value =
-                                  """
-                                {
-                                  "price": 2.49,
-                                  "quantity": 120
-                                }
-                            """)))
-          @org.springframework.web.bind.annotation.RequestBody
-          @Valid
-          ProductUpdateRequest product);
+      @RequestParam("product") @Valid String product,
+      @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile);
 
   @Operation(summary = "Delete a product by its ID")
   @ApiResponses(

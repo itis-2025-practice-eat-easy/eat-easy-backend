@@ -7,9 +7,9 @@ include ':services:product-service:product-api'
 include ':services:product-service:product-impl'
 include ':services:product-service:product-db'
 
-include 'modules:jwt-service-library'
-include 'modules:spring-boot-starter-jwt-authentication'
-include 'services:authentication-service'
+//include 'modules:jwt-service-library'
+//include 'modules:spring-boot-starter-jwt-authentication'
+//include 'services:authentication-service'
 
 include 'modules:common'
 include ':services:user-service:user-api'
