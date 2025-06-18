@@ -22,11 +22,11 @@ liquibase {
     activities {
         main {
             classpath "$projectDir/db/changelog"
-            changelogFile project.property('db.changelogFile')
-            url project.property('db.url')
-            username project.property('db.username')
-            password project.property('db.password')
-            driver project.property('db.driver')
+            changelogFile project.findProperty('db.changelogFile')
+            url project.findProperty('db.url')
+            username project.findProperty('db.username')
+            password project.findProperty('db.password')
+            driver project.findProperty('db.driver')
         }
     }
 }

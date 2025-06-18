@@ -49,9 +49,6 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public UserWithHashPasswordResponseDto getUserByEmail(String email) {
-        if (!isValidEmail(email)){
-            throw new BadRequestServiceException(String.format("Invalid format!","Invalid email format: %s",email));
-        }
         UserEntity entity = getEntityByEmail(email);
         return new UserWithHashPasswordResponseDto(mapper.toDto(entity), entity.getPassword());
     }
