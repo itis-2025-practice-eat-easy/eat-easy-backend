@@ -10,11 +10,22 @@ if [ -z "$FRONTEND_ADDRESS" ]; then
   exit 1
 fi
 
+if [ -n "$ENABLE_DEBUG" ]; then
+  echo "ℹ️  DEBUG-режим включен (ENABLE_DEBUG=$ENABLE_DEBUG)"
+  echo "   • Будут активированы подробные логи"
+else
+  echo "ℹ️  DEBUG-режим отключен (переменная ENABLE_DEBUG не задана)"
+fi
+
+echo "Запуск сборки сервисов..."
 ./gradlew :service:gateway-service:bootJar
 ./gradlew :services:authentication-service:bootJar
 ./gradlew :services:user-service:user-impl:bootJar
 
+echo "Запуск Docker-контейнеров..."
 docker compose -f docker/docker-compose.server.yml -p eat-easy up -d
 docker compose -f services/gateway-service/docker/docker-compose.server.yml -p eat-easy up -d --build
 docker compose -f services/authentication-service/docker/docker-compose.server.yml -p eat-easy up -d --build
 docker compose -f services/user-service/docker/docker-compose.server.yml -p eat-easy up -d --build
+
+echo "Все сервисы успешно запущены!"
