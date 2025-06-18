@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -103,42 +104,75 @@ public class CartRepositoryImpl implements CartRepository {
 
     @Override
     public List<Cart> findAll(UUID userId) {
-        String sqlCarts = queryProvider.getSqlQueryForCart("find_carts_by_user");
-
         createActiveCartIfNotExists(userId);
 
-        List<UUID> userCartsIds = jdbcTemplate.query(
-                sqlCarts,
-                new Object[]{userId},
-                (rs, rowNum) -> (UUID) rs.getObject("cart_id")
-        );
+        String sql = queryProvider.getSqlQueryForCart("find_carts_by_user");
 
-        return userCartsIds.stream()
-                .map(this::findById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList();
+        Map<UUID, Cart> cartMap = new LinkedHashMap<>();
+
+        jdbcTemplate.query(sql, new Object[]{userId}, rs -> {
+            UUID cartId = (UUID) rs.getObject("cart_id");
+
+            Cart cart = cartMap.computeIfAbsent(cartId, id -> {
+                        try {
+                            return Cart.builder()
+                                    .id(id)
+                                    .userId((UUID) rs.getObject("user_id"))
+                                    .isBlocked(rs.getBoolean("is_blocked"))
+                                    .createdAt(rs.getTimestamp("created_at"))
+                                    .products(new HashMap<>())
+                                    .build();
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+            );
+
+            UUID productId = (UUID) rs.getObject("product_id");
+            Integer quantity = rs.getObject("quantity") != null ? rs.getInt("quantity") : null;
+
+            if (productId != null && quantity != null) {
+                cart.getProducts().put(productId, quantity);
+            }
+        });
+
+        return new ArrayList<>(cartMap.values());
     }
 
     @Override
     public void addToCart(UUID productId, Integer quantity, UUID cartId) {
         String checkBlockedSql = queryProvider.getSqlQueryForCart("check_if_cart_blocked");
-        String sqlInsert = queryProvider.getSqlQueryForCart("save_cart_product");
+        String insertSql = queryProvider.getSqlQueryForCart("save_cart_product");
+        String updateSql = queryProvider.getSqlQueryForCart("update_cart_product_quantity");
+        String checkExistSql = queryProvider.getSqlQueryForCart("check_product_exists_in_cart");
 
         Optional<Cart> cart = findById(cartId);
-        if(cart.isEmpty()) {
+        if (cart.isEmpty()) {
             throw new CartNotFoundException(cartId);
-        }
-        else if(cart.get().getIsBlocked() == true) {
+        } else if (Boolean.TRUE.equals(cart.get().getIsBlocked())) {
             throw new CartIsBlockedException(cartId);
-
         }
 
         try {
-            jdbcTemplate.update(sqlInsert, cartId, productId, quantity);
-        } catch (EmptyResultDataAccessException e) {
-            throw new CartNotFoundException(cartId);
+            Boolean exists = jdbcTemplate.query(
+                    checkExistSql,
+                    ps -> {
+                        ps.setObject(1, cartId);
+                        ps.setObject(2, productId);
+                    },
+                    rs -> rs.next() && rs.getBoolean(1)
+            );
+
+            if (Boolean.TRUE.equals(exists)) {
+                jdbcTemplate.update(updateSql, quantity, cartId, productId);
+            } else {
+                jdbcTemplate.update(insertSql, cartId, productId, quantity);
+            }
+
+        } catch (Exception e) {
+            throw new CartDatabaseException(cartId);
         }
     }
+
 }
 
