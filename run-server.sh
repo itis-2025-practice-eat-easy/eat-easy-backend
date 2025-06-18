@@ -18,9 +18,9 @@ else
 fi
 
 echo "Запуск сборки сервисов..."
-./gradlew :service:gateway-service:bootJar
-./gradlew :services:authentication-service:bootJar
-./gradlew :services:user-service:user-impl:bootJar
+./gradlew :service:gateway-service:bootJar --no-daemon
+./gradlew :services:authentication-service:bootJar --no-daemon
+./gradlew :services:user-service:user-impl:bootJar --no-daemon
 
 echo "Запуск Docker-контейнеров..."
 docker compose -f docker/docker-compose.server.yml -p eat-easy up -d
