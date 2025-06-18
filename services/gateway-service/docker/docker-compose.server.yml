@@ -7,13 +7,13 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - CONSUL_HOST=consul
-      - CONSUL_PORT=8500
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
 
-      - FRONTEND_ADDRESS=${FRONTEND_ADDRESS}
-      - BACKEND_ADDRESS=${BACKEND_ADDRESS}
+      FRONTEND_ADDRESS: ${FRONTEND_ADDRESS}
+      BACKEND_ADDRESS: ${BACKEND_ADDRESS}
 
-      - SPRING_PROFILES_ACTIVE=server
+      SPRING_PROFILES_ACTIVE: "server${ENABLE_DEBUG:+,debug}"
     networks:
       - eat-easy-net
 

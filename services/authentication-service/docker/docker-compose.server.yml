@@ -23,6 +23,8 @@ services:
       JWT_REFRESH_PUBLIC_KEY: "file:/eat-easy/security/public/refresh_public.pem"
 
       CUSTOM_SWAGGER_SERVER: ${BACKEND_ADDRESS}
+
+      SPRING_PROFILES_ACTIVE: "${ENABLE_DEBUG:+debug}"
     networks:
       - eat-easy-net
 
