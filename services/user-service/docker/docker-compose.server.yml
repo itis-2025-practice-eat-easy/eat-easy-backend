@@ -17,7 +17,7 @@ services:
       CONSUL_HOST: consul
       CONSUL_PORT: 8500
 
-      CUSTOM_SWAGGER_SERVER: ${SERVER_ADDRESS}
+      CUSTOM_SWAGGER_SERVER: ${BACKEND_ADDRESS}
 
       JWT_ACCESS_PUBLIC_KEY: "file:/eat-easy/security/public/access_public.pem"
     networks:

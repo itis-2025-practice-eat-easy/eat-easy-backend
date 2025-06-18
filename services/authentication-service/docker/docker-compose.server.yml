@@ -22,7 +22,7 @@ services:
       JWT_REFRESH_PRIVATE_KEY: "file:/eat-easy/security/private/refresh_private.pem"
       JWT_REFRESH_PUBLIC_KEY: "file:/eat-easy/security/public/refresh_public.pem"
 
-      CUSTOM_SWAGGER_SERVER: ${SERVER_ADDRESS}
+      CUSTOM_SWAGGER_SERVER: ${BACKEND_ADDRESS}
     networks:
       - eat-easy-net
 
