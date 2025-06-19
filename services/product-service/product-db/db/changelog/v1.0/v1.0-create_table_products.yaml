@@ -1,0 +1,109 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-category-table
+      author: smesitejl
+      changes:
+        - createTable:
+            tableName: category
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+  - changeSet:
+      id: 002-create-product-table
+      author: smesitejl
+      changes:
+        - createTable:
+            tableName: product
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(1000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: photo_url
+                  type: VARCHAR(2048)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: NUMERIC(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: popularity
+                  type: INTEGER
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 003-create-product-category-table
+      author: smesitejl
+      changes:
+        - createTable:
+            tableName: product_category
+            columns:
+              - column:
+                  name: product_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: product_category
+            columnNames: product_id, category_id
+            constraintName: pk_product_category
+        - addForeignKeyConstraint:
+            baseTableName: product_category
+            baseColumnNames: product_id
+            referencedTableName: product
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_product_category_product
+        - addForeignKeyConstraint:
+            baseTableName: product_category
+            baseColumnNames: category_id
+            referencedTableName: category
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_product_category_category
