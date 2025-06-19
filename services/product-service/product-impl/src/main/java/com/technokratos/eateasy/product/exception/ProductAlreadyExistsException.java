@@ -1,7 +1,10 @@
 package com.technokratos.eateasy.product.exception;
 
-public class ProductAlreadyExistsException extends RuntimeException {
+import com.technokratos.eateasy.common.exception.ClientErrorServiceException;
+import org.springframework.http.HttpStatus;
+
+public class ProductAlreadyExistsException extends ClientErrorServiceException {
   public ProductAlreadyExistsException(String message) {
-    super(message);
+    super(message, HttpStatus.CONFLICT);
   }
 }

@@ -16,8 +16,6 @@ public interface ProductRepository {
 
   public int update(UUID productId, Map<String, Object> updates);
 
-  public int deleteById(UUID productId);
-
   public List<Product> getByCategoryId(
       UUID categoryId,
       String orderBy,

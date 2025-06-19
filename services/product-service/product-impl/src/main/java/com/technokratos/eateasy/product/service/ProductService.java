@@ -16,8 +16,6 @@ public interface ProductService {
 
   public void update(UUID id, ProductUpdateRequest product);
 
-  public void delete(UUID id);
-
   public List<ProductResponse> getByCategoryId(
       UUID id,
       String orderBy,

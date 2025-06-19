@@ -80,15 +80,6 @@ public class ProductServiceImpl implements ProductService {
     }
   }
 
-  @Transactional
-  public void delete(UUID id) {
-    log.info("Delete product with id: {}", id);
-    if (repository.deleteById(id) == 0) {
-      log.info("Product with id: {} not found", id);
-      throw new ProductNotFoundException("Product not found with id %s".formatted(id));
-    }
-  }
-
   public List<ProductResponse> getByCategoryId(
       UUID id,
       String orderBy,

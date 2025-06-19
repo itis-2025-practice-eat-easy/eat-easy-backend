@@ -105,21 +105,4 @@ public interface ProductApi {
           UUID productId,
       @RequestParam("product") @Valid String product,
       @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile);
-
-  @Operation(summary = "Delete a product by its ID")
-  @ApiResponses(
-      value = {
-        @ApiResponse(responseCode = "204", description = "Product deleted successfully"),
-        @ApiResponse(responseCode = "404", description = "Product not found")
-      })
-  @DeleteMapping("/{id}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ResponseBody
-  void delete(
-      @Parameter(
-              description = "Product UUID",
-              example = "c7e2f6b4-98b8-4f98-89b2-8295e8d25b5a",
-              required = true)
-          @PathVariable("id")
-          UUID productId);
 }

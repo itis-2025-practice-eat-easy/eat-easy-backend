@@ -49,11 +49,4 @@ public class ProductController implements ProductApi {
     log.info("Received request to update product with id: {}, data: {}", id, product);
     productCategoryFacade.update(id, product, avatarFile);
   }
-
-  @Override
-    @PreAuthorize("hasRole('ADMIN')")
-  public void delete(UUID id) {
-    log.info("Received request to delete product with id: {}", id);
-    productService.delete(id);
-  }
 }

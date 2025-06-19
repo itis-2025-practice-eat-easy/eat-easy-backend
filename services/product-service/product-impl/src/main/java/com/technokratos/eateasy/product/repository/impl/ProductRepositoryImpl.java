@@ -98,15 +98,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
   }
 
-  public int deleteById(UUID productId) {
-    String sql = queryProvider.getSqlQueryForProduct("delete_by_id");
-    try {
-      return jdbcTemplate.update(sql, productId);
-    } catch (Exception e) {
-      throw new RuntimeException("Database error", e);
-    }
-  }
-
   public List<Product> getByCategoryId(
       UUID categoryId,
       String orderBy,
