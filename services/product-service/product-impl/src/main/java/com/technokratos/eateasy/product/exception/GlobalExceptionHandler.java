@@ -4,9 +4,13 @@ import com.technokratos.eateasy.product.dto.exception.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -87,8 +92,15 @@ public class GlobalExceptionHandler {
     return buildErrorResponse(HttpStatus.NOT_FOUND, "Category not found", ex.getMessage());
   }
 
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex) {
+    log.info("Access denied: {}", ex.getMessage());
+    return buildErrorResponse(HttpStatus.FORBIDDEN, "Access Denied", ex.getMessage());
+  }
+
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> handleGeneralError(Exception ex) {
+    log.error("An unexpected error occurred: {}", ex.getMessage(), ex);
     return buildErrorResponse(
         HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", ex.getMessage());
   }

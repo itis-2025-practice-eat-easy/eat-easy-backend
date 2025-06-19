@@ -11,6 +11,7 @@ import com.technokratos.eateasy.product.service.ProductService;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,24 +30,28 @@ public class ProductController implements ProductApi {
   }
 
   @Override
+  @PreAuthorize("hasRole('ADMIN')")
   public ProductResponse create(String product, MultipartFile avatarFile) {
     log.info("Received request to create product: {}", product);
     return productCategoryFacade.create(product, avatarFile);
   }
 
   @Override
+    @PreAuthorize("hasRole('ADMIN')")
   public void updateQuantity(UUID id, Integer quantity) {
     log.info("Received request to update product quantity: {},  with id: {}", quantity, id);
     productService.updateQuantity(id, quantity);
   }
 
   @Override
+    @PreAuthorize("hasRole('ADMIN')")
   public void update(UUID id, String product, MultipartFile avatarFile) {
     log.info("Received request to update product with id: {}, data: {}", id, product);
     productCategoryFacade.update(id, product, avatarFile);
   }
 
   @Override
+    @PreAuthorize("hasRole('ADMIN')")
   public void delete(UUID id) {
     log.info("Received request to delete product with id: {}", id);
     productService.delete(id);

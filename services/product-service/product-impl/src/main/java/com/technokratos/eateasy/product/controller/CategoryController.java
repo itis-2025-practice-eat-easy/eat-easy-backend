@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,6 +29,7 @@ public class CategoryController implements CategoryApi {
   }
 
   @Override
+  @PreAuthorize("hasRole('ADMIN')")
   public CategoryResponse create(CategoryRequest category) {
     log.info("Received request to create a category {}", category);
     return categoryService.create(category);

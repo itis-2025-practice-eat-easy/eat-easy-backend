@@ -81,6 +81,17 @@ minio:
       ]
     }
 
+jwt:
+  mode: client
+  tokens:
+    access:
+      header: Authorization
+      prefix: "Bearer "
+      key:
+        algorithm: RSA
+        public-key: ${JWT_ACCESS_PUBLIC_KEY}
+  issuer: authentication-service
+
 custom:
   swagger:
     server: ${CUSTOM_SWAGGER_SERVER:http://localhost:8080}
