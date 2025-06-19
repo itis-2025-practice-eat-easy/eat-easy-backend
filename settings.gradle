@@ -19,3 +19,9 @@ include ':services:gateway-service'
 include 'services:cart-service:cart-api'
 include 'services:cart-service:cart-impl'
 include 'services:cart-service:cart-db'
+
+include ':services:order-service:order-api'
+include ':services:order-service:order-db'
+include ':services:order-service:order-impl'
+
+include ':modules:log-starter'
