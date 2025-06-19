@@ -2,7 +2,7 @@ package com.technokratos.eateasy.userimpl.service.impl;
 
 import com.technokratos.eateasy.common.exception.ConflictServiceException;
 import com.technokratos.eateasy.common.exception.NotFoundServiceException;
-import com.technokratos.eateasy.userapi.dto.UserRequestDto;
+import com.technokratos.eateasy.userapi.dto.UserRequestCreateDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
 import com.technokratos.eateasy.userimpl.mapper.UserMapper;
 import com.technokratos.eateasy.userimpl.model.UserEntity;
@@ -33,7 +33,7 @@ class UserServiceUnitTest {
     private UserServiceImpl userService;
 
     private UserEntity userEntity;
-    private UserRequestDto userRequestDto;
+    private UserRequestCreateDto userRequestCreateDto;
     private UserResponseDto userResponseDto;
 
     @BeforeEach
@@ -56,7 +56,7 @@ class UserServiceUnitTest {
                 .lastName(LAST_NAME)
                 .build();
 
-        userRequestDto = UserRequestDto.builder()
+        userRequestCreateDto = UserRequestCreateDto.builder()
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(PASSWORD)
@@ -107,13 +107,13 @@ class UserServiceUnitTest {
 
     @Test
     void createUserTest() {
-        when(userRepository.existsByUsername(userRequestDto.getUsername())).thenReturn(false);
-        when(userRepository.existsByEmail(userRequestDto.getEmail())).thenReturn(false);
-        when(userMapper.toEntity(userRequestDto)).thenReturn(userEntity);
+        when(userRepository.existsByUsername(userRequestCreateDto.getUsername())).thenReturn(false);
+        when(userRepository.existsByEmail(userRequestCreateDto.getEmail())).thenReturn(false);
+        when(userMapper.toEntity(userRequestCreateDto)).thenReturn(userEntity);
         when(userRepository.save(userEntity)).thenReturn(userEntity);
         when(userMapper.toDto(userEntity)).thenReturn(userResponseDto);
 
-        UserResponseDto result = userService.create(userRequestDto);
+        UserResponseDto result = userService.create(userRequestCreateDto);
 
         assertNotNull(result);
         assertEquals(userResponseDto, result);
@@ -121,17 +121,17 @@ class UserServiceUnitTest {
 
     @Test
     void createUserUsernameExceptionTest() {
-        when(userRepository.existsByUsername(userRequestDto.getUsername())).thenReturn(true);
+        when(userRepository.existsByUsername(userRequestCreateDto.getUsername())).thenReturn(true);
 
-        assertThrows(ConflictServiceException.class, () -> userService.create(userRequestDto));
+        assertThrows(ConflictServiceException.class, () -> userService.create(userRequestCreateDto));
     }
 
     @Test
     void createUserEmailExceptionTest() {
-        when(userRepository.existsByUsername(userRequestDto.getUsername())).thenReturn(false);
-        when(userRepository.existsByEmail(userRequestDto.getEmail())).thenReturn(true);
+        when(userRepository.existsByUsername(userRequestCreateDto.getUsername())).thenReturn(false);
+        when(userRepository.existsByEmail(userRequestCreateDto.getEmail())).thenReturn(true);
 
-        assertThrows(ConflictServiceException.class, () -> userService.create(userRequestDto));
+        assertThrows(ConflictServiceException.class, () -> userService.create(userRequestCreateDto));
     }
 
 
@@ -140,18 +140,18 @@ class UserServiceUnitTest {
         UUID nonExistentId = UUID.randomUUID();
         when(userRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundServiceException.class, () -> userService.update(nonExistentId, userRequestDto));
+        assertThrows(NotFoundServiceException.class, () -> userService.update(nonExistentId, userRequestCreateDto));
     }
 
     @Test
     void updateUserEmailExceptionTest() {
         when(userRepository.findById(userEntity.getId())).thenReturn(Optional.of(userEntity));
 
-        userRequestDto.setUsername("not_rbrmnv");
+        userRequestCreateDto.setUsername("not_rbrmnv");
         when(userRepository.existsByUsername("not_rbrmnv")).thenReturn(true);
 
         assertThrows(ConflictServiceException.class,
-                () -> userService.update(userEntity.getId(), userRequestDto));
+                () -> userService.update(userEntity.getId(), userRequestCreateDto));
     }
 
     @Test

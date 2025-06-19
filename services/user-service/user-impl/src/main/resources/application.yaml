@@ -64,3 +64,14 @@ custom:
   internal:
     header: ${CUSTOM_INTERNAL_HEADER:X-Internal-Request}
     secret-key: ${CUSTOM_INTERNAL_SECRET_KEY:secret-key}
+
+jwt:
+  mode: client
+  tokens:
+    access:
+      header: Authorization
+      prefix: "Bearer "
+      key:
+        algorithm: RSA
+        public-key: ${JWT_ACCESS_PUBLIC_KEY}
+  issuer: authentication-service

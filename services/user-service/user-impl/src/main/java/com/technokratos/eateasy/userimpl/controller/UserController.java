@@ -1,7 +1,8 @@
 package com.technokratos.eateasy.userimpl.controller;
 
 import com.technokratos.eateasy.userapi.api.UserApi;
-import com.technokratos.eateasy.userapi.dto.UserRequestDto;
+import com.technokratos.eateasy.userapi.dto.UserRequestCreateDto;
+import com.technokratos.eateasy.userapi.dto.UserRequestUpdateDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
 import com.technokratos.eateasy.userapi.dto.UserWithHashPasswordResponseDto;
 import com.technokratos.eateasy.userimpl.service.UserService;
@@ -30,7 +31,7 @@ public class UserController implements UserApi {
         return service.getById(id);
     }
     @Override
-    public UserResponseDto createUser(UserRequestDto userDto) {
+    public UserResponseDto createUser(UserRequestCreateDto userDto) {
         log.info("Received request to create user: {}", userDto);
         return service.create(userDto);
     }
@@ -40,7 +41,7 @@ public class UserController implements UserApi {
         return service.getUserByEmail(email);
     }
     @Override
-    public UserResponseDto updateUser(UUID id, UserRequestDto userDto) {
+    public UserResponseDto updateUser(UUID id, UserRequestUpdateDto userDto) {
         log.info("Received request to update user with id: {}, data: {}", id, userDto);
         return service.update(id, userDto);
     }

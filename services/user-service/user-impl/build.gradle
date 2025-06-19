@@ -11,7 +11,7 @@ jacocoTestCoverageVerification {
 dependencies {
     implementation project(":modules:common")
     implementation project(':services:user-service:user-api')
-    implementation project(':modules:common')
+    implementation project(':modules:spring-boot-starter-jwt-authentication')
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
