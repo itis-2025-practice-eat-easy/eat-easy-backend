@@ -6,4 +6,5 @@ import java.util.UUID;
 
 public interface AvatarStorageService {
   UUID uploadAvatar(MultipartFile file);
+  String getPhotoUrlById(UUID photoId);
 }

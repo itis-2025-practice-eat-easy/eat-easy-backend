@@ -1,5 +1,6 @@
 package com.technokratos.eateasy.product.service.impl;
 
+import com.technokratos.eateasy.common.exception.NotFoundServiceException;
 import com.technokratos.eateasy.product.entity.ImageReference;
 import com.technokratos.eateasy.product.repository.ImageReferenceRepository;
 import com.technokratos.eateasy.product.service.AvatarStorageService;
@@ -35,7 +36,7 @@ public class AvatarStorageServiceImpl implements AvatarStorageService {
       log.info("File uploaded to MinIO: {}", objectName);
 
       String originalFilename = file.getOriginalFilename();
-      if (originalFilename == null || originalFilename.isBlank()) {
+      if (originalFilename.isBlank()) {
         throw new IllegalArgumentException("File name could not be blank");
       }
 
@@ -68,6 +69,18 @@ public class AvatarStorageServiceImpl implements AvatarStorageService {
     }
   }
 
+  @Override
+  public String getPhotoUrlById(UUID photoId) {
+    ImageReference imageReference = repository.findById(photoId)
+            .orElseThrow(() -> new NotFoundServiceException("Photo with id %s not found", photoId));
+    return String.format("%s/%s/%s/%s.%s",
+            imageReference.getBaseUrl(),
+            imageReference.getBucketName(),
+            imageReference.getFolderName(),
+            imageReference.getFileName(),
+            imageReference.getExtension()
+    );
+  }
 
   private String generateObjectName(MultipartFile file) {
     return properties.getAvatarFolder() + "/" + file.getOriginalFilename();

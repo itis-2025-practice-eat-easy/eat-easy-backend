@@ -12,8 +12,8 @@ include ':services:product-service:product-db'
 //include 'services:authentication-service'
 
 include 'modules:common'
-include ':services:user-service:user-api'
-include ':services:user-service:user-impl'
-include ':services:user-service:user-db'
+//include ':services:user-service:user-api'
+//include ':services:user-service:user-impl'
+//include ':services:user-service:user-db'
 
 include ':modules:log-starter'

@@ -30,7 +30,7 @@ public class ProductCategoryFacadeImpl implements ProductCategoryFacade {
 
   public ProductResponse getById(UUID id) {
     ProductResponse response = productService.getById(id);
-    response.categories().addAll(categoryService.getCategoriesByProductId(id));
+    response.getCategories().addAll(categoryService.getCategoriesByProductId(id));
     return response;
   }
 
@@ -44,9 +44,11 @@ public class ProductCategoryFacadeImpl implements ProductCategoryFacade {
     }
     productRequest.setPhotoUrlId(setPhoto(avatarFile));
     ProductResponse response = productService.create(productRequest);
-    categoryService.assignCategoriesToProduct(productRequest.getCategories(), response.id());
-    response.categories().addAll(categoryService.getCategoriesByProductId(response.id()));
-    log.info("Created product with id: {}", response.id());
+    categoryService.assignCategoriesToProduct(productRequest.getCategories(), response.getId());
+    response.getCategories().addAll(categoryService.getCategoriesByProductId(response.getId()));
+    log.info("Created product with id: {}", response.getId());
+    String photoUrl = avatarStorageService.getPhotoUrlById(productRequest.getPhotoUrlId());
+    response.setPhotoUrl(photoUrl);
     return response;
   }
 
@@ -79,7 +81,7 @@ public class ProductCategoryFacadeImpl implements ProductCategoryFacade {
         productService.getByCategoryId(id, orderBy, page, pageSize, maxPrice, minPrice);
     products.forEach(
         product ->
-            product.categories().addAll(categoryService.getCategoriesByProductId(product.id())));
+            product.getCategories().addAll(categoryService.getCategoriesByProductId(product.getId())));
     return products;
   }
   private UUID setPhoto(MultipartFile avatarFile){

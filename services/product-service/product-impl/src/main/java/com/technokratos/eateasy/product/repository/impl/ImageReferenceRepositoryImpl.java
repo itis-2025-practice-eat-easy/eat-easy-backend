@@ -45,7 +45,7 @@ public class ImageReferenceRepositoryImpl implements ImageReferenceRepository {
     }
     @Override
     public Optional<ImageReference> findById(UUID id) {
-        ImageReference imageReference = jdbcTemplate.queryForObject(GET_BY_ID_SQL, rowMapper, id.toString());
+        ImageReference imageReference = jdbcTemplate.queryForObject(GET_BY_ID_SQL, rowMapper, id);
         return Optional.of(imageReference);
     }
 }

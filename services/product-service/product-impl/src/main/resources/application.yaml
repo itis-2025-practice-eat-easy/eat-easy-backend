@@ -26,7 +26,7 @@ spring:
       enabled: true
     swagger-ui:
       enabled: true
-      path: /swagger-ui.html
+      path: /product-service/swagger-ui.html
 
 logging:
   level:
