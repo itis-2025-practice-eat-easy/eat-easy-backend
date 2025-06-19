@@ -19,6 +19,8 @@ ext {
 dependencies {
     implementation project(':services:order-service:order-api')
     implementation project(':modules:common')
+    implementation project(':modules:spring-boot-starter-jwt-authentication')
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'jakarta.persistence:jakarta.persistence-api'

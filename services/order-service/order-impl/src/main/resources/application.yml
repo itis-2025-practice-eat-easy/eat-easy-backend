@@ -3,12 +3,12 @@ spring:
     name: order-service
   cloud:
     consul:
-      host: localhost
-      port: 8500
+      host: ${CONSUL_HOST:127.0.0.1}
+      port: ${CONSUL_PORT:8500}
       discovery:
-        register: true
-        enabled: true
         service-name: ${spring.application.name}
+        instance-id: ${spring.application.name}-${random.value}
+        register: true
         prefer-ip-address: true
         health-check-path: /actuator/health
         health-check-interval: 10s
@@ -26,23 +26,49 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 server:
   port: 8121
   servlet:
     encoding:
       charset: UTF-8
       enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+jwt:
+  mode: client
+  tokens:
+    access:
+      header: Authorization
+      prefix: "Bearer "
+      key:
+        algorithm: RSA
+        public-key: ${JWT_ACCESS_PUBLIC_KEY}
+  issuer: authentication-service
+
 logging:
   level:
     com.technokratos.eateasy.orderapi: DEBUG
+
 springdoc:
   swagger-ui:
-    path: /swagger-ui.html
+    enabled: true
+    path: /order-swagger/swagger-ui.html
     tags-sorter: alpha
     operations-sorter: alpha
   api-docs:
-    path: /v3/api-docs
+    enabled: true
+    path: /order-swagger/v3/api-docs
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
+
+custom:
+  swagger:
+    server: ${CUSTOM_SWAGGER_SERVER:http://localhost:8080}

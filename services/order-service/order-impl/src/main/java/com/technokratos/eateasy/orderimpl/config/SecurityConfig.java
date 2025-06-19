@@ -1,4 +1,4 @@
-package com.technokratos.eateasy.product.config;
+package com.technokratos.eateasy.orderimpl.config;
 
 import com.technokratos.eateasy.jwtauthenticationstarter.configurer.SecurityConfigurer;
 import org.springframework.context.annotation.Bean;
@@ -12,15 +12,14 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, SecurityConfigurer configurer) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, SecurityConfigurer configurer) throws Exception {
         configurer.configure(http);
-
         http
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/product-swagger/swagger-ui.html").permitAll()
-                        .requestMatchers("/product-swagger/swagger-ui/**").permitAll()
-                        .requestMatchers("/product-swagger/v3/api-docs/**").permitAll()
+                        .requestMatchers("/order-swagger/swagger-ui.html").permitAll()
+                        .requestMatchers("/order-swagger/swagger-ui/**").permitAll()
+                        .requestMatchers("/order-swagger/v3/api-docs/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -28,5 +27,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 }
