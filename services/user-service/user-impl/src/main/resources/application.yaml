@@ -29,3 +29,13 @@ aop:
 logging:
   level:
     com.technokratos.eateasy.userapi.aop: DEBUG
+jwt:
+  mode: client
+  tokens:
+    access:
+      header: Authorization
+      prefix: "Bearer "
+      key:
+        algorithm: RSA
+        public-key: ${JWT_ACCESS_PUBLIC_KEY}
+  issuer: authentication-service

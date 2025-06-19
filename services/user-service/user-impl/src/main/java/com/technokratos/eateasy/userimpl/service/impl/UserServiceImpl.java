@@ -3,9 +3,11 @@ package com.technokratos.eateasy.userimpl.service.impl;
 import com.technokratos.eateasy.common.exception.BadRequestServiceException;
 import com.technokratos.eateasy.common.exception.ConflictServiceException;
 import com.technokratos.eateasy.common.exception.NotFoundServiceException;
-import com.technokratos.eateasy.userapi.dto.UserRequestDto;
+import com.technokratos.eateasy.userapi.dto.UserRequestCreateDto;
+import com.technokratos.eateasy.userapi.dto.UserRequestUpdateDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
 import com.technokratos.eateasy.userapi.dto.UserWithHashPasswordResponseDto;
+import com.technokratos.eateasy.userapi.roleenum.UserRole;
 import com.technokratos.eateasy.userimpl.mapper.UserMapper;
 import com.technokratos.eateasy.userimpl.model.UserEntity;
 import com.technokratos.eateasy.userimpl.repository.UserRepository;
@@ -55,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponseDto create(UserRequestDto userDto) {
+    public UserResponseDto create(UserRequestCreateDto userDto) {
         if (repository.existsByUsername(userDto.getUsername())) {
             log.debug("Username already exists: {}", userDto.getUsername());
             throw new ConflictServiceException("Username already exists");
@@ -72,7 +74,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponseDto update(UUID id, UserRequestDto userDto) {
+    public UserResponseDto update(UUID id, UserRequestUpdateDto userDto) {
         UserEntity existingUser = repository.findById(id)
                 .orElseThrow(() -> new NotFoundServiceException(String.format("User not found with id: %s!", id)));
         if (!existingUser.getUsername().equals(userDto.getUsername()) && 
@@ -85,11 +87,34 @@ public class UserServiceImpl implements UserService {
             log.debug("Email already exists: {}", userDto.getEmail());
             throw new ConflictServiceException("Email already exists");
         }
+
+        UserRole oldRole = existingUser.getRole();
+        UserRole newRole = userDto.getRole();
+        if (isNeedAuthCheck(oldRole, newRole)){
+            //Проверка, является ли текущий пользак админом
+        }
         mapper.updateEntity(existingUser, userDto);
         UserEntity updatedUser = repository.save(existingUser);
         log.info("User updated with ID: {}", existingUser.getId());
         return mapper.toDto(updatedUser);
     }
+
+    private boolean isNeedAuthCheck(UserRole oldRole, UserRole newRole) {
+        if (oldRole == UserRole.USER
+                && newRole == UserRole.ADMIN
+                || newRole == UserRole.COURIER
+                || newRole == UserRole.STOREKEEPER) {
+            return true;
+        }
+        if (oldRole == UserRole.ADMIN
+                || oldRole == UserRole.COURIER
+                || oldRole == UserRole.STOREKEEPER
+                && newRole == UserRole.USER) {
+            throw new ConflictServiceException("Cannot downgrade to USER!");
+        }
+        return false;
+    }
+
     @Transactional
     @Override
     public void delete(UUID id) {

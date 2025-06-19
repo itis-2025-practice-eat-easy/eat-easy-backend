@@ -11,7 +11,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
-
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
 
 @Data
@@ -19,7 +18,7 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIR
 @AllArgsConstructor
 @Builder
 @Schema(description = "Data Transfer Object for creating or updating user information")
-public class UserRequestDto {
+public class UserRequestUpdateDto {
     @Schema(
             description = "Unique username for the user",
             example = "john_doe",

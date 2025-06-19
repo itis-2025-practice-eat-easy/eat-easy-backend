@@ -1,6 +1,6 @@
 package com.technokratos.eateasy.userimpl.controller;
 
-import com.technokratos.eateasy.userapi.dto.UserRequestDto;
+import com.technokratos.eateasy.userapi.dto.UserRequestCreateDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
 import com.technokratos.eateasy.userapi.dto.UserWithHashPasswordResponseDto;
 import com.technokratos.eateasy.userapi.roleenum.UserRole;
@@ -33,7 +33,7 @@ public class UserControllerIntegrationTest {
     @Autowired
     NamedParameterJdbcTemplate jdbcTemplate;
 
-    private UserRequestDto userRequestDto;
+    private UserRequestCreateDto userRequestCreateDto;
     private UUID createdUserId;
 
     final String USERNAME = "rbrmnv";
@@ -50,7 +50,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void createTest() {
-        userRequestDto = UserRequestDto.builder()
+        userRequestCreateDto = UserRequestCreateDto.builder()
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(PASSWORD)
@@ -63,7 +63,7 @@ public class UserControllerIntegrationTest {
         ResponseEntity<UserResponseDto> response = testRestTemplate.exchange(
                 "/api/v1/users",
                 HttpMethod.POST,
-                new HttpEntity<>(userRequestDto),
+                new HttpEntity<>(userRequestCreateDto),
                 UserResponseDto.class
         );
 
@@ -75,11 +75,11 @@ public class UserControllerIntegrationTest {
                 "select * from users where id = :id",
                 new MapSqlParameterSource("id", userId),
                 rs -> {
-                    assertEquals(userRequestDto.getUsername(), rs.getString("username"));
-                    assertEquals(userRequestDto.getEmail(), rs.getString("email"));
-                    assertEquals(userRequestDto.getFirstName(), rs.getString("first_name"));
-                    assertEquals(userRequestDto.getLastName(), rs.getString("last_name"));
-                    assertEquals(userRequestDto.getRole().toString(), rs.getString("role"));
+                    assertEquals(userRequestCreateDto.getUsername(), rs.getString("username"));
+                    assertEquals(userRequestCreateDto.getEmail(), rs.getString("email"));
+                    assertEquals(userRequestCreateDto.getFirstName(), rs.getString("first_name"));
+                    assertEquals(userRequestCreateDto.getLastName(), rs.getString("last_name"));
+                    assertEquals(userRequestCreateDto.getRole().toString(), rs.getString("role"));
                     assertFalse(rs.next());
                 }
         );
@@ -101,7 +101,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void getUserByIdTest() {
-        userRequestDto = UserRequestDto.builder()
+        userRequestCreateDto = UserRequestCreateDto.builder()
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(PASSWORD)
@@ -113,7 +113,7 @@ public class UserControllerIntegrationTest {
         ResponseEntity<UserResponseDto> createResponse = testRestTemplate.exchange(
                 "/api/v1/users",
                 HttpMethod.POST,
-                new HttpEntity<>(userRequestDto),
+                new HttpEntity<>(userRequestCreateDto),
                 UserResponseDto.class
         );
         createdUserId = createResponse.getBody().getId();
@@ -150,7 +150,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void getUserByEmailTest() {
-        userRequestDto = UserRequestDto.builder()
+        userRequestCreateDto = UserRequestCreateDto.builder()
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(PASSWORD)
@@ -162,7 +162,7 @@ public class UserControllerIntegrationTest {
         ResponseEntity<UserResponseDto> createResponse = testRestTemplate.exchange(
                 "/api/v1/users",
                 HttpMethod.POST,
-                new HttpEntity<>(userRequestDto),
+                new HttpEntity<>(userRequestCreateDto),
                 UserResponseDto.class
         );
 
@@ -197,7 +197,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void updateUserTest() {
-        userRequestDto = UserRequestDto.builder()
+        userRequestCreateDto = UserRequestCreateDto.builder()
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(PASSWORD)
@@ -209,12 +209,12 @@ public class UserControllerIntegrationTest {
         ResponseEntity<UserResponseDto> createResponse = testRestTemplate.exchange(
                 "/api/v1/users",
                 HttpMethod.POST,
-                new HttpEntity<>(userRequestDto),
+                new HttpEntity<>(userRequestCreateDto),
                 UserResponseDto.class
         );
         createdUserId = createResponse.getBody().getId();
 
-        UserRequestDto updatedUser = UserRequestDto.builder()
+        UserRequestCreateDto updatedUser = UserRequestCreateDto.builder()
                 .username("updateduser")
                 .email("updated@mail.ru")
                 .password("updatedpass123")
@@ -255,7 +255,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void updateUserNotFoundTest() {
-        userRequestDto = UserRequestDto.builder()
+        userRequestCreateDto = UserRequestCreateDto.builder()
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(PASSWORD)
@@ -268,7 +268,7 @@ public class UserControllerIntegrationTest {
         ResponseEntity<String> response = testRestTemplate.exchange(
                 "/api/v1/users/" + nonExistentId,
                 HttpMethod.PUT,
-                new HttpEntity<>(userRequestDto),
+                new HttpEntity<>(userRequestCreateDto),
                 String.class
         );
 
@@ -277,7 +277,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void deleteUserTest() {
-        userRequestDto = UserRequestDto.builder()
+        userRequestCreateDto = UserRequestCreateDto.builder()
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(PASSWORD)
@@ -289,7 +289,7 @@ public class UserControllerIntegrationTest {
         ResponseEntity<UserResponseDto> createResponse = testRestTemplate.exchange(
                 "/api/v1/users",
                 HttpMethod.POST,
-                new HttpEntity<>(userRequestDto),
+                new HttpEntity<>(userRequestCreateDto),
                 UserResponseDto.class
         );
 
