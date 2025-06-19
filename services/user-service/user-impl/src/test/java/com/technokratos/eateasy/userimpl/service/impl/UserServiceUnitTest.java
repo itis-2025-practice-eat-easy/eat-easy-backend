@@ -1,9 +1,9 @@
 package com.technokratos.eateasy.userimpl.service.impl;
 
+import com.technokratos.eateasy.common.exception.ConflictServiceException;
+import com.technokratos.eateasy.common.exception.NotFoundServiceException;
 import com.technokratos.eateasy.userapi.dto.UserRequestDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
-import com.technokratos.eateasy.userimpl.exception.UserAlreadyExistsException;
-import com.technokratos.eateasy.userimpl.exception.UserNotFoundException;
 import com.technokratos.eateasy.userimpl.mapper.UserMapper;
 import com.technokratos.eateasy.userimpl.model.UserEntity;
 import com.technokratos.eateasy.userimpl.repository.UserRepository;
@@ -102,7 +102,7 @@ class UserServiceUnitTest {
         UUID nonExistentId = UUID.randomUUID();
         when(userRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> userService.getById(nonExistentId));
+        assertThrows(NotFoundServiceException.class, () -> userService.getById(nonExistentId));
     }
 
     @Test
@@ -123,7 +123,7 @@ class UserServiceUnitTest {
     void createUserUsernameExceptionTest() {
         when(userRepository.existsByUsername(userRequestDto.getUsername())).thenReturn(true);
 
-        assertThrows(UserAlreadyExistsException.class, () -> userService.create(userRequestDto));
+        assertThrows(ConflictServiceException.class, () -> userService.create(userRequestDto));
     }
 
     @Test
@@ -131,7 +131,7 @@ class UserServiceUnitTest {
         when(userRepository.existsByUsername(userRequestDto.getUsername())).thenReturn(false);
         when(userRepository.existsByEmail(userRequestDto.getEmail())).thenReturn(true);
 
-        assertThrows(UserAlreadyExistsException.class, () -> userService.create(userRequestDto));
+        assertThrows(ConflictServiceException.class, () -> userService.create(userRequestDto));
     }
 
 
@@ -140,7 +140,7 @@ class UserServiceUnitTest {
         UUID nonExistentId = UUID.randomUUID();
         when(userRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> userService.update(nonExistentId, userRequestDto));
+        assertThrows(NotFoundServiceException.class, () -> userService.update(nonExistentId, userRequestDto));
     }
 
     @Test
@@ -150,7 +150,7 @@ class UserServiceUnitTest {
         userRequestDto.setUsername("not_rbrmnv");
         when(userRepository.existsByUsername("not_rbrmnv")).thenReturn(true);
 
-        assertThrows(UserAlreadyExistsException.class,
+        assertThrows(ConflictServiceException.class,
                 () -> userService.update(userEntity.getId(), userRequestDto));
     }
 
@@ -159,7 +159,7 @@ class UserServiceUnitTest {
         UUID id = UUID.randomUUID();
         when(userRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> userService.delete(id));
+        assertThrows(NotFoundServiceException.class, () -> userService.delete(id));
         verify(userRepository, never()).deleteById(any());
     }
 }

@@ -13,10 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class UserMapper {
-
     private final PasswordEncoder passwordEncoder;
-
-
     public UserResponseDto toDto(UserEntity entity) {
         return entity == null ? null :
                 UserResponseDto.builder()
@@ -28,7 +25,6 @@ public class UserMapper {
                         .role(entity.getRole())
                         .build();
     }
-
     public UserEntity toEntity(UserRequestDto dto) {
         return dto == null ? null :
                 UserEntity.builder()
@@ -40,12 +36,10 @@ public class UserMapper {
                         .role(dto.getRole() != null ? dto.getRole() : UserRole.USER)
                         .build();
     }
-
     public void updateEntity(UserEntity entity, UserRequestDto dto) {
         if (dto == null || entity == null) {
             return ;
         }
-
         if (dto.getUsername() != null) {
             entity.setUsername(dto.getUsername());
         }

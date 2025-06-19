@@ -46,7 +46,6 @@ springdoc:
     path: /user-swagger/v3/api-docs
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
-
 aop:
   auto: true
   proxy-target-class: true
