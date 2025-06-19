@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - include:
+      file: v1.0/v1.0-create_table_cart.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: v1.0/v1.1-create_column_quantity.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: v1.0/v1.2-create_column_created_at.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: v1.0/v1.3-create_column_is_blocked_and_blocked_by.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: v1.0/v1.4-partially_unique_index_is_blocked.yaml
+      relativeToChangelogFile: true

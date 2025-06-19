@@ -1,0 +1,32 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.liquibase:liquibase-core:4.26.0'
+    }
+}
+
+plugins {
+    id 'org.liquibase.gradle' version '3.0.2'
+}
+
+dependencies {
+    liquibaseRuntime 'org.liquibase:liquibase-core:4.26.0'
+    liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:3.0.2'
+    liquibaseRuntime 'info.picocli:picocli:4.6.1'
+    liquibaseRuntime 'org.postgresql:postgresql:42.7.4'
+}
+
+liquibase {
+    activities {
+        main {
+            classpath "$projectDir/db/changelog"
+            changelogFile project.findProperty('db.changelogFile')
+            url project.findProperty('db.url')
+            username project.findProperty('db.username')
+            password project.findProperty('db.password')
+            driver project.findProperty('db.driver')
+        }
+    }
+}

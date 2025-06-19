@@ -15,3 +15,7 @@ include ':services:user-service:user-db'
 
 include ':modules:log-starter'
 include ':services:gateway-service'
+
+include 'services:cart-service:cart-api'
+include 'services:cart-service:cart-impl'
+include 'services:cart-service:cart-db'

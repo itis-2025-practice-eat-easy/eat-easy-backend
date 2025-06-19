@@ -1,0 +1,55 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-user-cart-table
+      author: smesitejl
+      changes:
+        - createTable:
+            tableName: user_cart
+            columns:
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cart_id
+                  type: UUID
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: user_cart
+            columnNames: user_id, cart_id
+            constraintName: pk_user_cart
+        - addUniqueConstraint:
+            tableName: user_cart
+            columnNames: cart_id
+            constraintName: uq_user_cart_cart_id
+
+  - changeSet:
+      id: create-cart-product-table
+      author: smesitejl
+      changes:
+        - createTable:
+            tableName: cart_product
+            columns:
+              - column:
+                  name: cart_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: cart_product
+            columnNames: cart_id, product_id
+            constraintName: pk_cart_product
+        - addForeignKeyConstraint:
+            baseTableName: cart_product
+            baseColumnNames: cart_id
+            referencedTableName: user_cart
+            referencedColumnNames: cart_id
+            constraintName: fk_cart_product_cart

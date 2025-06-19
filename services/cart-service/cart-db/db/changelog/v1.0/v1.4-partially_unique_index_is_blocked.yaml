@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-partial-unique-index-on-active-cart
+      author: smesitejl
+      changes:
+        - sql:
+            splitStatements: false
+            stripComments: true
+            sql: >
+              CREATE UNIQUE INDEX uq_user_cart_active
+              ON user_cart (user_id)
+              WHERE is_blocked = false;
