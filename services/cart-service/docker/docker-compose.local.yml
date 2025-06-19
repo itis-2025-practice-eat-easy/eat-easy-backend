@@ -1,0 +1,66 @@
+services:
+  cart-service:
+    build:
+      context: ../../..
+      dockerfile: services/cart-service/docker/Dockerfile
+    container_name: eat-easy-cart-service
+    depends_on:
+      - cart-db
+      - cart-db-migrator
+    ports:
+      - "8101:8082"
+    volumes:
+      - ${PWD}/security/public:/eat-easy/security/public
+    environment:
+      DB_URL: jdbc:postgresql://cart-db:5432/cart_db
+      DB_USERNAME: eat_easy
+      DB_PASSWORD: easy
+
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
+
+      CUSTOM_SWAGGER_SERVER: "http://localhost:8080"
+
+      JWT_ACCESS_PUBLIC_KEY: "file:/eat-easy/security/public/access_public.pem"
+    networks:
+      - eat-easy-net
+
+  cart-db:
+    image: postgres:17
+    container_name: cart-db
+    environment:
+      POSTGRES_DB: cart_db
+      POSTGRES_USER: eat_easy
+      POSTGRES_PASSWORD: easy
+    ports:
+      - "5460:5432"
+    networks:
+      - eat-easy-net
+    volumes:
+      - cart_db_data:/var/lib/postgresql/data
+
+  cart-db-migrator:
+    image: liquibase/liquibase:4.28
+    container_name: cart-db-migrator
+    depends_on:
+      - cart-db
+    networks:
+      - eat-easy-net
+    volumes:
+      - ${PWD}/services/cart-service/cart-db/db/changelog:/liquibase/changelog
+    command: >
+      liquibase
+      --url=jdbc:postgresql://cart-db:5432/cart_db
+      --changeLogFile=changelog/db.changelog-master.yaml
+      --username=eat_easy
+      --password=easy
+      --logLevel=info
+      update
+
+volumes:
+  cart_db_data:
+
+networks:
+  eat-easy-net:
+    driver: bridge
+    external: true

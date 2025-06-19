@@ -11,6 +11,7 @@ jacocoTestCoverageVerification {
 dependencies {
     implementation project(":modules:common")
     implementation project(':services:user-service:user-api')
+    implementation project(':modules:spring-boot-starter-jwt-authentication')
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -25,24 +26,18 @@ dependencies {
     testImplementation 'org.testcontainers:postgresql'
     testImplementation 'org.testcontainers:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
     testImplementation 'org.liquibase:liquibase-core'
-
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 }
-
-
 tasks.register('copyMigrations', Copy) {
     from project(':services:user-service:user-db').file('db')
     into "${layout.buildDirectory.dir("resources/test").get()}/db"
 }
-
 tasks.named('test') {
     dependsOn copyMigrations
     useJUnitPlatform()
 }
-
 configurations.configureEach {
     resolutionStrategy {
         force 'org.apache.commons:commons-text:1.12.0'

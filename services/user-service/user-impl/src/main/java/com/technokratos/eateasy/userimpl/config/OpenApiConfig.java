@@ -40,5 +40,4 @@ public class OpenApiConfig {
                     .description("User Microservice Wiki")
                     .url("https://example.com/docs"));
     }
-
 }

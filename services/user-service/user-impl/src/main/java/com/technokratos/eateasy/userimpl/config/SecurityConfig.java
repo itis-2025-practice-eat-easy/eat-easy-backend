@@ -1,13 +1,11 @@
 package com.technokratos.eateasy.userimpl.config;
 
 import com.technokratos.eateasy.common.internalkeyvalidator.InternalKeyValidator;
-import lombok.RequiredArgsConstructor;
+import com.technokratos.eateasy.jwtauthenticationstarter.configurer.SecurityConfigurer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authorization.AuthorizationDecision;
-import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -42,7 +40,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, SecurityConfigurer configurer) throws Exception {
+        configurer.configure(http);
         http
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
@@ -53,7 +52,6 @@ public class SecurityConfig {
                         .requestMatchers("/user-swagger/swagger-ui.html").permitAll()
                         .requestMatchers("/user-swagger/swagger-ui/**").permitAll()
                         .requestMatchers("/user-swagger/v3/api-docs/**").permitAll()
-                        .requestMatchers("/user-swagger/api/v1/webhooks/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated()
                 );

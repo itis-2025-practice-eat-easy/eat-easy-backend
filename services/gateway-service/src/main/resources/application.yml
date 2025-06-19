@@ -24,6 +24,35 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
+        - id: order-service-user-orders
+          uri: lb://order-service
+          predicates:
+            - Path=/api/v1/users/*/orders/**
+
+        - id: order-service-orders
+          uri: lb://order-service
+          predicates:
+              - Path=/api/v1/orders/**
+        - id: order-service-swagger
+          uri: lb://order-service
+          predicates:
+              - Path=/order-swagger/**
+
+        - id: cart-service-user-carts
+          uri: lb://cart-service
+          predicates:
+            - Path=/api/v1/users/*/carts/**
+
+        - id: cart-service-carts
+          uri: lb://cart-service
+          predicates:
+            - Path=/api/v1/carts/**
+
+        - id: cart-service-swagger
+          uri: lb://cart-service
+          predicates:
+            - Path=/cart-swagger/**
+
         - id: user-service
           uri: lb://user-service
           predicates:
@@ -43,3 +72,18 @@ spring:
           uri: lb://authentication-service
           predicates:
               - Path=/authentication-swagger/**
+
+        - id: product-service-products
+          uri: lb://product-service
+          predicates:
+            - Path=/api/v1/products/**
+
+        - id: product-service-categories
+          uri: lb://product-service
+          predicates:
+            - Path=/api/v1/categories/**
+
+        - id: product-service-swagger
+          uri: lb://product-service
+          predicates:
+            - Path=/product-swagger/**

@@ -1,6 +1,7 @@
 package com.technokratos.eateasy.userapi.api;
 
-import com.technokratos.eateasy.userapi.dto.UserRequestDto;
+import com.technokratos.eateasy.userapi.dto.UserRequestCreateDto;
+import com.technokratos.eateasy.userapi.dto.UserRequestUpdateDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
 import com.technokratos.eateasy.userapi.dto.UserWithHashPasswordResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,8 +55,8 @@ public interface UserApi {
     UserResponseDto createUser(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "New user data", required = true,
-                    content = @Content(schema = @Schema(implementation = UserRequestDto.class)))
-            @Valid @RequestBody UserRequestDto userDto);
+                    content = @Content(schema = @Schema(implementation = UserRequestCreateDto.class)))
+            @Valid @RequestBody UserRequestCreateDto userDto);
 
     @Operation(summary = "Get user by email", description = "Returns a user by their email address")
     @ApiResponses({
@@ -82,8 +83,8 @@ public interface UserApi {
             @PathVariable UUID id,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Updated user data", required = true,
-                    content = @Content(schema = @Schema(implementation = UserRequestDto.class)))
-            @Valid @RequestBody UserRequestDto userDto);
+                    content = @Content(schema = @Schema(implementation = UserRequestUpdateDto.class)))
+            @Valid @RequestBody UserRequestUpdateDto userDto);
 
     @Operation(summary = "Delete user", description = "Deletes a user from the system by their ID")
     @ApiResponses({
