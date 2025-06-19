@@ -13,6 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Schema(description = "Request for updating an existing product (partial update)")
 @AtLeastOneFieldNotNull(message = "Product update data cannot be null")
 public class ProductUpdateRequest {
 
@@ -29,12 +30,11 @@ public class ProductUpdateRequest {
         @Schema(description = "Product price in USD", example = "1.99")
         private BigDecimal price;
 
-        @Size(max = 255, message = "Product category is longer than 255 characters")
-        @Schema(description = "Product categories", example = "c7e2f6b4-98b8-4f98-89b2-8295e8d25b5a")
+        @Schema(description = "List of category UUIDs", example = "[\"c7e2f6b4-98b8-4f98-89b2-8295e8d25b5a\"]")
         private List<UUID> categories;
 
         @Min(value = 0, message = "Product quantity cannot be negative")
-        @Schema(description = "Available quantity in stock (e.g., units or packages)", example = "200")
+        @Schema(description = "Available quantity in stock", example = "200")
         private Integer quantity;
 
         @Schema(description = "Product photo UUID from 'image-reference' table", example = "d7e2f6b4-98b8-4f98-89b2-8295e8d25b5a")

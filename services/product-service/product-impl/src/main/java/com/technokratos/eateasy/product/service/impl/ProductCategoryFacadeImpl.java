@@ -26,6 +26,7 @@ public class ProductCategoryFacadeImpl implements ProductCategoryFacade {
   private final ProductService productService;
   private final CategoryService categoryService;
   private final AvatarStorageService avatarStorageService;
+  private final ObjectMapper objectMapper;
 
   public ProductResponse getById(UUID id) {
     ProductResponse response = productService.getById(id);
@@ -37,7 +38,7 @@ public class ProductCategoryFacadeImpl implements ProductCategoryFacade {
   public ProductResponse create(String product, MultipartFile avatarFile) {
     ProductRequest productRequest = null;
     try {
-      productRequest = new ObjectMapper().readValue(product, ProductRequest.class);
+      productRequest = objectMapper.readValue(product, ProductRequest.class);
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
@@ -53,7 +54,7 @@ public class ProductCategoryFacadeImpl implements ProductCategoryFacade {
   public void update(UUID id, String product, MultipartFile avatarFile) {
     ProductUpdateRequest productUpdateRequest = null;
     try {
-      productUpdateRequest = new ObjectMapper().readValue(product, ProductUpdateRequest.class);
+      productUpdateRequest = objectMapper.readValue(product, ProductUpdateRequest.class);
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
