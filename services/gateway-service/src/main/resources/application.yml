@@ -43,3 +43,18 @@ spring:
           uri: lb://authentication-service
           predicates:
               - Path=/authentication-swagger/**
+
+        - id: product-service-products
+          uri: lb://product-service
+          predicates:
+            - Path=/api/v1/products/**
+
+        - id: product-service-categories
+          uri: lb://product-service
+          predicates:
+            - Path=/api/v1/categories/**
+
+        - id: product-service-swagger
+          uri: lb://product-service
+          predicates:
+            - Path=/product-swagger/**

@@ -1,7 +1,9 @@
 server:
-  port: 8081
+  port: ${SERVER_PORT:8083}
 
 spring:
+  application:
+    name: product-service
   servlet:
     multipart:
       enabled: true
@@ -21,12 +23,40 @@ spring:
     serialization:
       indent_output: true
 
-  springdoc:
-    api-docs:
-      enabled: true
-    swagger-ui:
-      enabled: true
-      path: /swagger-ui.html
+  cloud:
+    consul:
+      host: ${CONSUL_HOST:127.0.0.1}
+      port: ${CONSUL_PORT:8500}
+      discovery:
+        service-name: ${spring.application.name}
+        instance-id: ${spring.application.name}-${random.value}
+        register: true
+        prefer-ip-address: true
+        health-check-path: /actuator/health
+        health-check-interval: 10s
+        scheme: http
+        deregister: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /product-swagger/swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    enabled: true
+    path: /product-swagger/v3/api-docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
 
 logging:
   level:
@@ -50,3 +80,7 @@ minio:
         }
       ]
     }
+
+custom:
+  swagger:
+    server: ${CUSTOM_SWAGGER_SERVER:http://localhost:8080}
