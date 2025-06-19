@@ -17,11 +17,11 @@ public class AtLeastOneFieldNotNullValidator
   @Override
   public boolean isValid(ProductUpdateRequest request, ConstraintValidatorContext context) {
     boolean valid =
-        request.title() != null
-            || request.description() != null
-            || request.price() != null
-            || request.categories() != null
-            || request.quantity() != null;
+        request.getTitle() != null
+            || request.getDescription() != null
+            || request.getPrice() != null
+            || request.getCategories() != null
+            || request.getQuantity() != null;
 
     if (!valid) {
       context.disableDefaultConstraintViolation();

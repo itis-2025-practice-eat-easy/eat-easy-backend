@@ -18,7 +18,7 @@ public class ProductRepositoryImpl implements ProductRepository {
   private final JdbcTemplate jdbcTemplate;
   private final QueryProvider queryProvider;
   private static final Set<String> allowedColumns =
-      Set.of("title", "description", "photo_url", "price", "category", "quantity");
+      Set.of("title", "description",  "price", "category", "quantity", "photo_url_id");
 
   private final RowMapper<Product> productRowMapper =
       (rs, rowNum) ->
@@ -26,7 +26,7 @@ public class ProductRepositoryImpl implements ProductRepository {
               .id(UUID.fromString(rs.getString("id")))
               .title(rs.getString("title"))
               .description(rs.getString("description"))
-              .photoUrl(rs.getString("photo_url"))
+              .photoUrlId(UUID.fromString(rs.getString("photo_url_id")))
               .price(rs.getBigDecimal("price"))
               .quantity(rs.getInt("quantity"))
               .createdAt(rs.getTimestamp("created_at"))
@@ -47,11 +47,11 @@ public class ProductRepositoryImpl implements ProductRepository {
           productRowMapper,
           product.getTitle(),
           product.getDescription(),
-          product.getPhotoUrl(),
           product.getPrice(),
           product.getQuantity(),
           product.getCreatedAt(),
-          product.getPopularity());
+          product.getPopularity(),
+          product.getPhotoUrlId());
     } catch (DataIntegrityViolationException e) {
       throw e;
     } catch (Exception e) {
@@ -138,5 +138,12 @@ public class ProductRepositoryImpl implements ProductRepository {
       params.add(page * pageSize);
     }
     return jdbcTemplate.query(sql.toString(), productRowMapper, params.toArray());
+  }
+
+  @Override
+  public boolean isProductExist(String title) {
+    String sql = queryProvider.getSqlQueryForProduct("count_by_title");
+    Integer count = jdbcTemplate.queryForObject(sql, Integer.class, title);
+    return count != 0;
   }
 }

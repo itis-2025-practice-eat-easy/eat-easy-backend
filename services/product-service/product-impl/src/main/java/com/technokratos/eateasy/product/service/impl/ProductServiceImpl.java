@@ -1,5 +1,6 @@
 package com.technokratos.eateasy.product.service.impl;
 
+import com.technokratos.eateasy.common.exception.ConflictServiceException;
 import com.technokratos.eateasy.product.dto.product.ProductRequest;
 import com.technokratos.eateasy.product.dto.product.ProductResponse;
 import com.technokratos.eateasy.product.dto.product.ProductUpdateRequest;
@@ -26,34 +27,31 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
-  private final ProductRepository productRepository;
+  private final ProductRepository repository;
 
-  private final ProductMapper productMapper;
+  private final ProductMapper mapper;
 
   public ProductResponse getById(UUID id) {
-    return productRepository
+    return repository
         .findById(id)
-        .map(productMapper::toResponse)
+        .map(mapper::toResponse)
         .orElseThrow(
             () -> new ProductNotFoundException("Product not found with id %s".formatted(id)));
   }
 
   @Transactional
   public ProductResponse create(ProductRequest product) {
-    try {
       log.info("Create product {}", product);
-      return productMapper.toResponse(productRepository.save(productMapper.toEntity(product)));
-    } catch (DataIntegrityViolationException e) {
-      log.error("Duplicate product {}", product);
-      throw new ProductAlreadyExistsException(
-          "Product already exists: %s".formatted(e.getMessage()));
-    }
+      if (repository.isProductExist(product.getTitle())){
+        throw new ConflictServiceException("Product already exist");
+      }
+      return mapper.toResponse(repository.save(mapper.toEntity(product)));
   }
 
   @Transactional
   public void updateQuantity(UUID id, Integer quantity) {
     try {
-      int affectedRows = productRepository.updateQuantityIfNotNegative(id, quantity);
+      int affectedRows = repository.updateQuantityIfNotNegative(id, quantity);
       log.info("Updated product with id: {}", id);
       if (affectedRows == 0) {
         log.info("Product with id: {} not found", id);
@@ -70,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
   public void update(UUID id, ProductUpdateRequest product) {
     try {
       int affectedRows =
-          productRepository.update(id, prepareUpdatesMap(productMapper.toEntity(product)));
+          repository.update(id, prepareUpdatesMap(mapper.toEntity(product)));
       log.info("Updated product with id: {}", id);
       if (affectedRows == 0) {
         log.info("Product with id: {} not found", id);
@@ -85,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
   @Transactional
   public void delete(UUID id) {
     log.info("Delete product with id: {}", id);
-    if (productRepository.deleteById(id) == 0) {
+    if (repository.deleteById(id) == 0) {
       log.info("Product with id: {} not found", id);
       throw new ProductNotFoundException("Product not found with id %s".formatted(id));
     }
@@ -99,10 +97,10 @@ public class ProductServiceImpl implements ProductService {
       BigDecimal maxPrice,
       BigDecimal minPrice) {
 
-    return productRepository
+    return repository
         .getByCategoryId(id, orderBy, page, pageSize, maxPrice, minPrice)
         .stream()
-        .map(productMapper::toResponse)
+        .map(mapper::toResponse)
         .collect(Collectors.toList());
   }
 
@@ -110,7 +108,7 @@ public class ProductServiceImpl implements ProductService {
     Map<String, Object> updates = new LinkedHashMap<>();
     if (product.getTitle() != null) updates.put("title", product.getTitle());
     if (product.getDescription() != null) updates.put("description", product.getDescription());
-    if (product.getPhotoUrl() != null) updates.put("photo_url", product.getPhotoUrl());
+    if (product.getPhotoUrlId() != null) updates.put("photo_url_id", product.getPhotoUrlId());
     if (product.getPrice() != null) updates.put("price", product.getPrice());
     if (product.getQuantity() != null) updates.put("quantity", product.getQuantity());
     return updates;

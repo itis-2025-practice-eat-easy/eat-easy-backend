@@ -20,9 +20,9 @@ public record ProductResponse(
             example = "Fresh and juicy Gala apples, grown locally in California.")
         String description,
     @Schema(
-            description = "URL to the product image",
-            example = "http://example.com/images/apple.jpg")
-        String photoUrl,
+            description = "Product photo UUID from 'image-reference' table",
+            example = "d7e2f6b4-98b8-4f98-89b2-8295e8d25b5a")
+        String photoUrlId,
     @Schema(description = "Product price in USD", example = "1.99") BigDecimal price,
     @Schema(description = "Product category", example = "Fruits") List<CategoryResponse> categories,
     @Schema(description = "Available quantity in stock (e.g., units or packages)", example = "200")

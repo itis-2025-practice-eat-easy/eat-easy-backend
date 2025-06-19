@@ -14,9 +14,9 @@ public class Product {
   private UUID id;
   private String title;
   private String description;
-  private String photoUrl;
   private BigDecimal price;
   private Integer quantity;
   private Timestamp createdAt;
   private Integer popularity;
+  private UUID photoUrlId;
 }
