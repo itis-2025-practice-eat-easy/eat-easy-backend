@@ -24,6 +24,21 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
+        - id: cart-service-user-carts
+          uri: lb://cart-service
+          predicates:
+            - Path=/api/v1/users/*/carts/**
+
+        - id: cart-service-carts
+          uri: lb://cart-service
+          predicates:
+            - Path=/api/v1/carts/**
+
+        - id: cart-service-swagger
+          uri: lb://cart-service
+          predicates:
+            - Path=/cart-swagger/**
+
         - id: user-service
           uri: lb://user-service
           predicates:

@@ -28,7 +28,7 @@ public interface CartApi {
                     @ApiResponse(responseCode = "404", description = "Пользователь не найден", content = @Content)
             }
     )
-    @GetMapping("/user/{id}/carts")
+    @GetMapping("/users/{id}/carts")
     @ResponseStatus(HttpStatus.OK)
     List<CartResponse> getAll(
             @Parameter(description = "UUID пользователя", required = true)
