@@ -1,7 +1,8 @@
 package com.technokratos.eateasy.userimpl.controller;
 
-import com.technokratos.eateasy.userapi.dto.UserRequestDto;
+import com.technokratos.eateasy.userapi.dto.UserRequestCreateDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
+import com.technokratos.eateasy.userapi.dto.UserWithHashPasswordResponseDto;
 import com.technokratos.eateasy.userapi.roleenum.UserRole;
 import com.technokratos.eateasy.userimpl.config.TestRestTemplateConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class UserControllerIntegrationTest {
     @Autowired
     NamedParameterJdbcTemplate jdbcTemplate;
 
-    private UserRequestDto userRequestDto;
+    private UserRequestCreateDto userRequestCreateDto;
     private UUID createdUserId;
 
     final String USERNAME = "rbrmnv";
@@ -49,7 +50,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void createTest() {
-        userRequestDto = UserRequestDto.builder()
+        userRequestCreateDto = UserRequestCreateDto.builder()
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(PASSWORD)
@@ -60,9 +61,9 @@ public class UserControllerIntegrationTest {
 
 
         ResponseEntity<UserResponseDto> response = testRestTemplate.exchange(
-                "/users",
+                "/api/v1/users",
                 HttpMethod.POST,
-                new HttpEntity<>(userRequestDto),
+                new HttpEntity<>(userRequestCreateDto),
                 UserResponseDto.class
         );
 
@@ -74,11 +75,11 @@ public class UserControllerIntegrationTest {
                 "select * from users where id = :id",
                 new MapSqlParameterSource("id", userId),
                 rs -> {
-                    assertEquals(userRequestDto.getUsername(), rs.getString("username"));
-                    assertEquals(userRequestDto.getEmail(), rs.getString("email"));
-                    assertEquals(userRequestDto.getFirstName(), rs.getString("first_name"));
-                    assertEquals(userRequestDto.getLastName(), rs.getString("last_name"));
-                    assertEquals(userRequestDto.getRole().toString(), rs.getString("role"));
+                    assertEquals(userRequestCreateDto.getUsername(), rs.getString("username"));
+                    assertEquals(userRequestCreateDto.getEmail(), rs.getString("email"));
+                    assertEquals(userRequestCreateDto.getFirstName(), rs.getString("first_name"));
+                    assertEquals(userRequestCreateDto.getLastName(), rs.getString("last_name"));
+                    assertEquals(userRequestCreateDto.getRole().toString(), rs.getString("role"));
                     assertFalse(rs.next());
                 }
         );
@@ -87,7 +88,7 @@ public class UserControllerIntegrationTest {
     @Test
     void getAllUsersTest() {
         ResponseEntity<List<UserResponseDto>> response = testRestTemplate.exchange(
-                "/users",
+                "/api/v1/users",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<>() {}
@@ -100,7 +101,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void getUserByIdTest() {
-        userRequestDto = UserRequestDto.builder()
+        userRequestCreateDto = UserRequestCreateDto.builder()
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(PASSWORD)
@@ -110,15 +111,15 @@ public class UserControllerIntegrationTest {
                 .build();
 
         ResponseEntity<UserResponseDto> createResponse = testRestTemplate.exchange(
-                "/users",
+                "/api/v1/users",
                 HttpMethod.POST,
-                new HttpEntity<>(userRequestDto),
+                new HttpEntity<>(userRequestCreateDto),
                 UserResponseDto.class
         );
         createdUserId = createResponse.getBody().getId();
 
         ResponseEntity<UserResponseDto> response = testRestTemplate.exchange(
-                "/users/" + createdUserId,
+                "/api/v1/users/" + createdUserId,
                 HttpMethod.GET,
                 null,
                 UserResponseDto.class
@@ -139,7 +140,7 @@ public class UserControllerIntegrationTest {
     void getUserByIdNotFoundTest() {
         UUID nonExistentId = UUID.randomUUID();
         ResponseEntity<String> response = testRestTemplate.exchange(
-                "/users/" + nonExistentId,
+                "/api/v1/users/" + nonExistentId,
                 HttpMethod.GET,
                 null,
                 String.class
@@ -149,7 +150,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void getUserByEmailTest() {
-        userRequestDto = UserRequestDto.builder()
+        userRequestCreateDto = UserRequestCreateDto.builder()
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(PASSWORD)
@@ -159,23 +160,23 @@ public class UserControllerIntegrationTest {
                 .build();
 
         ResponseEntity<UserResponseDto> createResponse = testRestTemplate.exchange(
-                "/users",
+                "/api/v1/users",
                 HttpMethod.POST,
-                new HttpEntity<>(userRequestDto),
+                new HttpEntity<>(userRequestCreateDto),
                 UserResponseDto.class
         );
 
         createdUserId = createResponse.getBody().getId();
 
-        ResponseEntity<UserResponseDto> response = testRestTemplate.exchange(
-                "/users?email=" + EMAIL,
+        ResponseEntity<UserWithHashPasswordResponseDto> response = testRestTemplate.exchange(
+                "/api/v1/users?email=" + EMAIL,
                 HttpMethod.GET,
                 null,
-                UserResponseDto.class
+                UserWithHashPasswordResponseDto.class
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        UserResponseDto user = response.getBody();
+        UserResponseDto user = response.getBody().getUserResponseDto();
         assertNotNull(user);
         assertEquals(createdUserId, user.getId());
         assertEquals(EMAIL, user.getEmail());
@@ -185,7 +186,7 @@ public class UserControllerIntegrationTest {
     void getUserByEmailNotFoundTest() {
         String nonExistentEmail = "nonexistent@mail.ru";
         ResponseEntity<String> response = testRestTemplate.exchange(
-                "/users?email=" + nonExistentEmail,
+                "/api/v1/users?email=" + nonExistentEmail,
                 HttpMethod.GET,
                 null,
                 String.class
@@ -196,7 +197,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void updateUserTest() {
-        userRequestDto = UserRequestDto.builder()
+        userRequestCreateDto = UserRequestCreateDto.builder()
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(PASSWORD)
@@ -206,14 +207,14 @@ public class UserControllerIntegrationTest {
                 .build();
 
         ResponseEntity<UserResponseDto> createResponse = testRestTemplate.exchange(
-                "/users",
+                "/api/v1/users",
                 HttpMethod.POST,
-                new HttpEntity<>(userRequestDto),
+                new HttpEntity<>(userRequestCreateDto),
                 UserResponseDto.class
         );
         createdUserId = createResponse.getBody().getId();
 
-        UserRequestDto updatedUser = UserRequestDto.builder()
+        UserRequestCreateDto updatedUser = UserRequestCreateDto.builder()
                 .username("updateduser")
                 .email("updated@mail.ru")
                 .password("updatedpass123")
@@ -223,7 +224,7 @@ public class UserControllerIntegrationTest {
                 .build();
 
         ResponseEntity<UserResponseDto> response = testRestTemplate.exchange(
-                "/users/" + createdUserId,
+                "/api/v1/users/" + createdUserId,
                 HttpMethod.PUT,
                 new HttpEntity<>(updatedUser),
                 UserResponseDto.class
@@ -254,7 +255,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void updateUserNotFoundTest() {
-        userRequestDto = UserRequestDto.builder()
+        userRequestCreateDto = UserRequestCreateDto.builder()
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(PASSWORD)
@@ -265,9 +266,9 @@ public class UserControllerIntegrationTest {
 
         UUID nonExistentId = UUID.randomUUID();
         ResponseEntity<String> response = testRestTemplate.exchange(
-                "/users/" + nonExistentId,
+                "/api/v1/users/" + nonExistentId,
                 HttpMethod.PUT,
-                new HttpEntity<>(userRequestDto),
+                new HttpEntity<>(userRequestCreateDto),
                 String.class
         );
 
@@ -276,7 +277,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void deleteUserTest() {
-        userRequestDto = UserRequestDto.builder()
+        userRequestCreateDto = UserRequestCreateDto.builder()
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(PASSWORD)
@@ -286,9 +287,9 @@ public class UserControllerIntegrationTest {
                 .build();
 
         ResponseEntity<UserResponseDto> createResponse = testRestTemplate.exchange(
-                "/users",
+                "/api/v1/users",
                 HttpMethod.POST,
-                new HttpEntity<>(userRequestDto),
+                new HttpEntity<>(userRequestCreateDto),
                 UserResponseDto.class
         );
 
@@ -296,7 +297,7 @@ public class UserControllerIntegrationTest {
         UUID userIdToDelete = createResponse.getBody().getId();
 
         ResponseEntity<Void> deleteResponse = testRestTemplate.exchange(
-                "/users/" + userIdToDelete,
+                "/api/v1/users/" + userIdToDelete,
                 HttpMethod.DELETE,
                 null,
                 Void.class
@@ -316,7 +317,7 @@ public class UserControllerIntegrationTest {
     void deleteUserNotFoundTest() {
         UUID nonExistentId = UUID.randomUUID();
         ResponseEntity<String> response = testRestTemplate.exchange(
-                "/users/" + nonExistentId,
+                "/api/v1/users/" + nonExistentId,
                 HttpMethod.DELETE,
                 null,
                 String.class

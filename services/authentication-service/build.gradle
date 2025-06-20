@@ -1,0 +1,33 @@
+plugins {
+    id 'com.technokratos.key-generation'
+}
+
+ext {
+    jacocoExclude = '**/dto/**,**/exception/**,**/*Exception.class,**/OpenApiConfig.class'
+}
+
+dependencies {
+    implementation project(':modules:common')
+    implementation project(':services:user-service:user-api')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8'
+    implementation project(':modules:spring-boot-starter-jwt-authentication')
+    implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    testImplementation 'com.redis:testcontainers-redis'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation project(":modules:jwt-service-library")
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+}
+
+test {
+    useJUnitPlatform()
+}

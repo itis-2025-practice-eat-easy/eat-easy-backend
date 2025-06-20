@@ -16,15 +16,12 @@ import java.util.UUID;
 @Builder
 @Schema(description = "Data Transfer Object containing user response data")
 public class UserResponseDto {
-
     @Schema(
             description = "Unique identifier of the user",
             example = "123e4567-e89b-12d3-a456-426614174000",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    @JsonProperty("id")
     private UUID id;
-
     @Schema(
             description = "Unique username of the user",
             example = "john_doe",
@@ -32,40 +29,30 @@ public class UserResponseDto {
             minLength = 3,
             maxLength = 50
     )
-    @JsonProperty("username")
     private String username;
-
     @Schema(
             description = "Email address of the user",
             example = "john.doe@example.com",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    @JsonProperty("email")
     private String email;
-
     @Schema(
             description = "First name of the user",
             example = "John",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    @JsonProperty("first_name")
     private String firstName;
-
     @Schema(
             description = "Last name of the user",
             example = "Doe",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    @JsonProperty("last_name")
     private String lastName;
-
     @Schema(
             description = "Role of the user",
             example = "User",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
-
-    @JsonProperty("role")
     private UserRole role;
 
 }

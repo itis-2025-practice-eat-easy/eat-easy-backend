@@ -1,7 +1,8 @@
 package com.technokratos.eateasy.userimpl.mapper;
 
 
-import com.technokratos.eateasy.userapi.dto.UserRequestDto;
+import com.technokratos.eateasy.userapi.dto.UserRequestCreateDto;
+import com.technokratos.eateasy.userapi.dto.UserRequestUpdateDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
 import com.technokratos.eateasy.userapi.roleenum.UserRole;
 import com.technokratos.eateasy.userimpl.model.UserEntity;
@@ -13,10 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class UserMapper {
-
     private final PasswordEncoder passwordEncoder;
-
-
     public UserResponseDto toDto(UserEntity entity) {
         return entity == null ? null :
                 UserResponseDto.builder()
@@ -28,8 +26,7 @@ public class UserMapper {
                         .role(entity.getRole())
                         .build();
     }
-
-    public UserEntity toEntity(UserRequestDto dto) {
+    public UserEntity toEntity(UserRequestCreateDto dto) {
         return dto == null ? null :
                 UserEntity.builder()
                         .username(dto.getUsername())
@@ -37,15 +34,13 @@ public class UserMapper {
                         .password(passwordEncoder.encode(dto.getPassword()))
                         .firstName(dto.getFirstName())
                         .lastName(dto.getLastName())
-                        .role(dto.getRole() != null ? dto.getRole() : UserRole.USER)
+                        .role(UserRole.USER)
                         .build();
     }
-
-    public void updateEntity(UserEntity entity, UserRequestDto dto) {
+    public void updateEntity(UserEntity entity, UserRequestUpdateDto dto) {
         if (dto == null || entity == null) {
             return ;
         }
-
         if (dto.getUsername() != null) {
             entity.setUsername(dto.getUsername());
         }
@@ -57,9 +52,6 @@ public class UserMapper {
         }
         if (dto.getLastName() != null) {
             entity.setLastName(dto.getLastName());
-        }
-        if (dto.getRole() != null){
-            entity.setRole(dto.getRole());
         }
     }
 }

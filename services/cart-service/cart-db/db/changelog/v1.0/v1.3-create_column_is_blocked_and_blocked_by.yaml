@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-is_blocked-and-blocked_by-to-user_cart
+      author: smesitejl
+      changes:
+        - addColumn:
+            tableName: user_cart
+            columns:
+              - column:
+                  name: is_blocked
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: blocked_by
+                  type: varchar(255)
+                  defaultValue: null

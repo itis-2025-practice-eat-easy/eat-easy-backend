@@ -1,0 +1,89 @@
+plugins {
+    id 'com.diffplug.spotless' version '6.25.0'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+
+
+spotless {
+    java {
+        target 'src/**/*.java'
+        encoding 'UTF-8'
+        googleJavaFormat()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
+dependencies {
+    implementation project(':services:product-service:product-api')
+    implementation project(':modules:common')
+    implementation project(':modules:spring-boot-starter-jwt-authentication')
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8'
+    implementation 'org.springframework:spring-tx'
+
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+    implementation 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.testcontainers:postgresql'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    testImplementation 'org.liquibase:liquibase-core'
+    implementation('io.minio:minio:8.5.17') {
+        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
+    }
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+}
+
+tasks.withType(JavaCompile) {
+    options.annotationProcessorPath = configurations.annotationProcessor
+    options.compilerArgs = ['-Amapstruct.defaultComponentModel=spring']
+}
+
+
+tasks.register('copyMigrations', Copy) {
+    from project(':services:product-service:product-db').file('db')
+    into "${layout.buildDirectory.dir("resources/test").get()}/db"
+}
+
+tasks.named('test') {
+    dependsOn copyMigrations
+    useJUnitPlatform()
+}
+
+jacocoTestCoverageVerification {
+    enabled = false;
+}
+
+configurations.configureEach {
+    resolutionStrategy {
+        force 'org.apache.commons:commons-compress:1.27.1'
+        force 'org.jetbrains:annotations:17.0.0'
+        force 'org.checkerframework:checker-qual:3.48.3'
+        force 'org.apache.commons:commons-text:1.12.0'
+        force 'com.google.errorprone:error_prone_annotations:2.28.0'
+    }
+}
+

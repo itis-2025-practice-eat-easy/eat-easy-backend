@@ -1,0 +1,43 @@
+services:
+  authentication-service:
+    build:
+      context: ../../..
+      dockerfile: services/authentication-service/docker/Dockerfile
+    container_name: eat-easy-authentication-service
+    depends_on:
+      - authentication-redis
+    volumes:
+      - ${PWD}/security/public:/eat-easy/security/public
+      - ${PWD}/security/private:/eat-easy/security/private
+    environment:
+      REDIS_HOST: authentication-redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: authentication
+
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
+
+      JWT_ACCESS_PRIVATE_KEY: "file:/eat-easy/security/private/access_private.pem"
+      JWT_ACCESS_PUBLIC_KEY: "file:/eat-easy/security/public/access_public.pem"
+      JWT_REFRESH_PRIVATE_KEY: "file:/eat-easy/security/private/refresh_private.pem"
+      JWT_REFRESH_PUBLIC_KEY: "file:/eat-easy/security/public/refresh_public.pem"
+
+      CUSTOM_SWAGGER_SERVER: ${BACKEND_ADDRESS}
+
+      SPRING_PROFILES_ACTIVE: "${ENABLE_DEBUG:+debug}"
+    networks:
+      - eat-easy-net
+
+  authentication-redis:
+    image: redis:7.2
+    container_name: authentication-redis
+    ports:
+      - "6379:6379"
+    command: [ "redis-server", "--requirepass", "authentication" ]
+    networks:
+      - eat-easy-net
+
+networks:
+  eat-easy-net:
+    driver: bridge
+    external: true
