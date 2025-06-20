@@ -14,6 +14,10 @@ include ':services:user-service:user-impl'
 include ':services:user-service:user-db'
 
 include ':modules:log-starter'
+
+include 'modules:custom-openapi-starter'
+
+
 include ':services:gateway-service'
 
 include 'services:cart-service:cart-api'
@@ -25,3 +29,4 @@ include ':services:order-service:order-db'
 include ':services:order-service:order-impl'
 
 include ':modules:log-starter'
+
