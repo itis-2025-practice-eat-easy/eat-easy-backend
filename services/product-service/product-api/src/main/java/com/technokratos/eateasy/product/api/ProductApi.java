@@ -45,20 +45,35 @@ public interface ProductApi {
           @PathVariable("id")
           UUID productId);
 
-  @Operation(summary = "Create a new product")
-  @ApiResponses(
-      value = {
-        @ApiResponse(responseCode = "201", description = "Product created successfully"),
-        @ApiResponse(responseCode = "400", description = "Invalid product data"),
-        @ApiResponse(responseCode = "409", description = "Product already exists")
-      })
-  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  @ResponseStatus(HttpStatus.CREATED)
-  @ResponseBody
-  ProductResponse create(
-          @RequestParam("product") @Valid String product,
-          @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile
-          );
+    @Operation(summary = "Create a new product", parameters = {
+            @Parameter(
+                    name = "product",
+                    description = "JSON-string with product data",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProductRequest.class),
+                            examples = @ExampleObject(
+                                    name = "Example",
+                                    value = """
+                    {
+                      "title": "Gala Apple",
+                      "description": "Fresh and juicy Gala apples",
+                      "price": 1.99,
+                      "categories": ["c7e2f6b4-98b8-4f98-89b2-8295e8d25b5a"],
+                      "quantity": 200
+                    }"""
+                            )
+                    )
+            )
+    })
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    ProductResponse create(
+            @RequestParam("product") @Valid String product,
+            @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile
+    );
 
   @Operation(summary = "Update the quantity of a product (add or subtract the provided value)")
   @ApiResponses(
@@ -86,25 +101,35 @@ public interface ProductApi {
           @Max(value = 10000)
           Integer quantity);
 
-  @Operation(summary = "Update a product's details (partial update)")
-  @ApiResponses(
-      value = {
-        @ApiResponse(responseCode = "204", description = "Product updated successfully"),
-        @ApiResponse(responseCode = "400", description = "Invalid product data"),
-        @ApiResponse(responseCode = "404", description = "Product not found")
-      })
-  @PatchMapping("/{id}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ResponseBody
-  void update(
-      @Parameter(
-              description = "Product UUID",
-              example = "c7e2f6b4-98b8-4f98-89b2-8295e8d25b5a",
-              required = true)
-          @PathVariable("id")
-          UUID productId,
-      @RequestParam("product") @Valid String product,
-      @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile);
+    @Operation(summary = "Update a product's details", parameters = {
+            @Parameter(
+                    name = "product",
+                    description = "JSON-строка с обновляемыми данными",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProductUpdateRequest.class),
+                            examples = @ExampleObject(
+                                    name = "Example",
+                                    value = """
+                    {
+                      "title": "Updated Apple",
+                      "description": "Premium quality apples",
+                      "price": 2.49,
+                      "categories": ["d8f3g7c5-12a9-4e76-91c3-8654e9d42f1b"],
+                      "quantity": 150
+                    }"""
+                            )
+                    )
+            )
+    })
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    void update(
+            @PathVariable("id") UUID productId,
+            @RequestParam("product") @Valid String product,
+            @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile);
 
   @Operation(summary = "Delete a product by its ID")
   @ApiResponses(

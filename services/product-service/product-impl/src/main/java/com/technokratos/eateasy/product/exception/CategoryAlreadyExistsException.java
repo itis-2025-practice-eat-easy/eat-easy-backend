@@ -1,6 +1,8 @@
 package com.technokratos.eateasy.product.exception;
 
-public class CategoryAlreadyExistsException extends RuntimeException {
+import com.technokratos.eateasy.common.exception.ConflictServiceException;
+
+public class CategoryAlreadyExistsException extends ConflictServiceException {
   public CategoryAlreadyExistsException(String message) {
     super(message);
   }

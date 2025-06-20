@@ -89,4 +89,5 @@ public class ProductCategoryFacadeImpl implements ProductCategoryFacade {
     }
     return photoId;
   }
+
 }

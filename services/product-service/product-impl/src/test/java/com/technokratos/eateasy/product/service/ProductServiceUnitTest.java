@@ -8,6 +8,7 @@ import com.technokratos.eateasy.product.dto.product.ProductResponse;
 import com.technokratos.eateasy.product.dto.product.ProductUpdateRequest;
 import com.technokratos.eateasy.product.entity.Product;
 import com.technokratos.eateasy.product.exception.ProductAlreadyExistsException;
+import com.technokratos.eateasy.product.exception.ProductDataIntegrityViolationException;
 import com.technokratos.eateasy.product.exception.ProductNotFoundException;
 import com.technokratos.eateasy.product.mapper.ProductMapper;
 import com.technokratos.eateasy.product.repository.impl.ProductRepositoryImpl;
@@ -45,7 +46,7 @@ class ProductServiceUnitTest {
             .id(productId)
             .title("Burger")
             .description("Tasty burger")
-            .photoUrl("http://image.com")
+            .photoUrlId(UUID.fromString("23f5dccc-1405-41a0-beb1-99a2b36ec4dc"))
             .price(new BigDecimal("5.99"))
             .quantity(10)
             .build();
@@ -54,7 +55,7 @@ class ProductServiceUnitTest {
         ProductRequest.builder()
             .title("Burger")
             .description("Tasty burger")
-            .photoUrl("http://image.com")
+            .photoUrlId(UUID.fromString("23f5dccc-1405-41a0-beb1-99a2b36ec4dc"))
             .price(new BigDecimal("5.99"))
             .quantity(10)
             .build();
@@ -63,7 +64,7 @@ class ProductServiceUnitTest {
         ProductUpdateRequest.builder()
             .title("Burger")
             .description("Tasty burger")
-            .photoUrl("http://image.com")
+            .photoUrlId(UUID.fromString("23f5dccc-1405-41a0-beb1-99a2b36ec4dc"))
             .price(new BigDecimal("5.99"))
             .quantity(10)
             .build();
@@ -73,7 +74,7 @@ class ProductServiceUnitTest {
             .id(productId)
             .title("Burger")
             .description("Tasty burger")
-            .photoUrl("http://image.com")
+            .photoUrlId("23f5dccc-1405-41a0-beb1-99a2b36ec4dc")
             .price(new BigDecimal("5.99"))
             .quantity(10)
             .build();
@@ -108,7 +109,7 @@ class ProductServiceUnitTest {
   void createDuplicateThrowsException() {
     when(productMapper.toEntity(productRequest)).thenReturn(product);
     when(productRepository.save(product)).thenThrow(DataIntegrityViolationException.class);
-    assertThrows(ProductAlreadyExistsException.class, () -> productService.create(productRequest));
+    assertThrows(ProductDataIntegrityViolationException.class, () -> productService.create(productRequest));
   }
 
   @Test
@@ -135,7 +136,7 @@ class ProductServiceUnitTest {
     when(productRepository.updateQuantityIfNotNegative(productId, 5))
         .thenThrow(DataIntegrityViolationException.class);
     assertThrows(
-        DataIntegrityViolationException.class, () -> productService.updateQuantity(productId, 5));
+            ProductDataIntegrityViolationException.class, () -> productService.updateQuantity(productId, 5));
   }
 
   @Test
@@ -167,7 +168,7 @@ class ProductServiceUnitTest {
     when(productRepository.update(eq(productId), anyMap()))
         .thenThrow(DataIntegrityViolationException.class);
     assertThrows(
-        DataIntegrityViolationException.class,
+            ProductDataIntegrityViolationException.class,
         () -> productService.update(productId, productUpdateRequest));
   }
 

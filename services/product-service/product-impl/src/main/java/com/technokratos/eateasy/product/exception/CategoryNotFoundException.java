@@ -1,6 +1,8 @@
 package com.technokratos.eateasy.product.exception;
 
-public class CategoryNotFoundException extends RuntimeException {
+import com.technokratos.eateasy.common.exception.NotFoundServiceException;
+
+public class CategoryNotFoundException extends NotFoundServiceException {
   public CategoryNotFoundException(String message) {
     super(message);
   }
