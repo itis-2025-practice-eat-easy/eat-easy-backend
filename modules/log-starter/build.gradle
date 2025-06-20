@@ -1,0 +1,58 @@
+plugins {
+	id 'java-library'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'maven-publish'
+}
+
+dependencies {
+	implementation "org.springframework.boot:spring-boot-starter-aop"
+	implementation "org.springframework.boot:spring-boot-autoconfigure"
+	implementation "org.springframework:spring-web"
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+	compileOnly "org.projectlombok:lombok"
+	annotationProcessor "org.projectlombok:lombok"
+	testImplementation "org.springframework.boot:spring-boot-starter-test"
+}
+
+jacocoTestCoverageVerification {
+	enabled = false
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			groupId = 'com.technokratos.eateasy'
+			artifactId = 'logging-starter'
+			version = '1.0.3'
+			from components.java
+			pom {
+				name = 'Logging Starter'
+				description = 'AOP-based logging starter for Spring Boot'
+				url = 'https://robert.com'
+				licenses {
+					license {
+						name = 'The Apache License, Version 2.0'
+						url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+					}
+				}
+				developers {
+					developer {
+						id = '1'
+						name = 'Robert'
+						email = 'robert@mail.ru'
+					}
+				}
+			}
+		}
+	}
+}
+
+dependencyManagement {
+	imports {
+		mavenBom 'org.springframework.boot:spring-boot-dependencies:3.4.5'
+	}
+}
+
+test {
+	useJUnitPlatform()
+}

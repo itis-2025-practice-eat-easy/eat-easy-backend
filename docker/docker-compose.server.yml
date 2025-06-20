@@ -1,0 +1,14 @@
+services:
+  consul:
+    container_name: consul
+    image: hashicorp/consul:1.21
+    command: agent -dev -client=0.0.0.0
+    ports:
+      - "8500:8500"
+    networks:
+      - eat-easy-net
+
+networks:
+  eat-easy-net:
+    driver: bridge
+    external: true

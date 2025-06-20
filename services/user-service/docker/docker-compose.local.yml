@@ -1,0 +1,66 @@
+services:
+  user-service:
+    build:
+      context: ../../..
+      dockerfile: services/user-service/docker/Dockerfile
+    container_name: eat-easy-user-service
+    depends_on:
+      - user-db
+      - user-db-migrator
+    ports:
+      - "8082:8082"
+    volumes:
+      - ${PWD}/security/public:/eat-easy/security/public
+    environment:
+      DB_URL: jdbc:postgresql://user-db:5432/user_db
+      DB_USERNAME: eat_easy
+      DB_PASSWORD: easy
+
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
+
+      CUSTOM_SWAGGER_SERVER: "http://localhost:8080"
+
+      JWT_ACCESS_PUBLIC_KEY: "file:/eat-easy/security/public/access_public.pem"
+    networks:
+      - eat-easy-net
+
+  user-db:
+    image: postgres:17
+    container_name: user-db
+    environment:
+      POSTGRES_DB: user_db
+      POSTGRES_USER: eat_easy
+      POSTGRES_PASSWORD: easy
+    ports:
+      - "5440:5432"
+    networks:
+      - eat-easy-net
+    volumes:
+      - user_db_data:/var/lib/postgresql/data
+
+  user-db-migrator:
+    image: liquibase/liquibase:4.28
+    container_name: user-db-migrator
+    depends_on:
+      - user-db
+    networks:
+      - eat-easy-net
+    volumes:
+      - ${PWD}/services/user-service/user-db/db/changelog:/liquibase/changelog
+    command: >
+      liquibase
+      --url=jdbc:postgresql://user-db:5432/user_db
+      --changeLogFile=changelog/db.changelog-master.yaml
+      --username=eat_easy
+      --password=easy
+      --logLevel=info
+      update
+
+volumes:
+  user_db_data:
+
+networks:
+  eat-easy-net:
+    driver: bridge
+    external: true

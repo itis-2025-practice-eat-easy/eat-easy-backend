@@ -1,0 +1,20 @@
+plugins {
+    id 'com.technokratos.jacoco-convention'
+}
+
+subprojects {
+    group = 'com.technokratos.eateasy'
+    version = '1.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+
+    configurations {
+        configureEach {
+            resolutionStrategy {
+                failOnVersionConflict()
+            }
+        }
+    }
+}

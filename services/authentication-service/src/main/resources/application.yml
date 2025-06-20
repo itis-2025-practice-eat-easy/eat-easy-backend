@@ -1,0 +1,86 @@
+spring:
+  application:
+    name: authentication-service
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:eat-easy}
+      timeout: 3s
+
+  cloud:
+    consul:
+      host: ${CONSUL_HOST:127.0.0.1}
+      port: ${CONSUL_PORT:8500}
+      discovery:
+        service-name: ${spring.application.name}
+        instance-id: ${spring.application.name}-${random.value}
+        register: true
+        prefer-ip-address: true
+        health-check-path: /actuator/health
+        health-check-interval: 10s
+        scheme: http
+        deregister: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+
+springdoc:
+  swagger-ui:
+    path: /authentication-swagger/swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /authentication-swagger/v3/api-docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  model-and-view-allowed: true
+  override-with-generic-response: false
+
+jwt:
+  mode: server
+  login-url: /api/v1/auth/login
+  refresh-url: /api/v1/auth/refresh
+  logout-url: /api/v1/auth/logout
+  issuer: authentication-service
+  tokens:
+    access:
+      header: Authorization
+      prefix: "Bearer "
+      expiration: 7m
+      key:
+        algorithm: RSA
+        private-key: ${JWT_ACCESS_PRIVATE_KEY}
+        public-key: ${JWT_ACCESS_PUBLIC_KEY}
+    refresh:
+      use-cookie: true
+      cookie-name: refresh_token
+      expiration: 48h
+      key:
+        algorithm: RSA
+        private-key: ${JWT_REFRESH_PRIVATE_KEY}
+        public-key: ${JWT_REFRESH_PUBLIC_KEY}
+
+custom:
+  use-https: ${CUSTOM_USE_HTTPS:false}
+  repository:
+    refresh-token:
+      key-prefix: "refresh:"
+  swagger:
+    server: ${CUSTOM_SWAGGER_SERVER:http://localhost:8081}
+  service:
+    user-service:
+      name: user-service
+  internal:
+    header: ${CUSTOM_INTERNAL_HEADER:X-Internal-Request}
+    secret-key: ${CUSTOM_INTERNAL_SECRET_KEY:secret-key}
+
+server:
+  port: 8081

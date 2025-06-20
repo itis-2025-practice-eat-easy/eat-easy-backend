@@ -1,0 +1,21 @@
+subprojects {
+    apply plugin: 'java-library'
+
+    jar.archiveFileName = "${project.name}.jar"
+
+    ext {
+        lombokVersion = '1.18.22'
+    }
+
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    dependencies {
+        compileOnly "org.projectlombok:lombok:${lombokVersion}"
+        annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    }
+}

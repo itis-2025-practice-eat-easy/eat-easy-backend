@@ -1,0 +1,10 @@
+{
+  "urls": [
+    { "url": "/user-swagger/v3/api-docs", "name": "User Service" },
+    { "url": "/product-swagger/v3/api-docs", "name": "Product Service" },
+    { "url": "/cart-swagger/v3/api-docs", "name": "Cart Service" },
+    { "url": "/order-swagger/v3/api-docs", "name": "Order Service" },
+    { "url": "/authentication-swagger/v3/api-docs", "name": "Authentication Service" }
+  ],
+  "urls.primaryName": "Authentication Service"
+}

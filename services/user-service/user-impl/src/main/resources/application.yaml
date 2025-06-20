@@ -1,0 +1,77 @@
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  cloud:
+    consul:
+      host: ${CONSUL_HOST:127.0.0.1}
+      port: ${CONSUL_PORT:8500}
+      discovery:
+        service-name: ${spring.application.name}
+        instance-id: ${spring.application.name}-${random.value}
+        register: true
+        prefer-ip-address: true
+        health-check-path: /actuator/health
+        health-check-interval: 10s
+        scheme: http
+        deregister: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+springdoc:
+  swagger-ui:
+    path: /user-swagger/swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /user-swagger/v3/api-docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+aop:
+  auto: true
+  proxy-target-class: true
+
+logging:
+  level:
+    com.technokratos.eateasy.userapi.aop: DEBUG
+
+server:
+  port: 8082
+
+
+custom:
+  swagger:
+    server: ${CUSTOM_SWAGGER_SERVER:http://localhost:8080}
+  internal:
+    header: ${CUSTOM_INTERNAL_HEADER:X-Internal-Request}
+    secret-key: ${CUSTOM_INTERNAL_SECRET_KEY:secret-key}
+
+jwt:
+  mode: client
+  tokens:
+    access:
+      header: Authorization
+      prefix: "Bearer "
+      key:
+        algorithm: RSA
+        public-key: ${JWT_ACCESS_PUBLIC_KEY}
+  issuer: authentication-service

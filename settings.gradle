@@ -1,0 +1,27 @@
+rootProject.name = 'eat-easy-backend'
+
+include ':services:product-service:product-api'
+include ':services:product-service:product-impl'
+include ':services:product-service:product-db'
+
+include ':modules:jwt-service-library'
+include ':modules:spring-boot-starter-jwt-authentication'
+include ':services:authentication-service'
+
+include ':modules:common'
+include ':services:user-service:user-api'
+include ':services:user-service:user-impl'
+include ':services:user-service:user-db'
+
+include ':modules:log-starter'
+include ':services:gateway-service'
+
+include 'services:cart-service:cart-api'
+include 'services:cart-service:cart-impl'
+include 'services:cart-service:cart-db'
+
+include ':services:order-service:order-api'
+include ':services:order-service:order-db'
+include ':services:order-service:order-impl'
+
+include ':modules:log-starter'

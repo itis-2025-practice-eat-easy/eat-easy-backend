@@ -1,0 +1,6 @@
+logging:
+  level:
+    root: info
+    com.technokratos.eateasy: trace
+    org.springframework.security: debug
+    org.springframework.web.filter.CommonsRequestLoggingFilter: trace

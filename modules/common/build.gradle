@@ -1,0 +1,39 @@
+plugins {
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+ext {
+    springBootVersion = '3.4.5'
+    jjwtVersion = '0.12.6'
+    junitVersion = '5.10.0'
+    jacocoExclude = '**/exception/**,**/*Exception.class'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+    }
+}
+
+dependencies {
+    implementation 'org.slf4j:slf4j-api'
+    implementation 'org.springframework:spring-web'
+    compileOnly 'jakarta.servlet:jakarta.servlet-api'
+    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.30'
+
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'jakarta.servlet:jakarta.servlet-api'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
+    testImplementation platform("org.junit:junit-bom:${junitVersion}")
+}
+
+test {
+    useJUnitPlatform()
+}

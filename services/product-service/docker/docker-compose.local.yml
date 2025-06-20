@@ -1,0 +1,89 @@
+services:
+  product-service:
+    build:
+      context: ../../..
+      dockerfile: services/product-service/docker/Dockerfile
+    container_name: eat-easy-product
+    depends_on:
+      - product-db
+      - product-db-migrator
+      - product-minio
+    ports:
+      - "8083:8083"
+    volumes:
+      - ${PWD}/security/public:/eat-easy/security/public
+    environment:
+      DB_URL: jdbc:postgresql://product-db:5432/product_db
+      DB_USERNAME: eat_easy
+      DB_PASSWORD: easy
+
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
+
+      CUSTOM_SWAGGER_SERVER: "http://localhost:8080"
+
+      JWT_ACCESS_PUBLIC_KEY: "file:/eat-easy/security/public/access_public.pem"
+
+      MINIO_URL: http://product-minio:9000
+      MINIO_LOGIN: minioadmin
+      MINIO_PASSWORD: minioadmin
+
+      SPRING_PROFILES_ACTIVE: debug
+    networks:
+      - eat-easy-net
+
+  product-db:
+    image: postgres:17
+    container_name: product-db
+    environment:
+      POSTGRES_DB: product_db
+      POSTGRES_USER: eat_easy
+      POSTGRES_PASSWORD: easy
+    ports:
+      - "5450:5432"
+    networks:
+      - eat-easy-net
+    volumes:
+      - product_db_data:/var/lib/postgresql/data
+
+  product-db-migrator:
+    image: liquibase/liquibase:4.28
+    container_name: product-db-migrator
+    depends_on:
+      - product-db
+    networks:
+      - eat-easy-net
+    volumes:
+      - ${PWD}/services/product-service/product-db/db/changelog:/liquibase/changelog
+    command: >
+      liquibase
+      --url=jdbc:postgresql://product-db:5432/product_db
+      --changeLogFile=changelog/db.changelog-master.yaml
+      --username=eat_easy
+      --password=easy
+      --logLevel=info
+      update
+
+  product-minio:
+    image: minio/minio:latest
+    container_name: product-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server --console-address ":9001" /data
+    volumes:
+      - minio-data:/data
+    networks:
+      - eat-easy-net
+
+volumes:
+  product_db_data:
+  minio-data:
+
+networks:
+  eat-easy-net:
+    driver: bridge
+    external: true
