@@ -26,7 +26,7 @@ public class ProductCategoryFacadeImpl implements ProductCategoryFacade {
   private final ProductService productService;
   private final CategoryService categoryService;
   private final AvatarStorageService avatarStorageService;
-  private final ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
   public ProductResponse getById(UUID id) {
     ProductResponse response = productService.getById(id);

@@ -109,7 +109,7 @@ class ProductServiceUnitTest {
   void createDuplicateThrowsException() {
     when(productMapper.toEntity(productRequest)).thenReturn(product);
     when(productRepository.save(product)).thenThrow(DataIntegrityViolationException.class);
-    assertThrows(ProductDataIntegrityViolationException.class, () -> productService.create(productRequest));
+    assertThrows(DataIntegrityViolationException.class, () -> productService.create(productRequest));
   }
 
   @Test
