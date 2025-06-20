@@ -1,6 +1,8 @@
 package com.technokratos.eateasy.product.exception;
 
-public class ProductNotFoundException extends RuntimeException {
+import com.technokratos.eateasy.common.exception.NotFoundServiceException;
+
+public class ProductNotFoundException extends NotFoundServiceException {
   public ProductNotFoundException(String message) {
     super(message);
   }

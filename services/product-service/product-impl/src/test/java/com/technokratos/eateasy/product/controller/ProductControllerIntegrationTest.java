@@ -35,10 +35,10 @@ class ProductControllerIntegrationTest {
       new ProductRequest(
           "Apple",
           "Fresh red apples",
-          "http://example.com/apple.jpg",
-          BigDecimal.valueOf(2.99),
-          List.of(),
-          100);
+              BigDecimal.valueOf(2.99),
+              List.of(),
+              100,
+          UUID.fromString("f05d7d66-9d1f-4de9-b9b5-e2e6e4b33c91"));
 
   UUID categoryId;
   ProductRequest testProduct;
@@ -49,12 +49,12 @@ class ProductControllerIntegrationTest {
     categoryId = createCategory();
     testProduct =
         new ProductRequest(
-            BASE_PRODUCT.title(),
-            BASE_PRODUCT.description(),
-            BASE_PRODUCT.photoUrl(),
-            BASE_PRODUCT.price(),
-            List.of(categoryId),
-            BASE_PRODUCT.quantity());
+            BASE_PRODUCT.getTitle(),
+            BASE_PRODUCT.getDescription(),
+            BASE_PRODUCT.getPrice(),
+            BASE_PRODUCT.getCategories(),
+            BASE_PRODUCT.getQuantity(),
+            BASE_PRODUCT.getPhotoUrlId());
   }
 
   void clearDatabase() {
@@ -87,7 +87,7 @@ class ProductControllerIntegrationTest {
     ProductResponse createdProduct = response.getBody();
 
     assertNotNull(createdProduct);
-    assertEquals(testProduct.title(), createdProduct.title());
+    assertEquals(testProduct.getTitle(), createdProduct.title());
 
     Integer count =
         jdbcTemplate.queryForObject(

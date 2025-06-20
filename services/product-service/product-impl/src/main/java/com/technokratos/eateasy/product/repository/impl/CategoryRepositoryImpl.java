@@ -1,6 +1,8 @@
 package com.technokratos.eateasy.product.repository.impl;
 
 import com.technokratos.eateasy.product.entity.Category;
+import com.technokratos.eateasy.product.exception.CategoryDataIntegrityViolationException;
+import com.technokratos.eateasy.product.exception.CategoryDatabaseException;
 import com.technokratos.eateasy.product.repository.CategoryRepository;
 import com.technokratos.eateasy.product.util.QueryProvider;
 import java.util.List;
@@ -43,9 +45,9 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     try {
       return jdbcTemplate.queryForObject(sql, categoryRowMapper, category.getTitle());
     } catch (DataIntegrityViolationException e) {
-      throw e;
+      throw new CategoryDataIntegrityViolationException(e.getMessage());
     } catch (Exception e) {
-      throw new RuntimeException("Database error", e);
+      throw new CategoryDatabaseException(e.getMessage());
     }
   }
 

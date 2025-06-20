@@ -19,9 +19,11 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
 class ProductCategoryFacadeUnitTest {
@@ -36,6 +38,7 @@ class ProductCategoryFacadeUnitTest {
   private ProductRequest productRequest;
   private ProductResponse productResponse;
   private ProductUpdateRequest productUpdateRequest;
+  private ObjectMapper objectMapper = new ObjectMapper();
 
   @BeforeEach
   void setUp() {
@@ -45,7 +48,7 @@ class ProductCategoryFacadeUnitTest {
         ProductRequest.builder()
             .title("Product name")
             .description("Description")
-            .photoUrl("http://example.com/image.jpg")
+            .photoUrlId(UUID.fromString("f05d7d66-9d1f-4de9-b9b5-e2e6e4b33c91"))
             .price(BigDecimal.valueOf(100))
             .categories(List.of(UUID.randomUUID(), UUID.randomUUID()))
             .quantity(10)
@@ -55,7 +58,7 @@ class ProductCategoryFacadeUnitTest {
         ProductUpdateRequest.builder()
             .title("Product name")
             .description("Description")
-            .photoUrl("http://example.com/image.jpg")
+            .photoUrlId(UUID.fromString("f05d7d66-9d1f-4de9-b9b5-e2e6e4b33c91"))
             .price(BigDecimal.valueOf(100))
             .categories(List.of(UUID.randomUUID(), UUID.randomUUID()))
             .quantity(10)
@@ -66,7 +69,7 @@ class ProductCategoryFacadeUnitTest {
             .id(productId)
             .title("Product name")
             .description("Description")
-            .photoUrl("http://example.com/image.jpg")
+            .photoUrlId("f05d7d66-9d1f-4de9-b9b5-e2e6e4b33c91")
             .price(BigDecimal.valueOf(100))
             .categories(new ArrayList<>())
             .quantity(10)
@@ -94,46 +97,66 @@ class ProductCategoryFacadeUnitTest {
   }
 
   @Test
-  void create_ShouldCreateProductAndAssignCategories() {
-    List<CategoryResponse> categories =
-        List.of(
-            new CategoryResponse(productRequest.categories().get(0), "Fruits"),
-            new CategoryResponse(productRequest.categories().get(1), "Vegetables"));
+  void create_ShouldCreateProductAndAssignCategories() throws Exception {
+    String productJson = objectMapper.writeValueAsString(productRequest);
 
-    when(productService.create(productRequest)).thenReturn(productResponse);
+    List<CategoryResponse> categories =
+            List.of(
+                    new CategoryResponse(productRequest.getCategories().get(0), "Fruits"),
+                    new CategoryResponse(productRequest.getCategories().get(1), "Vegetables"));
+
+    when(productService.create(any(ProductRequest.class))).thenReturn(productResponse);
     when(categoryService.getCategoriesByProductId(productId)).thenReturn(categories);
 
-    ProductResponse result = facade.create(productRequest);
+    ProductResponse result = facade.create(productJson, null);
 
     assertEquals(productId, result.id());
     assertEquals(2, result.categories().size());
-    verify(productService).create(productRequest);
-    verify(categoryService).assignCategoriesToProduct(productRequest.categories(), productId);
+
+    ArgumentCaptor<ProductRequest> captor = ArgumentCaptor.forClass(ProductRequest.class);
+    verify(productService).create(captor.capture());
+
+    ProductRequest actualRequest = captor.getValue();
+    assertEquals(productRequest.getTitle(), actualRequest.getTitle());
+    assertEquals(productRequest.getDescription(), actualRequest.getDescription());
+
+    verify(categoryService).assignCategoriesToProduct(eq(productRequest.getCategories()), eq(productId));
   }
 
   @Test
-  void update_ShouldUpdateCategoriesAndProduct_WhenCategoriesNotEmpty() {
-    facade.update(productId, productUpdateRequest);
+  void update_ShouldUpdateCategoriesAndProduct_WhenCategoriesNotEmpty() throws Exception {
+    String updateJson = objectMapper.writeValueAsString(productUpdateRequest);
+
+    facade.update(productId, updateJson, null);
+
+    ArgumentCaptor<ProductUpdateRequest> captor = ArgumentCaptor.forClass(ProductUpdateRequest.class);
+    verify(productService).update(eq(productId), captor.capture());
+
+    ProductUpdateRequest actualRequest = captor.getValue();
+    assertEquals(productUpdateRequest.getTitle(), actualRequest.getTitle());
+    assertEquals(productUpdateRequest.getPrice(), actualRequest.getPrice());
+
     verify(categoryService)
-        .updateCategoriesByProductId(productUpdateRequest.categories(), productId);
-    verify(productService).update(productId, productUpdateRequest);
+            .updateCategoriesByProductId(eq(productUpdateRequest.getCategories()), eq(productId));
   }
 
   @Test
-  void update_ShouldOnlyUpdateProduct_WhenCategoriesEmpty() {
-    ProductUpdateRequest request =
-        ProductUpdateRequest.builder()
+  void update_ShouldOnlyUpdateProduct_WhenCategoriesEmpty() throws Exception {
+    ProductUpdateRequest request = ProductUpdateRequest.builder()
             .title("Product")
             .description("Desc")
-            .photoUrl("http://example.com/image.jpg")
+            .photoUrlId(UUID.fromString("f05d7d66-9d1f-4de9-b9b5-e2e6e4b33c91"))
             .price(BigDecimal.TEN)
             .categories(Collections.emptyList())
             .quantity(5)
             .build();
 
-    facade.update(productId, request);
+    String requestJson = objectMapper.writeValueAsString(request);
+
+    facade.update(productId, requestJson, null);
+
     verify(categoryService, never()).updateCategoriesByProductId(any(), any());
-    verify(productService).update(productId, request);
+    verify(productService).update(eq(productId), any(ProductUpdateRequest.class));
   }
 
   @Test
@@ -149,7 +172,7 @@ class ProductCategoryFacadeUnitTest {
             .id(productId)
             .title("Product")
             .description("Desc")
-            .photoUrl("http://example.com/image.jpg")
+            .photoUrlId("f05d7d66-9d1f-4de9-b9b5-e2e6e4b33c91")
             .price(BigDecimal.TEN)
             .categories(new ArrayList<>())
             .quantity(5)

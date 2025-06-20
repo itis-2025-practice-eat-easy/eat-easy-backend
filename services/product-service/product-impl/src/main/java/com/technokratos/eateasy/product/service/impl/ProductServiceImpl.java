@@ -6,6 +6,7 @@ import com.technokratos.eateasy.product.dto.product.ProductResponse;
 import com.technokratos.eateasy.product.dto.product.ProductUpdateRequest;
 import com.technokratos.eateasy.product.entity.Product;
 import com.technokratos.eateasy.product.exception.ProductAlreadyExistsException;
+import com.technokratos.eateasy.product.exception.ProductDataIntegrityViolationException;
 import com.technokratos.eateasy.product.exception.ProductNotFoundException;
 import com.technokratos.eateasy.product.mapper.ProductMapper;
 import com.technokratos.eateasy.product.repository.ProductRepository;
@@ -59,8 +60,7 @@ public class ProductServiceImpl implements ProductService {
       }
     } catch (DataIntegrityViolationException e) {
       log.error("Invalid product data with id {}", id);
-      throw new DataIntegrityViolationException(
-          "Data integrity violation".formatted(e.getMessage()));
+      throw new ProductDataIntegrityViolationException("Data integrity violation".formatted(e.getMessage()));
     }
   }
 
@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
       }
     } catch (DataIntegrityViolationException e) {
       log.error("Invalid product data with id {}", id);
-      throw new DataIntegrityViolationException("Data integrity violation");
+      throw new ProductDataIntegrityViolationException("Data integrity violation".formatted(e.getMessage()));
     }
   }
 

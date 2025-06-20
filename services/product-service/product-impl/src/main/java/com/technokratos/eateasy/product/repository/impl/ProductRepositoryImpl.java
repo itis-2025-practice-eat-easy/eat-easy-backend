@@ -1,6 +1,8 @@
 package com.technokratos.eateasy.product.repository.impl;
 
 import com.technokratos.eateasy.product.entity.Product;
+import com.technokratos.eateasy.product.exception.ProductDataIntegrityViolationException;
+import com.technokratos.eateasy.product.exception.ProductDatabaseException;
 import com.technokratos.eateasy.product.repository.ProductRepository;
 import com.technokratos.eateasy.product.util.QueryProvider;
 import java.math.BigDecimal;
@@ -53,9 +55,9 @@ public class ProductRepositoryImpl implements ProductRepository {
           product.getPopularity(),
           product.getPhotoUrlId());
     } catch (DataIntegrityViolationException e) {
-      throw e;
+      throw new ProductDataIntegrityViolationException(e.getMessage());
     } catch (Exception e) {
-      throw new RuntimeException("Database error", e);
+      throw new ProductDatabaseException(e.getMessage());
     }
   }
 
@@ -64,9 +66,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     try {
       return jdbcTemplate.update(sql, productId, quantity);
     } catch (DataIntegrityViolationException e) {
-      throw e;
+      throw new ProductDataIntegrityViolationException(e.getMessage());
     } catch (Exception e) {
-      throw new RuntimeException("Database error", e);
+      throw new ProductDatabaseException(e.getMessage());
     }
   }
 
@@ -92,9 +94,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     try {
       return jdbcTemplate.update(sql.toString(), params.toArray());
     } catch (DataIntegrityViolationException e) {
-      throw e;
+      throw new ProductDataIntegrityViolationException(e.getMessage());
     } catch (Exception e) {
-      throw new RuntimeException("Database error", e);
+      throw new ProductDatabaseException(e.getMessage());
     }
   }
 
@@ -103,7 +105,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     try {
       return jdbcTemplate.update(sql, productId);
     } catch (Exception e) {
-      throw new RuntimeException("Database error", e);
+      throw new ProductDatabaseException(e.getMessage());
     }
   }
 
