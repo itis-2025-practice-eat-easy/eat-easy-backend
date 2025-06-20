@@ -56,7 +56,6 @@ public class UserControllerIntegrationTest {
                 .password(PASSWORD)
                 .firstName(FIRST_NAME)
                 .lastName(LAST_NAME)
-                .role(ROLE)
                 .build();
 
 
@@ -79,7 +78,6 @@ public class UserControllerIntegrationTest {
                     assertEquals(userRequestCreateDto.getEmail(), rs.getString("email"));
                     assertEquals(userRequestCreateDto.getFirstName(), rs.getString("first_name"));
                     assertEquals(userRequestCreateDto.getLastName(), rs.getString("last_name"));
-                    assertEquals(userRequestCreateDto.getRole().toString(), rs.getString("role"));
                     assertFalse(rs.next());
                 }
         );
@@ -107,7 +105,6 @@ public class UserControllerIntegrationTest {
                 .password(PASSWORD)
                 .firstName(FIRST_NAME)
                 .lastName(LAST_NAME)
-                .role(ROLE)
                 .build();
 
         ResponseEntity<UserResponseDto> createResponse = testRestTemplate.exchange(
@@ -156,7 +153,6 @@ public class UserControllerIntegrationTest {
                 .password(PASSWORD)
                 .firstName(FIRST_NAME)
                 .lastName(LAST_NAME)
-                .role(ROLE)
                 .build();
 
         ResponseEntity<UserResponseDto> createResponse = testRestTemplate.exchange(
@@ -203,7 +199,6 @@ public class UserControllerIntegrationTest {
                 .password(PASSWORD)
                 .firstName(FIRST_NAME)
                 .lastName(LAST_NAME)
-                .role(ROLE)
                 .build();
 
         ResponseEntity<UserResponseDto> createResponse = testRestTemplate.exchange(
@@ -220,7 +215,6 @@ public class UserControllerIntegrationTest {
                 .password("updatedpass123")
                 .firstName("Updated")
                 .lastName("User")
-                .role(UserRole.ADMIN)
                 .build();
 
         ResponseEntity<UserResponseDto> response = testRestTemplate.exchange(
@@ -247,7 +241,6 @@ public class UserControllerIntegrationTest {
                     assertEquals(updatedUser.getEmail(), rs.getString("email"));
                     assertEquals(updatedUser.getFirstName(), rs.getString("first_name"));
                     assertEquals(updatedUser.getLastName(), rs.getString("last_name"));
-                    assertEquals(updatedUser.getRole().toString(), rs.getString("role"));
                     assertFalse(rs.next());
                 }
         );
@@ -261,7 +254,6 @@ public class UserControllerIntegrationTest {
                 .password(PASSWORD)
                 .firstName(FIRST_NAME)
                 .lastName(LAST_NAME)
-                .role(ROLE)
                 .build();
 
         UUID nonExistentId = UUID.randomUUID();
@@ -283,7 +275,6 @@ public class UserControllerIntegrationTest {
                 .password(PASSWORD)
                 .firstName(FIRST_NAME)
                 .lastName(LAST_NAME)
-                .role(ROLE)
                 .build();
 
         ResponseEntity<UserResponseDto> createResponse = testRestTemplate.exchange(

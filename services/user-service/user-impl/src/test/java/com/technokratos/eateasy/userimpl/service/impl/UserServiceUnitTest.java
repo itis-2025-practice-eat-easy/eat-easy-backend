@@ -3,7 +3,9 @@ package com.technokratos.eateasy.userimpl.service.impl;
 import com.technokratos.eateasy.common.exception.ConflictServiceException;
 import com.technokratos.eateasy.common.exception.NotFoundServiceException;
 import com.technokratos.eateasy.userapi.dto.UserRequestCreateDto;
+import com.technokratos.eateasy.userapi.dto.UserRequestUpdateDto;
 import com.technokratos.eateasy.userapi.dto.UserResponseDto;
+import com.technokratos.eateasy.userapi.roleenum.UserRole;
 import com.technokratos.eateasy.userimpl.mapper.UserMapper;
 import com.technokratos.eateasy.userimpl.model.UserEntity;
 import com.technokratos.eateasy.userimpl.repository.UserRepository;
@@ -34,6 +36,8 @@ class UserServiceUnitTest {
 
     private UserEntity userEntity;
     private UserRequestCreateDto userRequestCreateDto;
+
+    private UserRequestUpdateDto userRequestUpdateDto;
     private UserResponseDto userResponseDto;
 
     @BeforeEach
@@ -62,6 +66,15 @@ class UserServiceUnitTest {
                 .password(PASSWORD)
                 .firstName(FIRST_NAME)
                 .lastName(LAST_NAME)
+                .build();
+
+        userRequestUpdateDto = UserRequestUpdateDto.builder()
+                .username(USERNAME)
+                .email(EMAIL)
+                .password(PASSWORD)
+                .firstName(FIRST_NAME)
+                .lastName(LAST_NAME)
+                .role(UserRole.USER)
                 .build();
 
         userResponseDto = UserResponseDto.builder()
@@ -140,18 +153,18 @@ class UserServiceUnitTest {
         UUID nonExistentId = UUID.randomUUID();
         when(userRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundServiceException.class, () -> userService.update(nonExistentId, userRequestCreateDto));
+        assertThrows(NotFoundServiceException.class, () -> userService.update(nonExistentId, userRequestUpdateDto));
     }
 
     @Test
     void updateUserEmailExceptionTest() {
         when(userRepository.findById(userEntity.getId())).thenReturn(Optional.of(userEntity));
 
-        userRequestCreateDto.setUsername("not_rbrmnv");
+        userRequestUpdateDto.setUsername("not_rbrmnv");
         when(userRepository.existsByUsername("not_rbrmnv")).thenReturn(true);
 
         assertThrows(ConflictServiceException.class,
-                () -> userService.update(userEntity.getId(), userRequestCreateDto));
+                () -> userService.update(userEntity.getId(), userRequestUpdateDto));
     }
 
     @Test
